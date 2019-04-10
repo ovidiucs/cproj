@@ -2,10 +2,10 @@
 #include<stdlib.h>
 #include<string.h>
 
-const char *myarg = NULL;
+//const char *myarg = NULL;
 
-int readfile(char *argument) {
-
+int readfile(char *argument, FILE *fptr) {
+	char ch[] = "";
 	char* ret;
 	// if (( *fptr = fopen(argument,"r")) == NULL) 
 	// {
@@ -16,8 +16,10 @@ int readfile(char *argument) {
 	//printf(fptr);
 	char* s2 = argument;
 	char s1[] = "test";
-	ret = strstr(s1,s2);
-	printf("The substring in s1 is %s and in s2 is %s and the returned is %s\n",s1,s2,ret);
+	puts(fgets (ch,100, fptr));
+	
+	ret = strstr(s1,ch);
+	printf("The substring in s1 is %s and in s2 is %s and the returned is %s\n",s1,s1,s1);
 
 	return 0;
 }
@@ -27,8 +29,7 @@ int main(int argc, char *argv[]) {
 // Declare pointer to file for use later
 
 	FILE *fptr;
-	char ch[] = "";
-	myarg = argv[1];
+	char* myarg = argv[1];
 	if (argc == 3) {
 		printf("The search term is '%s' and the filename is '%s'\n", argv[1], argv[2]);
 		fptr = fopen (argv[2], "r");
@@ -44,10 +45,7 @@ int main(int argc, char *argv[]) {
 	} else {
 
 		//int rc = readfile(fptr,argv[1]);
-		char *argument = argv[1];
-		
-		puts(fgets (ch,60, fptr));
-		int rc = readfile(argument);
+		int rc = readfile(myarg, fptr);
 		//printf (rc);
 	}
 #if 0
