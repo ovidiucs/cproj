@@ -4,13 +4,14 @@
 
 const char *myarg = NULL;
 
-int readfile() {
+int readfile(char *argument) {
+	printf("%s\n", argument);
 	char* ret;
-	char s2[20] = "This";
+	char* s2 = argument;
 	char s1[100] = "This is free software: you are free to change and redistribute it.";
 
 	ret = strstr(s1,s2);
-	printf("The substring is: %s s1 %s s2 %s ret\n",s1,s2,ret);
+	printf("The substring in s1 is %s and in s2 is %s and the returned is %s\n",s1,s2,ret);
 
 	return 0;
 }
@@ -23,7 +24,6 @@ int main(int argc, char *argv[]) {
 	char ch;
 	myarg = argv[1];
 	
-	if (argc == 3 ){
 		printf("The search term is %s and the filename is '%s'\n", argv[1], argv[2]);
 		fptr = fopen (argv[2], "r");
 	} else {
@@ -39,8 +39,9 @@ int main(int argc, char *argv[]) {
 	} else {
 #endif
 		//int rc = readfile(fptr,argv[1]);
-		int rc = readfile();
-		printf (rc);
+		char *argument = argv[1];
+		int rc = readfile(argument);
+		//printf (rc);
 #if 0
 		// fgetc - return the character currently pointed by the
 		// internal file position. internal file position is then adv
