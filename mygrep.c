@@ -4,27 +4,20 @@
 
 //const char *myarg = NULL;
 
-int readfile(char *argument, FILE *fptr) {
-	char ch[] = "";
+int readfile(char *argument, FILE **fptr) {
+	char data[1000];
 	char* ret;
-	// if (( *fptr = fopen(argument,"r")) == NULL) 
-	// {
-	// // Empty file	
-	// 		printf("Unable to open specified file\n");
-	// 		exit(1);
-	// }
-	//printf(fptr);
+	//char* s1 = *fptr;
 	char* s2 = argument;
-	char s1[] = "test";
-	puts(fgets (ch,100, fptr));
-	
-	ret = strstr(s1,ch);
-	printf("The substring in s1 is %s and in s2 is %s and the returned is %s\n",s1,s1,s1);
+
+	while(fgets (data,1000,*fptr) != NULL);
+	ret = strstr(data,s2);
+	printf("The substring in s1 is %s and in s2 is %s and the returned is %s\n",data,s2,ret);
 
 	return 0;
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char **argv) {
 
 // Declare pointer to file for use later
 
@@ -39,22 +32,23 @@ int main(int argc, char *argv[]) {
 	}
 
 	if (fptr == NULL) {
-	// Empty file	
+	// Empty file
 			printf("Unable to open specified file\n");
 			exit(1);
 	} else {
 
 		//int rc = readfile(fptr,argv[1]);
-		int rc = readfile(myarg, fptr);
+		int rc = readfile(myarg, &fptr);
 		//printf (rc);
 	}
+
 #if 0
 		// fgetc - return the character currently pointed by the
 		// internal file position. internal file position is then adv
 		// anced to the next character
 			while((ch=fgetc(fptr))!=EOF) {
 			printf("%c", ch);
-	}	
+	}
 	fclose(fptr);
 #endif
 	return 0;
