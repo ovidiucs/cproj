@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <unistd.h>
 
 int readfile(char *pat, FILE *fptr, char *fn ) {
 	char data[1000];
@@ -11,7 +12,6 @@ int readfile(char *pat, FILE *fptr, char *fn ) {
 	while(fgets (data,sizeof(data),fptr) != NULL) {
 		ret = strstr(data,s2);
 		if (ret != NULL) {
-		//printf("%s:\n Data%s Pattern, %s Return,%s\n",fn,data,s2,ret);
 		printf("%s:\t %s",fn, ret);
 		//	fputs(data, stdout);
 		}
@@ -27,10 +27,12 @@ int main(int argc, char **argv) {
 	
 	FILE *fptr;
 	char* fn;
+	char chbuf[1];
+	char *ret;
 	char* pat = argv[1];
 	int rc = 0;
 	
-	if (argc >= 2) {
+	if (argc > 2) {
 		printf("The search term is: '%s' and the filename is: '%s'\n", argv[1], argv[2]);
 		for ( int i = 2; i < argc; i++ ) {
 			fn = argv[i];	
@@ -43,10 +45,15 @@ int main(int argc, char **argv) {
 			}
 			fclose(fptr);
 		}
+	} else if (argc == 2) {
+		printf("No filename argument specified.\nUsing standard input.\n");
+		while (read(0, chbuf, sizeof(chbuf))>0) {
+			ret = strstr(chbuf,pat);
+			printf("%s\n%s\n%s\n",ret,chbuf,pat);
+		}
 	} else {
 		printf("Usage: Specify a search term followed by a filename.\n");
 		exit(0);
 	}
-
 	return rc;
 }
