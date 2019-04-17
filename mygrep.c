@@ -11,7 +11,8 @@ int readfile(char *pat, FILE *fptr, char *fn ) {
 	while(fgets (data,sizeof(data),fptr) != NULL) {
 		ret = strstr(data,s2);
 		if (ret != NULL) {
-		printf("%s:\n",fn,data,s2,ret);
+		//printf("%s:\n Data%s Pattern, %s Return,%s\n",fn,data,s2,ret);
+		printf("%s:\t %s",fn, ret);
 		//	fputs(data, stdout);
 		}
 	}
@@ -26,11 +27,11 @@ int main(int argc, char **argv) {
 	
 	FILE *fptr;
 	char* fn;
-	const char* pat = argv[1];
+	char* pat = argv[1];
 	int rc = 0;
 	
-	if (argc >= 3) {
-		printf("The search term is '%s' and the filename is '%s'\n", argv[1], argv[2]);
+	if (argc >= 2) {
+		printf("The search term is: '%s' and the filename is: '%s'\n", argv[1], argv[2]);
 		for ( int i = 2; i < argc; i++ ) {
 			fn = argv[i];	
 			fptr = fopen (fn, "r");
