@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
 	
 	FILE *fptr;
 	char* fn;
-	char chbuf[1];
+	char chbuf[1024];
 	char *ret;
 	char* pat = argv[1];
 	int rc = 0;
@@ -46,11 +46,15 @@ int main(int argc, char **argv) {
 			fclose(fptr);
 		}
 	} else if (argc == 2) {
-		printf("No filename argument specified.\nUsing standard input.\n");
+		printf("No filename argument specified.\nUsing standard input.Use ^C to exit\n");
 		while (read(0, chbuf, sizeof(chbuf))>0) {
-			ret = strstr(chbuf,pat);
-			printf("%s\n%s\n%s\n",ret,chbuf,pat);
+			if (ret = strstr(chbuf,pat)) {
+				printf("Found: %sin the given input: %swhere pattern is: %s\n",ret,chbuf,pat);
+			} else {
+				 memset(chbuf, 0, sizeof chbuf);
+			}
 		}
+			
 	} else {
 		printf("Usage: Specify a search term followed by a filename.\n");
 		exit(0);
