@@ -12,8 +12,7 @@ int readfile(char *pat, FILE *fptr, char *fn ) {
 	while(fgets (data,sizeof(data),fptr) != NULL) {
 		ret = strstr(data,s2);
 		if (ret != NULL) {
-		printf("%s:\t %s",fn, ret);
-		//	fputs(data, stdout);
+		fprintf(stderr,"%s:\t %s",fn, ret);
 		}
 	}
 	if (ferror(fptr)) {
@@ -33,31 +32,25 @@ int main(int argc, char **argv) {
 	int rc = 0;
 	
 	if (argc > 2) {
-		printf("The search term is: '%s' and the filename is: '%s'\n", argv[1], argv[2]);
+		fprintf(stderr,"The search term is: '%s' and the filename is: '%s'\n", argv[1], argv[2]);
 		for ( int i = 2; i < argc; i++ ) {
 			fn = argv[i];	
 			fptr = fopen (fn, "r");
 			if (fptr == NULL) {
 				fprintf(stderr,"Unable to open %s\n", fn);
-				exit(1);
+				rc = 1;
 			} else {
 				rc = readfile(pat, fptr, fn);
 			}
 			fclose(fptr);
 		}
 	} else if (argc == 2) {
-		printf("No filename argument specified.\nUsing standard input.Use ^C to exit\n");
-		while (read(0, chbuf, sizeof(chbuf))>0) {
-			if (ret = strstr(chbuf,pat)) {
-				printf("Found: %sin the given input: %swhere pattern is: %s\n",ret,chbuf,pat);
-			} else {
-				 memset(chbuf, 0, sizeof chbuf);
-			}
-		}
+		fprintf(stderr,"No filename argument specified.\nUsing standard input.Use ^C to exit\n");
+		rc = readfile(pat,stdin,0);
 			
 	} else {
-		printf("Usage: Specify a search term followed by a filename.\n");
-		exit(0);
+		fprintf(stderr,"Usage: Specify a search term followed by a filename.\n");
+		rc = 0;
 	}
 	return rc;
 }
