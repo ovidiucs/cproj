@@ -37,9 +37,28 @@ void readfile( FILE *fptr, char *fn ) {
 	}
 
 }		
+int main(int argc, char** argv){
 
-- main function
-- write list - for statement to loop the linked list
-- in each iteration write text memeber to stdout
-- program can be called with 0 or 1 argument
-- no argument from stdin or 1 arg from file to read.
+	int rc = 0;
+
+	FILE* fptr;
+	char* fname;
+	char* text = argv[1];
+
+	if(argc > 2){
+		fprintf(stderr,"Filename provided is: %s\n", argv[2]);
+		rc = 0;
+	} else if (argc == 1){
+		fprintf(stderr, "Reading from stdin\n"  );
+		rc = 0;
+	} else {
+		fprintf(stderr,"Usage: %s text [file ...]\n", argv[0]);
+		rc = 0;
+	}
+	return rc;
+}
+//- main function
+//- write list - for statement to loop the linked list
+//- in each iteration write text memeber to stdout
+//- program can be called with 0 or 1 argument
+//- no argument from stdin or 1 arg from file to read.
