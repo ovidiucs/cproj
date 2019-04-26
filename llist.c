@@ -13,12 +13,16 @@ Node* head = NULL;
 Node* tail = NULL;
 
 void saveline(char *data) {
-	fprintf(stderr,"Entered saveline linked list.");
+	
+	// fprintf(stderr,"Entered saveline linked list.\n");
+	
 	// Allocate a new node
 	Node* nodePointer;
+
 	// Allocate memory 
 	nodePointer = (Node*) malloc (sizeof(Node) + strlen(data));
 	nodePointer->next = NULL;
+
 	// Copy bytes to struct memeber 'text'
 	strcpy(nodePointer->text,data);
 	if (head == NULL) {
@@ -26,9 +30,6 @@ void saveline(char *data) {
 	} else {
 		tail->next = nodePointer;
 		tail = nodePointer;
-	}
-	for (tail=head; tail ; tail=tail->next  ){
-		fprintf(stderr,"%s", nodePointer->text);
 	}
 }
 
@@ -48,7 +49,8 @@ int main(int argc, char** argv){
 
 	FILE* fptr;
 	char* fname;
-	char* text = argv[1];
+	int numNode = 0;
+	Node* tempNode;
 
 	if(argc == 2){
 		fprintf(stderr,"Filename provided is: %s\n", argv[1]);
@@ -63,10 +65,14 @@ int main(int argc, char** argv){
 		fclose (fptr);
 	} else if (argc == 1){
 		fprintf(stderr, "Reading from stdin\n"  );
-		rc = 0;
+		rc = readfile(stdin, NULL);
 	} else {
 		fprintf(stderr,"Usage: %s text [file ...]\n", argv[0]);
 		rc = 0;
+	}
+	
+	for (tempNode=head; tempNode!=NULL ; tempNode=tempNode->next  ){
+		fprintf(stderr,"%d:%p:%s\n",numNode, (void *) tempNode, tempNode->text);
 	}
 	return rc;
 }
