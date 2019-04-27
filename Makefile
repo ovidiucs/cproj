@@ -7,7 +7,7 @@ Libs = -lc
 # Options and arguments to the C compiler.
 CC = cc
 CFLAGS = -funsigned-char -W -Wall -Wunused\
- -Wno-bitwise-op-parentheses -Wno-comment -Wno-missing-field-initializers -Wno-missing-braces -Wno-parentheses\
+ -Wno-comment -Wno-missing-field-initializers -Wno-missing-braces -Wno-parentheses\
  -Wno-pointer-sign -Wno-unused-parameter -Wno-unused-result $(COPTS)\
  -O2
 

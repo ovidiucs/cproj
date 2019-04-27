@@ -9,15 +9,20 @@ typedef struct Node {
 	char text[1];
 } Node;
 
-Node* head = NULL; 
+Node* head = NULL;
 Node* tail = NULL;
 
 void saveline(char *data) {
+
+	// fprintf(stderr,"Entered saveline linked list.\n");
+
 	// Allocate a new node
 	Node* nodePointer;
-	// Allocate memory 
+
+	// Allocate memory
 	nodePointer = (Node*) malloc (sizeof(Node) + strlen(data));
 	nodePointer->next = NULL;
+
 	// Copy bytes to struct memeber 'text'
 	strcpy(nodePointer->text,data);
 	if (head == NULL) {
@@ -28,32 +33,46 @@ void saveline(char *data) {
 	}
 }
 
-void readfile( FILE *fptr, char *fn ) {
+int  readfile( FILE *fptr, char *fn ) {
 	char data[1000];
-	
-	
+	int rc = 0;
+
 	while(fgets (data,sizeof(data),fptr) != NULL) {
+		fprintf(stderr,"Data is:%s", data);
 		saveline(data);
 	}
-
-}		
+	return rc;
+}
 int main(int argc, char** argv){
 
 	int rc = 0;
 
 	FILE* fptr;
 	char* fname;
-	char* text = argv[1];
+	int numNode = 0;
+	Node* tempNode;
 
-	if(argc > 2){
-		fprintf(stderr,"Filename provided is: %s\n", argv[2]);
-		rc = 0;
+	if(argc == 2){
+		fprintf(stderr,"Filename provided is: %s\n", argv[1]);
+		fname = argv[1];
+		fptr = fopen(fname,"r");
+		if (fptr == NULL) {
+			fprintf(stderr,"Unable to open %s\n", fname);
+			rc = 1;
+		} else {
+			readfile(fptr, fname);
+		}
+		fclose (fptr);
 	} else if (argc == 1){
 		fprintf(stderr, "Reading from stdin\n"  );
-		rc = 0;
+		rc = readfile(stdin, NULL);
 	} else {
 		fprintf(stderr,"Usage: %s text [file ...]\n", argv[0]);
 		rc = 0;
+	}
+
+	for (tempNode=head; tempNode!=NULL ; tempNode=tempNode->next  ){
+		fprintf(stderr,"%d:%p:%s\n",numNode, (void *) tempNode, tempNode->text);
 	}
 	return rc;
 }
