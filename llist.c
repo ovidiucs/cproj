@@ -5,7 +5,9 @@
 #include <unistd.h>
 
 typedef struct Node {
+	// store pointer address of next block of data - 8 bytes / 64 bit - 4 bytes / 32 bit arch
 	struct Node *next;
+	// dynamically resied for malloc uses
 	char text[1];
 } Node;
 
@@ -19,7 +21,7 @@ void saveline(char *data) {
 	// Allocate a new node
 	Node* nodePointer;
 
-	// Allocate memory
+	// Allocate memory - malloc return generic pointer -> cast Node* to malloc instead of generic one
 	nodePointer = (Node*) malloc (sizeof(Node) + strlen(data));
 	nodePointer->next = NULL;
 
@@ -38,7 +40,7 @@ int  readfile( FILE *fptr, char *fn ) {
 	int rc = 0;
 
 	while(fgets (data,sizeof(data),fptr) != NULL) {
-		fprintf(stderr,"Data is:%s", data);
+		fprintf(stderr,"Data is: %s", data);
 		saveline(data);
 	}
 	return rc;
@@ -72,12 +74,10 @@ int main(int argc, char** argv){
 	}
 
 	for (tempNode=head; tempNode!=NULL ; tempNode=tempNode->next  ){
-		fprintf(stderr,"%d:%p:%s\n",numNode, (void *) tempNode, tempNode->text);
+		fprintf(stderr,"Node#: %d, at mem. address: %p with sizeof line: %ld\n and data: %s",
+						numNode, (void *) tempNode, strlen(tempNode->text),tempNode->text);
+		numNode +=1;
 	}
 	return rc;
 }
-//- main function
-//- write list - for statement to loop the linked list
-//- in each iteration write text memeber to stdout
-//- program can be called with 0 or 1 argument
-//- no argument from stdin or 1 arg from file to read.
+
