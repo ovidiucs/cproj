@@ -33,6 +33,8 @@ void saveline(char *data) {
 		tail->next = nodePointer;
 		tail = nodePointer;
 	}
+
+
 }
 
 int  readfile( FILE *fptr, char *fn ) {
@@ -48,11 +50,15 @@ int  readfile( FILE *fptr, char *fn ) {
 int main(int argc, char** argv){
 
 	int rc = 0;
-
+	int ret = 0;
+	int i = 0;
 	FILE* fptr;
 	char* fname;
 	int numNode = 0;
 	Node* tempNode;
+	Node* nodeList[1000];
+
+	//nodeList = (Node*) malloc (sizeof(Node));
 
 	if(argc == 2){
 		fprintf(stderr,"Filename provided is: %s\n", argv[1]);
@@ -74,10 +80,31 @@ int main(int argc, char** argv){
 	}
 
 	for (tempNode=head; tempNode!=NULL ; tempNode=tempNode->next  ){
+		//fprintf(stderr,"NOT NULL Node#: %s\n\n", tempNode[numNode]->text);
 		fprintf(stderr,"Node#: %d, at mem. address: %p with sizeof line: %ld\n and data: %s",
 						numNode, (void *) tempNode, strlen(tempNode->text),tempNode->text);
+		//strcmp(tempNode->text,);
+		if (numNode < 1000) {
+		nodeList[numNode] = tempNode;
+		}
 		numNode +=1;
-	}
-	return rc;
-}
+	//	fprintf(stderr,"NOT NULL Node#: %p\n\n", prevTemp);
+		// if (prevTemp = NULL) {
 
+		// 	fprintf(stderr,"NULL Node#: %p\n\n", (void *) prevTemp);
+		// } else {
+		// 	fprintf(stderr,"NOT NULL Node#: %p\n\n", prevTemp);
+		// }
+	}
+		while (nodeList[i] != NULL ){
+			if (nodeList[i+1] == NULL ){
+				break;
+			} else {
+				ret = strcmp(nodeList[i]->text,nodeList[i+1]->text);
+				fprintf(stderr,"%d\n",ret);
+			}
+			i+=1;
+		}
+			return rc;
+
+}
