@@ -42,7 +42,7 @@ int  readfile( FILE *fptr, char *fn ) {
 	int rc = 0;
 
 	while(fgets (data,sizeof(data),fptr) != NULL) {
-		fprintf(stderr,"Data is: %s", data);
+	//	fprintf(stderr,"Data is: %s", data);
 		saveline(data);
 	}
 	return rc;
@@ -50,7 +50,7 @@ int  readfile( FILE *fptr, char *fn ) {
 int main(int argc, char** argv){
 
 	int rc = 0;
-	int ret = 0;
+	//int ret = 0;
 	int i = 0;
 	FILE* fptr;
 	char* fname;
@@ -72,39 +72,52 @@ int main(int argc, char** argv){
 		}
 		fclose (fptr);
 	} else if (argc == 1){
-		fprintf(stderr, "Reading from stdin\n"  );
+		fprintf(stderr, "Reading from stdin\n");
 		rc = readfile(stdin, NULL);
 	} else {
 		fprintf(stderr,"Usage: %s text [file ...]\n", argv[0]);
 		rc = 0;
 	}
 
-	for (tempNode=head; tempNode!=NULL ; tempNode=tempNode->next  ){
+	for (tempNode=head; tempNode!=NULL ; tempNode=tempNode->next){
 		//fprintf(stderr,"NOT NULL Node#: %s\n\n", tempNode[numNode]->text);
-		fprintf(stderr,"Node#: %d, at mem. address: %p with sizeof line: %ld\n and data: %s",
+		fprintf(stderr,"Node#: %d, at mem. address: %p with sizeof line: %ld data is: %s",
 						numNode, (void *) tempNode, strlen(tempNode->text),tempNode->text);
 		//strcmp(tempNode->text,);
 		if (numNode < 1000) {
 		nodeList[numNode] = tempNode;
 		}
 		numNode +=1;
-	//	fprintf(stderr,"NOT NULL Node#: %p\n\n", prevTemp);
-		// if (prevTemp = NULL) {
-
-		// 	fprintf(stderr,"NULL Node#: %p\n\n", (void *) prevTemp);
-		// } else {
-		// 	fprintf(stderr,"NOT NULL Node#: %p\n\n", prevTemp);
-		// }
 	}
-		while (nodeList[i] != NULL ){
-			if (nodeList[i+1] == NULL ){
-				break;
+	fprintf(stderr,"\t Pointer of next is %p\t i is %d\n  size is: %d",
+						nodeList[i]->next,i,(Node*)( sizeof(nodeList) ) );
+
+/*
+	for (nodeList[i]; i<1000; nodeList[i]++) {
+		ret = strcmp(nodeList[i]->text,nodeList[i+1]->text);
+		fprintf(stderr,"\t Pointer of next is %p\t i is %d\n",nodeList[i]->next,i);
+	}
+
+	while (nodeList[i] != NULL){
+		if (nodeList[i+1] == NULL){
+			break;
+		} else {
+			ret = strcmp(nodeList[i]->text,nodeList[i+1]->text);
+			fprintf(stderr,"\t Pointer of next is %p\t i is %d\n",nodeList[i]->next,i);
+			if (ret > 0){
+				nodeList[i]->next=nodeList[i-1]->next;
+				fprintf(stderr,"Data is:%s \t%d, ret is > 0 pointer of next is %p\n",nodeList[i]->text,ret,nodeList[i]->next);
+			} else if (ret < 0){
+				fprintf(stderr,"Data is:%s \t%d, ret < 0 pointer of next is %p\n",nodeList[i]->text,ret,nodeList[i]->next);
+				nodeList[i]->next=nodeList[i+1]->next;
 			} else {
-				ret = strcmp(nodeList[i]->text,nodeList[i+1]->text);
-				fprintf(stderr,"%d\n",ret);
+				fprintf(stderr,"\t%d, ret is 0 => Equal\n", ret);
 			}
-			i+=1;
 		}
-			return rc;
+		i+=1;
+	}
+*/
+		return rc;
 
 }
+
