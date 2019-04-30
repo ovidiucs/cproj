@@ -50,7 +50,7 @@ int  readfile( FILE *fptr, char *fn ) {
 int main(int argc, char** argv){
 
 	int rc = 0;
-	//int ret = 0;
+	int ret = 0;
 	int i = 0;
 	FILE* fptr;
 	char* fname;
@@ -89,15 +89,21 @@ int main(int argc, char** argv){
 		}
 		numNode +=1;
 	}
-	fprintf(stderr,"\t Pointer of next is %p\t i is %d\n  size is: %d",
-						nodeList[i]->next,i,(Node*)( sizeof(nodeList) ) );
+	//fprintf(stderr,"\t Pointer of next is %p\t i is %d\n",
+	//					nodeList[i]->next,i);x`x`
 
-/*
-	for (nodeList[i]; i<1000; nodeList[i]++) {
-		ret = strcmp(nodeList[i]->text,nodeList[i+1]->text);
-		fprintf(stderr,"\t Pointer of next is %p\t i is %d\n",nodeList[i]->next,i);
+for (tempNode=head; tempNode!=NULL ; tempNode=tempNode->next) {
+	for (tempNode=head; tempNode!=NULL ; tempNode=tempNode->next) {
+		if (tempNode->next == NULL){
+			break;
+		} else {
+			ret = strcmp(tempNode->text,(tempNode->next->text));
+			fprintf(stderr,"\t Pointer of next is %p\t i is %d nad ret code is %d\n",(void *)tempNode->next,i,ret);
+		}
+		i+=1;
 	}
-
+}
+/*
 	while (nodeList[i] != NULL){
 		if (nodeList[i+1] == NULL){
 			break;
