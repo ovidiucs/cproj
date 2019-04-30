@@ -16,22 +16,46 @@ Node* tail = NULL;
 
 void saveline(char *data) {
 
+	int ret = 0;
+	Node* tempNode;
+	Node* prevNode;
 	// fprintf(stderr,"Entered saveline linked list.\n");
 
 	// Allocate a new node
 	Node* nodePointer;
 
+	
 	// Allocate memory - malloc return generic pointer -> cast Node* to malloc instead of generic one
 	nodePointer = (Node*) malloc (sizeof(Node) + strlen(data));
 	nodePointer->next = NULL;
+	
 
 	// Copy bytes to struct memeber 'text'
 	strcpy(nodePointer->text,data);
+	// Insert node in list in the right place in sorted order
+	
 	if (head == NULL) {
-		head = tail = nodePointer;
+		head = nodePointer;
+		
 	} else {
-		tail->next = nodePointer;
-		tail = nodePointer;
+		prevNode = NULL;
+		for (tempNode=head; tempNode!=NULL ; tempNode=tempNode->next){
+			ret = strcmp(nodePointer->text, tempNode->text);
+			if (ret <= 0) {
+				if (prevNode == NULL) {
+					head =  nodePointer;
+				} else {
+					prevNode->next = nodePointer;
+				}
+				nodePointer->next=tempNode;
+				//goto label;
+				return;
+			} 
+			prevNode = tempNode;
+		}
+		prevNode->next = nodePointer;
+//label:
+			
 	}
 
 
@@ -56,7 +80,7 @@ int main(int argc, char** argv){
 	char* fname;
 	int numNode = 0;
 	Node* tempNode;
-	Node* nodeList[1000];
+//	Node* nodeList[1000];
 
 	//nodeList = (Node*) malloc (sizeof(Node));
 
@@ -78,20 +102,22 @@ int main(int argc, char** argv){
 		fprintf(stderr,"Usage: %s text [file ...]\n", argv[0]);
 		rc = 0;
 	}
-
-	for (tempNode=head; tempNode!=NULL ; tempNode=tempNode->next){
-		//fprintf(stderr,"NOT NULL Node#: %s\n\n", tempNode[numNode]->text);
+	tempNode=head;
+	Node* prevNode;
+	
+	for (;;) {
 		fprintf(stderr,"Node#: %d, at mem. address: %p with sizeof line: %ld data is: %s",
 						numNode, (void *) tempNode, strlen(tempNode->text),tempNode->text);
-		//strcmp(tempNode->text,);
-		if (numNode < 1000) {
-		nodeList[numNode] = tempNode;
-		}
-		numNode +=1;
+		prevNode = tempNode->next;
+		free((void *) tempNode);
+		if (prevNode == NULL) {
+			break;
+		} 
+		tempNode = 
 	}
-	//fprintf(stderr,"\t Pointer of next is %p\t i is %d\n",
-	//					nodeList[i]->next,i);x`x`
+	
 
+/*
 for (tempNode=head; tempNode!=NULL ; tempNode=tempNode->next) {
 	for (tempNode=head; tempNode!=NULL ; tempNode=tempNode->next) {
 		if (tempNode->next == NULL){
@@ -103,7 +129,7 @@ for (tempNode=head; tempNode!=NULL ; tempNode=tempNode->next) {
 		i+=1;
 	}
 }
-/*
+
 	while (nodeList[i] != NULL){
 		if (nodeList[i+1] == NULL){
 			break;
