@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-//#include <unistd.h>
+#include <stddef.h>
 
 typedef struct Node {
 
@@ -14,24 +14,29 @@ typedef struct Node {
 
 } Node;
 
-Node* head;
-Node* tail;
+static Node* head;
+// Node* tail;
 
-void saveline(char *data) {
+static void saveline(char *data) {
 
+	// initialize return value, a temporary Node and a previous node
 	int ret = 0;
 	Node* tempNode;
 	Node* prevNode;
 
-	// Allocate a new node
+	// Inital node
 	Node* nodePointer;
 
-	// Allocate memory - malloc return generic pointer -> cast Node* to malloc instead of generic one
+	// Allocate memory - malloc returns a generic pointer.
+	// We then cast Node* such that malloc has a base type of Node instead of generic void*.
 	nodePointer = (Node*) malloc (sizeof(Node) + strlen(data));
+
+	// set nodePointer->next member to NULL
 	nodePointer->next = NULL;
 
 	// Copy bytes to struct memeber 'text'
 	strcpy(nodePointer->text,data);
+
 	// Insert node in list in the right place in sorted order
 
 	if (head == NULL) {
@@ -55,7 +60,7 @@ void saveline(char *data) {
 	}
 }
 
-int  readfile( FILE *fptr, char *fname ) {
+static int  readfile( FILE *fptr, char *fname ) {
 	char data[1000];
 	int rc = 0;
 
@@ -80,9 +85,9 @@ int main(int argc, char** argv){
 			fprintf(stderr,"Unable to open %s\n", fname);
 			rc = 1;
 		} else {
-			readfile(fptr, fname);
+			rc = readfile(fptr, fname);
 		}
-		fclose (fptr);
+		rc = fclose (fptr);
 	} else if (argc == 1){
 		fprintf(stderr, "Reading from stdin\n");
 		rc = readfile(stdin, NULL);
@@ -97,6 +102,7 @@ int main(int argc, char** argv){
 	for (;;) {
 		fprintf(stderr,"Node#: %d, at mem. address: %p with sizeof line: %d data is: %s",
 						numNode, (void *) tempNode, (int)strlen(tempNode->text),tempNode->text);
+		numNode += 1;
 		prevNode = tempNode->next;
 		free((void *) tempNode);
 		if (prevNode == NULL) {
