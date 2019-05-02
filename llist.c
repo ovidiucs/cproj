@@ -2,41 +2,40 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <unistd.h>
+//#include <unistd.h>
 
 typedef struct Node {
+
 	// store pointer address of next block of data - 8 bytes / 64 bit - 4 bytes / 32 bit arch
 	struct Node *next;
+
 	// dynamically resied for malloc uses
 	char text[1];
+
 } Node;
 
-Node* head = NULL;
-Node* tail = NULL;
+Node* head;
+Node* tail;
 
 void saveline(char *data) {
 
 	int ret = 0;
 	Node* tempNode;
 	Node* prevNode;
-	// fprintf(stderr,"Entered saveline linked list.\n");
 
 	// Allocate a new node
 	Node* nodePointer;
 
-	
 	// Allocate memory - malloc return generic pointer -> cast Node* to malloc instead of generic one
 	nodePointer = (Node*) malloc (sizeof(Node) + strlen(data));
 	nodePointer->next = NULL;
-	
 
 	// Copy bytes to struct memeber 'text'
 	strcpy(nodePointer->text,data);
 	// Insert node in list in the right place in sorted order
-	
+
 	if (head == NULL) {
 		head = nodePointer;
-		
 	} else {
 		prevNode = NULL;
 		for (tempNode=head; tempNode!=NULL ; tempNode=tempNode->next){
@@ -47,26 +46,20 @@ void saveline(char *data) {
 				} else {
 					prevNode->next = nodePointer;
 				}
-				nodePointer->next=tempNode;
-				//goto label;
+				  nodePointer->next=tempNode;
 				return;
-			} 
+			}
 			prevNode = tempNode;
 		}
 		prevNode->next = nodePointer;
-//label:
-			
 	}
-
-
 }
 
-int  readfile( FILE *fptr, char *fn ) {
+int  readfile( FILE *fptr, char *fname ) {
 	char data[1000];
 	int rc = 0;
 
-	while(fgets (data,sizeof(data),fptr) != NULL) {
-	//	fprintf(stderr,"Data is: %s", data);
+	while(fgets (data,(int)sizeof(data),fptr) != NULL) {
 		saveline(data);
 	}
 	return rc;
@@ -74,15 +67,10 @@ int  readfile( FILE *fptr, char *fn ) {
 int main(int argc, char** argv){
 
 	int rc = 0;
-	int ret = 0;
-	int i = 0;
 	FILE* fptr;
 	char* fname;
 	int numNode = 0;
 	Node* tempNode;
-//	Node* nodeList[1000];
-
-	//nodeList = (Node*) malloc (sizeof(Node));
 
 	if(argc == 2){
 		fprintf(stderr,"Filename provided is: %s\n", argv[1]);
@@ -103,52 +91,20 @@ int main(int argc, char** argv){
 		rc = 0;
 	}
 	tempNode=head;
+
 	Node* prevNode;
-	
+
 	for (;;) {
-		fprintf(stderr,"Node#: %d, at mem. address: %p with sizeof line: %ld data is: %s",
-						numNode, (void *) tempNode, strlen(tempNode->text),tempNode->text);
+		fprintf(stderr,"Node#: %d, at mem. address: %p with sizeof line: %d data is: %s",
+						numNode, (void *) tempNode, (int)strlen(tempNode->text),tempNode->text);
 		prevNode = tempNode->next;
 		free((void *) tempNode);
 		if (prevNode == NULL) {
 			break;
-		} 
-		tempNode = 
-	}
-	
-
-/*
-for (tempNode=head; tempNode!=NULL ; tempNode=tempNode->next) {
-	for (tempNode=head; tempNode!=NULL ; tempNode=tempNode->next) {
-		if (tempNode->next == NULL){
-			break;
 		} else {
-			ret = strcmp(tempNode->text,(tempNode->next->text));
-			fprintf(stderr,"\t Pointer of next is %p\t i is %d nad ret code is %d\n",(void *)tempNode->next,i,ret);
+			tempNode = prevNode;
 		}
-		i+=1;
 	}
-}
-
-	while (nodeList[i] != NULL){
-		if (nodeList[i+1] == NULL){
-			break;
-		} else {
-			ret = strcmp(nodeList[i]->text,nodeList[i+1]->text);
-			fprintf(stderr,"\t Pointer of next is %p\t i is %d\n",nodeList[i]->next,i);
-			if (ret > 0){
-				nodeList[i]->next=nodeList[i-1]->next;
-				fprintf(stderr,"Data is:%s \t%d, ret is > 0 pointer of next is %p\n",nodeList[i]->text,ret,nodeList[i]->next);
-			} else if (ret < 0){
-				fprintf(stderr,"Data is:%s \t%d, ret < 0 pointer of next is %p\n",nodeList[i]->text,ret,nodeList[i]->next);
-				nodeList[i]->next=nodeList[i+1]->next;
-			} else {
-				fprintf(stderr,"\t%d, ret is 0 => Equal\n", ret);
-			}
-		}
-		i+=1;
-	}
-*/
 		return rc;
 
 }
