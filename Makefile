@@ -5,16 +5,16 @@ BinName = llist
 Libs = -lc
 
 # Options and arguments to the C compiler.
-CC = cc
-CFLAGS = -g -funsigned-char -W -Wall -Wunused\
+CC = gcc
+CFLAGS = -g -funsigned-char -W -Wall -ggdb3 -Wunused\
  -Wno-comment -Wno-missing-field-initializers -Wno-missing-braces -Wno-parentheses\
  -Wno-pointer-sign -Wno-unused-parameter -Wno-unused-result $(COPTS)\
- -O2
+ -Og
 
 # Targets.
 $(BinName): $(BinName).o
 	$(CC) $(LDFLAGS) $? $(Libs) -o $(BinName)
-	strip $(BinName)
+#strip	$(BinName)
 
 $(BinName).o: $(BinName).c
 	$(CC) $(CFLAGS) -c -o $(BinName).o $?
