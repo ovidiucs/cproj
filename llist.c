@@ -23,16 +23,18 @@ static void saveline(char *data) {
 	int ret = 0;
 	Node* tempNode;
 	Node* prevNode;
-
+	fprintf(stderr, "Function called\n");
 	// Inital node
 	Node* nodePointer;
 
 	// Allocate memory - malloc returns a generic pointer.
 	// We then cast Node* such that malloc has a base type of Node instead of generic void*.
 	nodePointer = (Node*) malloc (sizeof(Node) + strlen(data));
+	fprintf(stderr, "Malloc called on nodePointer %p\n", nodePointer);
 
 	// set nodePointer->next member to NULL
 	nodePointer->next = NULL;
+	fprintf(stderr, "Set nodePointer->next to %p\n", nodePointer);
 
 	// Copy bytes to struct memeber 'text'
 	strcpy(nodePointer->text,data);
@@ -42,6 +44,7 @@ static void saveline(char *data) {
 	// 1. If head Node is NULL then set head to nodePointer;  - save nodePointer address
 	if (head == NULL) {
 		head = nodePointer;
+				fprintf(stderr, "Head is null so set it to: %p \n",head );
 	// 2. Otherwise - head already is set. Now set previous Node to NULL to keep track of
 	// previously traversed nodes. - temp variable.
 	} else {
@@ -49,6 +52,8 @@ static void saveline(char *data) {
 	// 3. assign head to temp node and while it's not null then assign the
 	// address of the next element in the list to temp node.
 		for (tempNode=head; tempNode!=NULL ; tempNode=tempNode->next){
+		fprintf(stderr, "Head is: %p\t tempNode is: %p\t tempNode->next is: %p\n",
+				head, tempNode, tempNode->next );
 	// 4. compare string pointed to by nodePointer and tempNode
 			ret = strcmp(nodePointer->text, tempNode->text);
 	// 5. if the comparsion returns less than or equal to 0
@@ -56,23 +61,31 @@ static void saveline(char *data) {
 	// 5a. if the previous node is NULL
 				if (prevNode == NULL) {
 	// 5b. then set head to nodePointer
+						fprintf(stderr, "Head is: %p\n ", head);
+
 					head = nodePointer;
 				} else {
 	// 5c. otherwise set the prevNode->next to nodePointer
 					prevNode->next = nodePointer;
+					fprintf(stderr, "\nInner PrevNode->next is: %p\n ", prevNode->next);
 				}
 				// end if prevNode == NULL
 	// 6.
 				  nodePointer->next=tempNode;
+				  fprintf(stderr, "NodePointer->next is: %p\n ", nodePointer->next);
 				return;
 			}
 			// end if ret <= 0
-			prevNode = tempNode;
+			prevNode = tempNode;	
+			fprintf(stderr, "	PrevNode is: %p\n ", prevNode);
 		 }
 		 // end for loop
 	prevNode->next = nodePointer;
+	fprintf(stderr, "PrevNode->next is: %p\n ", prevNode->next);
 	}
 	// emd else
+	fprintf(stderr, "End of function\n");
+	fprintf(stderr, "____________________\n");
 }
 
 static int  readfile( FILE *fptr, char *fname ) {
