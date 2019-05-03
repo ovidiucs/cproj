@@ -39,25 +39,40 @@ static void saveline(char *data) {
 
 	// Insert node in list in the right place in sorted order
 
+	// 1. If head Node is NULL then set head to nodePointer;  - save nodePointer address
 	if (head == NULL) {
 		head = nodePointer;
+	// 2. Otherwise - head already is set. Now set previous Node to NULL to keep track of
+	// previously traversed nodes. - temp variable.
 	} else {
-		prevNode = NULL;
+	prevNode = NULL;
+	// 3. assign head to temp node and while it's not null then assign the
+	// address of the next element in the list to temp node.
 		for (tempNode=head; tempNode!=NULL ; tempNode=tempNode->next){
+	// 4. compare string pointed to by nodePointer and tempNode
 			ret = strcmp(nodePointer->text, tempNode->text);
+	// 5. if the comparsion returns less than or equal to 0
 			if (ret <= 0) {
+	// 5a. if the previous node is NULL
 				if (prevNode == NULL) {
-					head =  nodePointer;
+	// 5b. then set head to nodePointer
+					head = nodePointer;
 				} else {
+	// 5c. otherwise set the prevNode->next to nodePointer
 					prevNode->next = nodePointer;
 				}
+				// end if prevNode == NULL
+	// 6.
 				  nodePointer->next=tempNode;
 				return;
 			}
+			// end if ret <= 0
 			prevNode = tempNode;
-		}
-		prevNode->next = nodePointer;
+		 }
+		 // end for loop
+	prevNode->next = nodePointer;
 	}
+	// emd else
 }
 
 static int  readfile( FILE *fptr, char *fname ) {

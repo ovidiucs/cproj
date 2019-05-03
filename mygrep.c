@@ -4,7 +4,7 @@
 #include <errno.h>
 #include <unistd.h>
 
-int readfile(char *pat, FILE *fptr, char *fn ) {
+static int readfile(char *pat, FILE *fptr, char *fn ) {
 	char data[1000];
 	char* s2 = pat;
 
