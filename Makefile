@@ -33,7 +33,6 @@ CFLAGS = -g \
 -Wstrict-overflow=5 \
 -Wswitch-default \
 -Wundef \
--Werror \
 -Wno-unused \
 
 

@@ -44,7 +44,7 @@ static void saveline(char *data) {
 	}
 }
 
-static int  readfile( FILE *fptr, char *fname ) {
+static int readfile( FILE *fptr, char *fname ) {
 
 	char data[1000];
 	int counter = 0;
@@ -58,9 +58,13 @@ static int  readfile( FILE *fptr, char *fname ) {
 
 static int compar (const void *a,  const void *b) {
 		//https://cboard.cprogramming.com/c-programming/64520-sorting-linked-list-qsort.html#post458752
-    return strcmp(((Node*)a)->text, ((Node*)b)->text);
-}
-
+		
+    int i = strcmp( (**( const Node**)a).text, (*( const Node**)b)->text );
+    fprintf(stderr,"%d and string A %p and string B %p\n", i,a,b);
+    return i;
+} 
+	// Function main executes the main body of the program. Arguments: argc and argv. Function  main executes the main body of the program.  Arguments: argc and argv.  Function main
+	 // executes the main body of the program.  Arguments: argc and argv.
 int main(int argc, char** argv){
 
 	int rc = 0;
@@ -99,20 +103,22 @@ int main(int argc, char** argv){
 
 		numNode += 1;
 	}
-				int i = 0;
+		int i = 0;
+		qsort ( (void *) arrayNode,
+		(size_t) counter,
+		sizeof(Node *),
+		compar);
 
-		for (i=0;i<10;i++) {
-		fprintf(stderr,"\nArray loop: %d memory address of text %p with string (char *) %s",i, arrayNode[i]->text,arrayNode[i]->text);
-					qsort ( (void *)	arrayNode,
-					10,
-					sizeof(arrayNode)/sizeof(arrayNode[i]),
-					compar);
+		for (i=0;i<counter;i++) {
+		fprintf(stderr,"\nArray element: %d memory address of text %p with string %s sizeof %ld",
+							i, arrayNode[i]->text,arrayNode[i]->text, sizeof(Node*));
 	}
-		for (i=0;i<10;i++) {
-		fprintf(stderr,"\tArray loop: %d memory address of text %p with string (char *) %s\n",i, arrayNode[i]->text,arrayNode[i]->text);
-	}
+//		for (i=0;i<10;i++) {
+//		fprintf(stderr,"\tArray loop: %d memory address of text %p with string (char *) %s\n",i, arrayNode[i]->text,arrayNode[i]->text);
+//	}
 		return rc;
 
 	}
+	
 //}
 
