@@ -4,13 +4,18 @@
 #include <errno.h>
 #include <stddef.h>
 
+// A binary tree is composed of
+// root node;
+// -- parent
+// -- nodes,
+// -- or leaves,
 
-typedef struct bst {
-	struct bst *bleft;
-	struct bst *bright;
-	char *btext;
+typedef struct bstNode {
+	struct bstNode *bleft;
+	struct bstNode *bright;
+	char *bstext;
 
-} bst;
+} bstNode;
 
 typedef struct Node {
 
@@ -24,6 +29,8 @@ typedef struct Node {
 
 static Node* head;
 static Node* tail;
+// Inital node - root
+static bstNode *root;
 
 static void saveline(char *data) {
 
@@ -52,34 +59,40 @@ static void saveline(char *data) {
 	}
 }
 
+//static insertNode(bstNode* root, char *data){
+//
+//}
+
 static void bstSaveLine(char *data) {
 
-	// initialize return value, a temporary Node and a previous node
+	root = NULL;
 	int result = 0;
-	int counter = 0;
-
-	// Inital node
-	bst* rootBstPointer;
 
 	// Allocate memory - malloc returns a generic pointer.
-	rootBstPointer = (bst*) malloc (sizeof(bst));
-	rootBstPointer->btext = (char*) malloc(sizeof(data));
+	root = (bstNode*) malloc (sizeof(bstNode));
+	root->bstext = (char*) malloc(sizeof(data));
+		fprintf(stderr,"Malloc for root is: %p, sizeof root node is %d\n", root,(sizeof(bstNode)));
+   	fprintf(stderr,"Malloc for char* is: %p, sizeof char*  is %d\n", root->bstext,(sizeof(data)));
 
 	// set nodePointer->next member to NULL
-	rootBstPointer->bleft = NULL;
-	rootBstPointer->bright = NULL;
+	root->bleft = NULL;
+	root->bright = NULL;
 
 
 	// Copy bytes to struct memeber 'text'
-	result = strcmp(rootBstPointer->data);
+	result = strcmp(data,root->bstext);
 
+	fprintf(stderr,"Result is: %d - String is: %s Data is: %s\n", result,root->bstext, data);
 
 	if (result == 0) {
-		 rootBstPointer = rootBstPointer;
+		// root = root;
+		fprintf(stderr,"Result == %d ' ' %s\n", result,root->bstext);
 	} else if (result < 0 ) {
-		return rootBstPointer->bleft;
+				fprintf(stderr,"Result < 0 so: %d ' ' %s\n", result,root->bstext);
+		// return root->bleft;
 	} else {
-		return rootBstPointer->bright;
+		fprintf(stderr,"Result > %d ' ' %s\n", result,root->bstext);
+		// return root->bright;
 	}
 
 }
@@ -90,7 +103,8 @@ static int readfile( FILE *fptr, char *fname ) {
 	int counter = 0;
 
 	while(fgets (data,(int)sizeof(data),fptr) != NULL) {
-		saveline(data);
+		//saveline(data);
+		bstSaveLine(data);
 		counter +=1;
 	}
 	return counter;
@@ -132,6 +146,7 @@ int main(int argc, char** argv){
 		fprintf(stderr,"Usage: %s text [file ...]\n", argv[0]);
 		rc = 0;
 	}
+/*
 	tempNode=head;
 	Node* arrayNode[counter];
 	Node* prevNode;
@@ -150,12 +165,13 @@ int main(int argc, char** argv){
 		compar);
 
 		for (i=0;i<counter;i++) {
-		fprintf(stderr,"\nArray element: %d memory address of text %p with string %s sizeof %ld",
-							i, arrayNode[i]->text,arrayNode[i]->text, sizeof(Node*));
+		fprintf(stderr,"Array element: %d memory address of text %p with string %s",
+							i, arrayNode[i]->text,arrayNode[i]->text);
 	}
 //		for (i=0;i<10;i++) {
 //		fprintf(stderr,"\tArray loop: %d memory address of text %p with string (char *) %s\n",i, arrayNode[i]->text,arrayNode[i]->text);
 //	}
+*/
 		return rc;
 
 	}
