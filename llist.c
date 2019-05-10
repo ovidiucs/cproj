@@ -31,7 +31,7 @@ static Node* head;
 static Node* tail;
 
 // Inital node - root
-static bstNode *root;
+static bstNode* root = NULL;
 
 static void saveline(char *data) {
 
@@ -60,50 +60,49 @@ static void saveline(char *data) {
 	}
 }
 
+static void insertBstNode (bstNode** nodeP, bstNode* node)
+{
+	
+	int result;
+	if (*nodeP == NULL) {
+		*nodeP = node;
+	} else {
+		result = strcmp(node->bstext,(*nodeP)->bstext);
+		if (result <= 0) {
+			insertBstNode( &( (*nodeP)->bleft), node);
+		} else {
+			insertBstNode( &( (*nodeP)->bright), node);
+		}
+	}
+}
 
 
 static void bstSaveLine(char *data) {
 
-	//root = NULL;
 	bstNode* bstPointer;
-	int result = 0;
+	
 
 	// Allocate memory - malloc returns a generic pointer.
 	bstPointer = (bstNode*) malloc (sizeof(bstNode));
-	bstPointer->bstext = (char*) malloc(strlen(data));
-		fprintf(stderr,"Malloc for root is: %p, sizeof root node is %ld\n", root,(sizeof(bstNode)));
+	bstPointer->bstext = (char*) malloc(strlen(data)+1);
+	fprintf(stderr,"Malloc for root is: %p, sizeof root node is %ld\n", bstPointer,(sizeof(*bstPointer)+strlen(data)));
    	//fprintf(stderr,"Malloc for char* is: %p, sizeof char*  is %ld\n", root->bstext,(strlen(data)));
 
 	// set nodePointer->next member to NULL
 	bstPointer->bleft = NULL;
 	bstPointer->bright = NULL;
-  strcpy(bstPointer->bstext,data);
-
-
-	// Copy bytes to struct memeber 'text'
+        strcpy(bstPointer->bstext,data);
+        
+#if 0
+	// Copy bytes to struct memeber 'bstext'
 	result = strcmp(data,bstPointer->bstext);
 
 	fprintf(stderr,"Result is: %d \nString is: %sData is: %s\n", result,root->bstext, data);
-
-
+#endif
+	insertBstNode(&root,bstPointer);
 
 }
 
-void insertBstNode (bstNode**, bstNode*)
-
-{
-
-		if (result == 0) {
-		root = bstPointer;
-		fprintf(stderr,"Result == %d ' ' %s\n", result,root->bstext);
-	} else if (result < 0 ) {
-				fprintf(stderr,"Result < 0 so: %d ' ' %s\n", result,root->bstext);
-		// return root->bleft;
-	} else {
-		fprintf(stderr,"Result > %d ' ' %s\n", result,root->bstext);
-		// return root->bright;
-	}
-}
 static int readfile( FILE *fptr, char *fname ) {
 
 	char data[1000];
@@ -156,14 +155,20 @@ int main(int argc, char** argv){
 /*
 	tempNode=head;
 	Node* arrayNode[counter];
-	Node* prevNode;
+	Node **nodep;
 
+	nodep = arrayNode;	
 	for (tempNode=head;tempNode!=NULL;tempNode=tempNode->next) {
 		fprintf(stderr,"Node#: %d, allocated mem. address: %p with strlen of text: %d data is: %s",
 						numNode, (Node *) tempNode, (int)strlen(tempNode->text),tempNode->text);
+#if 0
 		arrayNode[numNode] = tempNode;
-
 		numNode += 1;
+#else
+		//*(nodep+5)=tempNode;
+		//nodep[5] = tempNode;
+		*nodep++ = tempNode;
+#endif
 	}
 		int i = 0;
 		qsort ( (void *) arrayNode,
