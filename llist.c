@@ -29,6 +29,7 @@ typedef struct Node {
 
 static Node* head;
 static Node* tail;
+
 // Inital node - root
 static bstNode *root;
 
@@ -59,33 +60,41 @@ static void saveline(char *data) {
 	}
 }
 
-//static insertNode(bstNode* root, char *data){
-//
-//}
+
 
 static void bstSaveLine(char *data) {
 
-	root = NULL;
+	//root = NULL;
+	bstNode* bstPointer;
 	int result = 0;
 
 	// Allocate memory - malloc returns a generic pointer.
-	root = (bstNode*) malloc (sizeof(bstNode));
-	root->bstext = (char*) malloc(sizeof(data));
-		fprintf(stderr,"Malloc for root is: %p, sizeof root node is %d\n", root,(sizeof(bstNode)));
-   	fprintf(stderr,"Malloc for char* is: %p, sizeof char*  is %d\n", root->bstext,(sizeof(data)));
+	bstPointer = (bstNode*) malloc (sizeof(bstNode));
+	bstPointer->bstext = (char*) malloc(strlen(data));
+		fprintf(stderr,"Malloc for root is: %p, sizeof root node is %ld\n", root,(sizeof(bstNode)));
+   	//fprintf(stderr,"Malloc for char* is: %p, sizeof char*  is %ld\n", root->bstext,(strlen(data)));
 
 	// set nodePointer->next member to NULL
-	root->bleft = NULL;
-	root->bright = NULL;
+	bstPointer->bleft = NULL;
+	bstPointer->bright = NULL;
+  strcpy(bstPointer->bstext,data);
 
 
 	// Copy bytes to struct memeber 'text'
-	result = strcmp(data,root->bstext);
+	result = strcmp(data,bstPointer->bstext);
 
-	fprintf(stderr,"Result is: %d - String is: %s Data is: %s\n", result,root->bstext, data);
+	fprintf(stderr,"Result is: %d \nString is: %sData is: %s\n", result,root->bstext, data);
 
-	if (result == 0) {
-		// root = root;
+
+
+}
+
+void insertBstNode (bstNode**, bstNode*)
+
+{
+
+		if (result == 0) {
+		root = bstPointer;
 		fprintf(stderr,"Result == %d ' ' %s\n", result,root->bstext);
 	} else if (result < 0 ) {
 				fprintf(stderr,"Result < 0 so: %d ' ' %s\n", result,root->bstext);
@@ -94,9 +103,7 @@ static void bstSaveLine(char *data) {
 		fprintf(stderr,"Result > %d ' ' %s\n", result,root->bstext);
 		// return root->bright;
 	}
-
 }
-
 static int readfile( FILE *fptr, char *fname ) {
 
 	char data[1000];
