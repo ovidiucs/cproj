@@ -89,7 +89,7 @@ static void bstSaveLine(char *data) {
 
 }
 
-void insertBstNode (bstNode**, bstNode*)
+void insertBstNode (bstNode , bstNode*)
 
 {
 
