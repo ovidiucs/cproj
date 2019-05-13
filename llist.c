@@ -60,8 +60,7 @@ static void saveline(char *data) {
 	}
 }
 
-static void insertBstNode (bstNode** nodeP, bstNode* node)
-{
+static void insertBstNode (bstNode **nodeP, bstNode *node) {
 
 	int result;
 	if (*nodeP == NULL) {
@@ -74,18 +73,29 @@ static void insertBstNode (bstNode** nodeP, bstNode* node)
 			insertBstNode( &( (*nodeP)->bright), node);
 		}
 	}
+
 }
 
+static void printBstNode(bstNode *node){
+
+		if (node == NULL)
+			return;
+		printBstNode(root->bleft);
+		fprintf(stderr, "On main node. Data is: %s\n", node->bstext);
+		printBstNode(root->bright);
+
+}
 
 static void bstSaveLine(char *data) {
 
-	bstNode* bstPointer;
+	bstNode *bstPointer;
 
 
 	// Allocate memory - malloc returns a generic pointer.
 	bstPointer = (bstNode*) malloc (sizeof(bstNode));
 	bstPointer->bstext = (char*) malloc(strlen(data)+1);
-	fprintf(stderr,"Malloc for root is: %p, sizeof root node is %ld\n", bstPointer,(sizeof(*bstPointer)+strlen(data)));
+
+	fprintf(stderr,"Malloc for bstPointer is: %p, sizeof root node is %ld\n", bstPointer,(sizeof(*bstPointer)+strlen(data)));
    	//fprintf(stderr,"Malloc for char* is: %p, sizeof char*  is %ld\n", root->bstext,(strlen(data)));
 
 	// set nodePointer->next member to NULL
@@ -123,8 +133,7 @@ static int compar (const void *a,  const void *b) {
     fprintf(stderr,"%d and string A %p and string B %p\n", i,a,b);
     return i;
 }
-	// Function main executes the main body of the program. Arguments: argc and argv. Function  main executes the main body of the program.  Arguments: argc and argv.  Function main
-	 // executes the main body of the program.  Arguments: argc and argv.
+
 int main(int argc, char** argv){
 
 	int rc = 0;
@@ -152,6 +161,8 @@ int main(int argc, char** argv){
 		fprintf(stderr,"Usage: %s text [file ...]\n", argv[0]);
 		rc = 0;
 	}
+	printBstNode(root);
+
 /*
 	tempNode=head;
 	Node* arrayNode[counter];
