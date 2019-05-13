@@ -59,7 +59,11 @@ static void saveline(char *data) {
 }
 // bstSaveline
 static void bstSaveline(char *data){
-	
+	// initial node
+    bst* initNode;
+
+    // allocate memory for node
+    initNode = (bst*) malloc( sizeof(bst)  );
 }
 static int readfile( FILE *fptr, char *fname ) {
 
