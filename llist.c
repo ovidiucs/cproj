@@ -76,13 +76,13 @@ static void insertBstNode (bstNode **nodeP, bstNode *node) {
 
 }
 
-static void printBstNode(bstNode *node){
+static void printBstNode(bstNode **node){
 
-		if (node == NULL)
+		if ((*node) == NULL)
 			return;
-		printBstNode(root->bleft);
-		fprintf(stderr, "On main node. Data is: %s\n", node->bstext);
-		printBstNode(root->bright);
+		printBstNode(&((*node)->bleft));
+		fprintf(stderr, "On node %p. Data is: %s", node,(*node)->bstext);
+		printBstNode(&((*node)->bright));
 
 }
 
@@ -95,7 +95,8 @@ static void bstSaveLine(char *data) {
 	bstPointer = (bstNode*) malloc (sizeof(bstNode));
 	bstPointer->bstext = (char*) malloc(strlen(data)+1);
 
-	fprintf(stderr,"Malloc for bstPointer is: %p, sizeof root node is %ld\n", bstPointer,(sizeof(*bstPointer)+strlen(data)));
+	fprintf(stderr,"Malloc for bstPointer is: %p, sizeof root node is %ld data is: %s",
+		bstPointer,(sizeof(*bstPointer)+strlen(data)),data);
    	//fprintf(stderr,"Malloc for char* is: %p, sizeof char*  is %ld\n", root->bstext,(strlen(data)));
 
 	// set nodePointer->next member to NULL
@@ -161,7 +162,7 @@ int main(int argc, char** argv){
 		fprintf(stderr,"Usage: %s text [file ...]\n", argv[0]);
 		rc = 0;
 	}
-	printBstNode(root);
+	printBstNode(&root);
 
 /*
 	tempNode=head;
