@@ -76,13 +76,13 @@ static void insertBstNode (bstNode **nodeP, bstNode *node) {
 
 }
 
-static void printBstNode(bstNode **node){
+static void printBstNode(bstNode *node){
 
-		if ((*node) == NULL)
+		if (node == NULL)
 			return;
-		printBstNode(&((*node)->bleft));
-		fprintf(stderr, "On node %p. Data is: %s", node,(*node)->bstext);
-		printBstNode(&((*node)->bright));
+		printBstNode( node->bleft );
+		fprintf(stderr, "On node %p. Data is: %s", node,node->bstext);
+		printBstNode( node->bright);
 
 }
 
@@ -162,7 +162,7 @@ int main(int argc, char** argv){
 		fprintf(stderr,"Usage: %s text [file ...]\n", argv[0]);
 		rc = 0;
 	}
-	printBstNode(&root);
+	printBstNode(root);
 
 /*
 	tempNode=head;
