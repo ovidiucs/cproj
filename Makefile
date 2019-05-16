@@ -31,6 +31,7 @@ CFLAGS = -g \
 -Wshadow \
 -Wsign-conversion \
 -Wstrict-overflow=5 \
+-Wstrict-prototypes \
 -Wswitch-default \
 -Wundef \
 -Wno-unused \
