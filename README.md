@@ -1,0 +1,11 @@
+http://scc-forge.lancaster.ac.uk/open/char/debug/assert
+https://easyprog.online/blog/sort_par.html
+http://www.jera.com/techinfo/jtns/jtn002.html#Source_Code
+https://gcc.gnu.org/onlinedocs/cpp/
+http://users.cs.cf.ac.uk/Dave.Marshall/C/
+http://www.jera.com/techinfo/jtns/jtn002.html#Source_Code
+http://users.cs.cf.ac.uk/Dave.Marshall/C/
+https://hci.uni-hannover.de/files/prog1script/script.html
+http://dunkels.com/adam/pt/index.html
+http://bluefox.engineering/object-oriented-programming-in-c-with-examples/
+http://github.com/josuemnb/Run
