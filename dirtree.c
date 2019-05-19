@@ -2,22 +2,32 @@
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <dirent.h>
+#include <string.h>
 
 static void dirPrint(char *dirpath, int indentLevel) {
 	// read directory entries
+
 	DIR *dirptr;
-	dirptr = opendir(dirpath);
 	struct dirent *ent;
-	if (dirptr != 0)
+
+	if ( ( dirptr = opendir(dirpath) ) != NULL)
 		perror(NULL);
 	// header print
 	fprintf(stdout,"Directory tree of %s\n-----------------------\n", dirpath);
 	// for each directory entry
-	while ( (ent = readdir(dirptr) != NULL ) ) {
-	fprintf(stdout,"%s\n",readdir(dirptr)->d_name);
+	while ( ( ent = readdir(dirptr) ) != NULL )  {
+
+	// fprintf(stdout,"%s\n",readdir(dirptr)->d_name)
+	if (ent->d_type == 4) {
+		if ( strcmp(".", ent->d_name) == 0 || strcmp("..",ent->d_name) == 0) {
+			continue;
+		}
+		dirPrint(ent->d_name,2);
+		fprintf(stdout,"| %s \n",ent->d_name);
 		// print file to stdout
 			// if file is a directory increase indentation (add space)
 			// rerund same function with argument now as current directory
+	}
 		}
 	closedir(dirptr);
 }
