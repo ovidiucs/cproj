@@ -9,26 +9,38 @@ static void dirPrint(char *dirpath, int indentLevel) {
 
 	DIR *dirptr;
 	struct dirent *ent;
-
-	if ( ( dirptr = opendir(dirpath) ) != NULL)
-		perror(NULL);
+	
+	if ( ( dirptr = opendir(dirpath) ) == NULL) {
+		perror(dirpath);
+		exit(1);
+	}
 	// header print
 	fprintf(stdout,"Directory tree of %s\n-----------------------\n", dirpath);
 	// for each directory entry
 	while ( ( ent = readdir(dirptr) ) != NULL )  {
 
-	// fprintf(stdout,"%s\n",readdir(dirptr)->d_name)
-	if (ent->d_type == 4) {
-		if ( strcmp(".", ent->d_name) == 0 || strcmp("..",ent->d_name) == 0) {
-			continue;
+	 	// fprintf(stdout,"%s\n",readdir(dirptr)->d_name)
+		if (ent->d_type == DT_DIR) {
+			if ( strcmp(".", ent->d_name) == 0 || strcmp("..",ent->d_name) == 0) {
+				continue;
+			}
+			// length of current directory +1 for '/' + strlen of dir entry + /0
+			char tempDir[strlen(dirpath)+1+strlen(ent->d_name)+1];
+			
+			sprintf(tempDir, "%s/%s", dirpath,ent->d_name);	
+			dirPrint(tempDir,indentLevel+1);
+			
 		}
-		dirPrint(ent->d_name,2);
+		
+		for (int i = indentLevel; i >	 0 ; i--) {
+			fputs("..", stdout);
+		}
 		fprintf(stdout,"| %s \n",ent->d_name);
 		// print file to stdout
 			// if file is a directory increase indentation (add space)
 			// rerund same function with argument now as current directory
+	
 	}
-		}
 	closedir(dirptr);
 }
 
@@ -53,7 +65,7 @@ int main (int argc, char **argv) {
 			if ( fstat.st_mode & S_IFDIR ) {
 				fprintf(stderr, "This is a directory\n");
 				fprintf(stderr, "Calling opendir\n");
-				dirPrint(argv[1],1);
+				dirPrint(argv[1],0);
 		}
 
 
