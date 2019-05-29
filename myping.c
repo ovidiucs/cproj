@@ -26,15 +26,21 @@ void testFunc(const char *host){
 
 	struct addrinfo *pAddrinfo;
 	
-	// 3. Call the function getaddrinfo , print
+	// 3. CALL THE function getaddrinfo , print
 	// returned values and quit 
 
-	int retValue = getaddrinfo(host, "icmp", &hints,&pAddrinfo);
+	int retValue = getaddrinfo(host, NULL, NULL,&pAddrinfo);
 	if (retValue != 0) {
 		fprintf(stderr,"Error from getaddrinfo %s\n",gai_strerror(retValue));
 		exit(1);
 	} else {		
-	   fprintf(stdout,"Return Value is: %d", retValue);
+	   fprintf(stdout,"Return Value is: %d\n", retValue);
+	   while (pAddrinfo != NULL) {
+	   	fprintf(stdout, "Flags %x, socktype %d, protocol %d, address length %d, canonical name %s socket data %s\n",
+				  pAddrinfo->ai_flags, pAddrinfo->ai_socktype, pAddrinfo->ai_protocol, pAddrinfo->ai_addrlen,
+	   			  pAddrinfo->ai_canonname, pAddrinfo->ai_addr->sa_data);
+	   	pAddrinfo = pAddrinfo->ai_next;
+	   }
 	}
 }
 
