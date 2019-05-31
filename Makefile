@@ -1,7 +1,7 @@
 # Unix makefile for a C program.  Set BinName to program name.
 
 # Definitions.
-BinName = dirtree
+BinName = mycat
 Libs = -lc
 
 # Options and arguments to the C compiler.
