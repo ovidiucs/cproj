@@ -6,12 +6,17 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <cmocka.h>
+
 
 //
 #ifndef BUF_SIZE
 #define BUF_SIZE 1024
 #endif
 
+static void null_test_success(void **state) {
+    (void) state;
+}
 static void readLn(char *fn){
         // open will set this to whatever FD is needed
         int inputFd;
@@ -21,7 +26,7 @@ static void readLn(char *fn){
 
         // how many bytes are read are stored here ; 0 is EOF
         ssize_t bufread = 0;
-	
+
         // store buffer into an array of size BUF_SIZE
         char buf[BUF_SIZE];
 
@@ -37,29 +42,29 @@ static void readLn(char *fn){
 		}
         }
 
-        
+
         // C) the file position will advance by the number of bytes
         // read by read() it is not an error if this number is smaller
         // then the bytes requested
         // arguments - file descriptor, void * to buffer, size_t count)
-        
+
         for (;;) {
-        	
+
 		if( (bufread = read(inputFd,buf,BUF_SIZE) ) < 0) {
 			perror("read() failed");
 			exit(1);
 		} else {
 		   if (bufread == 0)
 			break;
-		}	
+		}
         // write up to bytes from the buffer to the file descriptor
         // returns number of bytes written.
-		
+
            if (write(STDOUT_FILENO,buf,(size_t) bufread) != bufread ) {
            	perror("write() failed");
            	exit(1);
            }
-		
+
         }
 }
 
@@ -73,7 +78,7 @@ int main(int argc, char** argv) {
     // if program is invoked with -h
     // printussage and quit
     // otherwise assume all arguments are filenames
- 
+
     if (argc == 1 ) {
 	fprintf(stderr, "reading from stdin\n");
         readLn(NULL);
@@ -81,8 +86,8 @@ int main(int argc, char** argv) {
         	fprintf(stderr,"Usage: %s [filename]\n",argv[0]);
     else {
 	char **argvPtr = argv + argc;
-    
-    	for ( ++argv ; argv < argvPtr ; argv++ ) {  
+
+    	for ( ++argv ; argv < argvPtr ; argv++ ) {
         	fprintf(stderr, "Showing file: %s\n", *argv);
         	readLn(*argv);
     	}

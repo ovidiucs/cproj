@@ -1,11 +1,7 @@
 # Unix makefile for a C program.  Set BinName to program name.
 
 # Definitions.
-<<<<<<< HEAD
-BinName = myping
-=======
 BinName = mycat
->>>>>>> homework
 Libs = -lc
 
 # Options and arguments to the C compiler.
