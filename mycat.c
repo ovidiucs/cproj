@@ -6,6 +6,11 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
+
+#include <stdarg.h>
+#include <stddef.h>
+#include <setjmp.h>
+
 #include <cmocka.h>
 
 
@@ -15,8 +20,9 @@
 #endif
 
 static void null_test_success(void **state) {
-    (void) state;
+       (void) state; /* unused */
 }
+
 static void readLn(char *fn){
         // open will set this to whatever FD is needed
         int inputFd;
