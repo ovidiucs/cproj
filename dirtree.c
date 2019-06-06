@@ -13,7 +13,7 @@ static void dirPrint(char *dirpath, int indentLevel) {
 	if ( ( dirptr = opendir(dirpath) ) == NULL) {
 		perror(dirpath);
 		exit(1);
-	}
+	}	
 	// header print
 	fprintf(stdout,"Directory tree of %s\n-----------------------\n", dirpath);
 	// for each directory entry
