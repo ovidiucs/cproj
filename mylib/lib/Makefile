@@ -1,20 +1,42 @@
-# Unix makefile for ProLib.		Ver. 1.3.0
-
 # Definitions.
 LibName = mylib.a
 SrcDir = ../src
 ObjDir = ../obj
 ObjFiles =\
  $(ObjDir)/prime.o \
- $(ObjDir)/hash.o 
+ $(ObjDir)/myhash.o 
  
  
 InclDir = ../include
 
 # Options and arguments to the C compiler.
 CC = cc
-CFLAGS = -funsigned-char -W -Wall -Wunused\
- -Wno-comment -Wno-missing-field-initializers -Wno-missing-braces -Wno-pointer-sign -Wno-unused-parameter -O2 -I$(InclDir)
+CFLAGS = -g \
+-Og \
+-ggdb3 \
+-Wall \
+-Wno-comment \
+-Wno-missing-field-initializers \
+-Wno-missing-braces \
+-Wno-parentheses \
+-Wextra \
+-Wcast-align \
+-Wcast-qual \
+-Wdisabled-optimization \
+-Wformat=2 \
+-Winit-self \
+-Wlogical-op \
+-Wmissing-declarations \
+-Wmissing-include-dirs \
+-Wredundant-decls \
+-Wshadow \
+-Wsign-conversion \
+-Wstrict-overflow=5 \
+-Wstrict-prototypes \
+-Wswitch-default \
+-Wundef \
+-Wno-unused -I$(InclDir)
+
 
 $(LibName): $(ObjFiles)
 	-[ -f $(LibName) ] && rm $(LibName)
@@ -26,8 +48,8 @@ $(LibName): $(ObjFiles)
 
 $(ObjDir)/prime.o: $(SrcDir)/prime.c
 	$(CC) -c -o $(ObjDir)/prime.o $(CFLAGS) $(SrcDir)/prime.c
-$(ObjDir)/hash.o: $(SrcDir)/hash.c
-	$(CC) -c -o $(ObjDir)/hash.o $(CFLAGS) $(SrcDir)/hash.c
+$(ObjDir)/myhash.o: $(SrcDir)/myhash.c
+	$(CC) -c -o $(ObjDir)/myhash.o $(CFLAGS) $(SrcDir)/myhash.c
 
 clean:
 	@rm -f $(LibName) $(ObjDir)/*.o
