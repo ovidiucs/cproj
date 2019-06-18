@@ -9,10 +9,11 @@ typedef struct HashNode {
 	char *h_key;
 	char *h_value;
 } HashNode;
+
 // the hash table stores an array of pointers to items
 // and some details about its size
 typedef struct  {
-	HashNode **h_table;
+	HashNode **h_items;
 	unsigned int h_size;
 } HashTable;
 
