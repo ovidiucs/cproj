@@ -50,8 +50,6 @@ HashTable *h_create ( unsigned int size ) {
 		exit(1);
 	}
 	hash->h_size = size;
-	fprintf(stderr,"Struct HashTable address: %p, Hash Size: %d,\n HashNode** : %p HashNode* : %p, hash->h_items: %ld\n",
-					hash, hash->h_size, hash->h_items,hash->h_items,sizeof(hash->h_items));
 
 	// return hash
 	return hash;
@@ -69,8 +67,7 @@ HashNode *h_insert (char *h_key, char *h_value) {
 
 	h_newNode->h_key = strdup(h_key);
 	h_newNode->h_value = strdup(h_value);
-		fprintf(stderr,"Struct HashNode address: %p Value: %s Key: %s, Next: %p\n",
-					h_newNode, h_newNode->h_value,h_newNode->h_key,h_newNode->h_next);
+	h_newNode->h_next = NULL;
 
 	return h_newNode;
 }
@@ -84,8 +81,49 @@ static HashTable *h_search (char *h_value, char *h_key) {
  */
 //static HashTable *h_delete()
 
-int main(int argc, char **argv){
-	h_create(0);
-	h_insert("400", "101");
+int main(){
+	HashTable *h_result = h_create(10);
+
+	HashNode *h_Nresult = h_insert("400", "101");
+
+	int i = 0;
+
+
+	char *strings[2];
+	strings[0] = "aac";
+	strings[1] = "ccc";
+	strings[2] = "ddd";
+	char *sndstring[2];
+	sndstring[0] = "fff";
+	sndstring[1] = "ggg";
+	sndstring[2] = "hhh";
+
+	do {
+		int resultHash = hash(h_Nresult->h_key,h_result->h_size );
+		if (h_result->h_items[resultHash] != NULL){
+			fprintf(stderr, "A collision has occured");
+			exit(1);
+		} 
+		// Otherwise add to the the index returnded by the hasing function
+		h_result->h_items[resultHash] = h_Nresult;
+		// Will print 
+	fprintf(stderr,"Struct HashTable address: %p, HashNode** : %p, HashNode* : %p, hash->h_items[%d]: %p\n\n",
+					h_result,
+					h_result->h_items,
+					h_result->h_items[resultHash],
+					resultHash,
+					h_result->h_items[resultHash]
+					);
+	fprintf(stderr,"Struct HashNode address: %p, HashNode value: %s, HashNode key: %s, HashNode next: %p\n",
+					h_Nresult,
+					h_Nresult->h_value,
+					h_Nresult->h_key,
+					h_Nresult->h_next
+					);
+		// Set i to... 
+		i +=1;
+		// While condition is bad
+	} while (h_result->h_items[i]  != NULL);
+
 	return 0;
 }

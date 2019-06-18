@@ -3,6 +3,7 @@
 
 // Associative array
 // Also called a map, symbol table or dictionary.
+
 typedef struct HashNode {
 	// Next node in the key collision list.
 	struct HashNode *h_next;
