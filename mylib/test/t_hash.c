@@ -3,20 +3,20 @@
 // test h_search - call on same keys and verify that is same result as the initial call to insert
 
 // insert multpile keys
-// 
-int main(int argc, char **argv){
+//
+int main(){
 	HashTable *tableResult = h_create(10);
-	
+//
 	HashNode  *nodeResult = h_insert(tableResult, "400", "101");
 
-#if 0	
+#if 0
 	int i = 0;
 
 
 	char *strings[2];
 	strings[0] = "aac";
 	strings[1] = "ccc";
-	strings[2] = "ddd";
+	strings[2] = "ddd";`
 	char *sndstring[2];
 	sndstring[0] = "fff";
 	sndstring[1] = "ggg";
@@ -24,7 +24,7 @@ int main(int argc, char **argv){
 
 	do {
 		// Otherwise add to the the index returnded by the hasing function
-		// Will print 
+		// Will print
 	fprintf(stderr,"Struct HashTable address: %p, HashNode** : %p, HashNode* : %p, hash->h_items[%d]: %p\n\n",
 					h_result,
 					h_result->h_items,
@@ -38,7 +38,7 @@ int main(int argc, char **argv){
 					h_Nresult->h_key,
 					h_Nresult->h_next
 					);
-		// Set i to... 
+		// Set i to...
 		i +=1;
 		// While condition is bad
 	} while (h_result->h_items[i]  != NULL);

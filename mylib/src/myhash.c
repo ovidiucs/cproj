@@ -52,7 +52,7 @@ HashTable *h_create ( unsigned int size ) {
 		}
 		hash->h_size = primeSize;
 	}
-		
+
 	// calloc - allocate the array and init to null
 
 	hash->h_items = (HashNode**) calloc((size_t) size ,sizeof(HashNode*));
@@ -60,7 +60,7 @@ HashTable *h_create ( unsigned int size ) {
 		perror("calloc () failed");
 		exit(1);
 	}
-	
+
 	// return hash
 	return hash;
 }
@@ -75,14 +75,14 @@ HashNode *h_insert (HashTable *hTable, char *key, char *value) {
 	if ( (newNode = (HashNode *) malloc(sizeof(HashNode) ) ) == NULL ||
 			(newNode->h_key = strdup(key) ) == NULL ||
 			(newNode->h_value = strdup(value) ) == NULL ) {
-			
+
 		perror("malloc () failed for HashNode");
 		exit(1);
 	}
 
 	newNode->h_next = hTable->h_items[resultHash];
 	hTable->h_items[resultHash] = newNode;
-	
+
 	return newNode;
 }
 
@@ -90,9 +90,10 @@ HashNode *h_insert (HashTable *hTable, char *key, char *value) {
 // Retrieve a key-value pair from a hash table
 // declare extern in myhash.h
 // takes Hastable and key
-// ret - HastNodes pointer 
+// ret - HastNodes pointer
 HashNodes *h_search (HashTable *hTable, char *key) {
 1. call hash function with key and table size
+
 2. search down link list in the array element using strcmp to find node that matches key
 3. return node that found or null if end of list
 }
