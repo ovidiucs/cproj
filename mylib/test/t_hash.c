@@ -1,4 +1,4 @@
-#include "myhash.h"
+#include "../include/myhash.h"
 // edit library implement search func.
 // test h_search - call on same keys and verify that is same result as the initial call to insert
 
@@ -8,7 +8,10 @@ int main(){
 	HashTable *tableResult = h_create(10);
 //
 	HashNode  *nodeResult = h_insert(tableResult, "400", "101");
+//	HashNode  *nodeResult = h_insert(tableResult, "400", "101");
+	HashNode  *nolt = h_insert(tableResult, "400", "101");
 
+	HashNode *searchResult = h_search(tableResult,"400");
 #if 0
 	int i = 0;
 
