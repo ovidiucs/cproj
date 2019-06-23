@@ -64,14 +64,26 @@ HashTable *h_create ( unsigned int size ) {
 	// return hash
 	return hash;
 }
-
+// Find a key in a given linked list
+static HashNode *h_findKey(HashNode *hNode, char *key) {
+	while (hNode != NULL) {
+		if(strcmp(hNode->h_key,key) == 0) {
+			break;
+		}
+	}
+	return hNode;
+}
+ 
 // Insert a key-value pair into a hash table
 
 HashNode *h_insert (HashTable *hTable, char *key, char *value) {
 	HashNode *newNode;
 
 	size_t resultHash = hash(key,hTable->h_size);
-
+	newNode = hTable->h_items[resultHash];
+	newNode = h_findKey(newNode, key);
+	
+    if ( newNode == NULL ) {	
 	if ( (newNode = (HashNode *) malloc(sizeof(HashNode) ) ) == NULL ||
 			 (newNode->h_key = strdup(key) ) == NULL ||
 			 (newNode->h_value = strdup(value) ) == NULL ) {
@@ -79,9 +91,14 @@ HashNode *h_insert (HashTable *hTable, char *key, char *value) {
 		perror("malloc () failed for HashNode");
 		exit(1);
 	}
-
 	newNode->h_next = hTable->h_items[resultHash];
 	hTable->h_items[resultHash] = newNode;
+     } else {
+ 		// Key exists , reeuse key + 1 for '/0'
+     			newNode->h_value = (char *) realloc((void *) newNode->h_value, strlen(value)+1);
+     }
+			
+
 
 	return newNode;
 }
@@ -93,12 +110,22 @@ HashNode *h_insert (HashTable *hTable, char *key, char *value) {
 // ret - HastNodes pointer
  */
 HashNode *h_search (HashTable *hTable, char *key) {
+	HashNode *newNode;
+
 	//1. call hash function with key and table size
 	size_t resultHash = hash(key,hTable->h_size);
+	newNode = hTable->h_items[resultHash];
+	newNode = h_findKey(newNode, key);
+
+	return newNode;
+}
+#if 0
 	// 1a. arguments for strcmp
 	char *keyStrAtIndex = hTable->h_items[resultHash]->h_key;
+	
 	// 1b. nextvalue local variable
 	HashNode *nextValue = hTable->h_items[resultHash]->h_next;
+	
 	// 2. set return value to a friendly variable
 	HashNode *returnVar = hTable->h_items[resultHash];
 
@@ -126,7 +153,7 @@ HashNode *h_search (HashTable *hTable, char *key) {
 					hTable->h_items[resultHash]->h_key,
 					hTable->h_items[resultHash]->h_value,
 					hTable->h_items[resultHash]->h_value
-					);
+				);
 		if ( (nextValue == NULL) && (strcmp(keyStrAtIndex,key) == 0) )
 					fprintf(stderr, "They are the same\n");
 		else {
@@ -144,3 +171,4 @@ HashNode *h_search (HashTable *hTable, char *key) {
 }
 
 //static HashTable *h_delete()
+#endif

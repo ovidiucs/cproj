@@ -1,17 +1,49 @@
+#include <stddef.h>
+#include <assert.h>
 #include "../include/myhash.h"
+
 // edit library implement search func.
 // test h_search - call on same keys and verify that is same result as the initial call to insert
+
+static void dumpTable (HashTable *table) {
+	HashNode **hNodePtr = table->h_items;
+	HashNode **hNodePtrZ = hNodePtr+table->h_size;
+	HashNode *node;	
+	do {
+		node = *hNodePtr;
+			while (node != NULL) {
+
+	fprintf(stderr, "De-referencing the pointer at %p we have our nosde strcutre that holds:\n\
+			h_next:  Address: %p\n\
+			h_key:   Address: %p, Value: %s\n\
+			h_value: Address: %p, Value: %s\n", hTable->h_items[resultHash],
+			hTable->h_items[resultHash]->h_next,
+			hTable->h_items[resultHash]->h_next,
+			hTable->h_items[resultHash]->h_key,
+			hTable->h_items[resultHash]->h_key,
+			hTable->h_items[resultHash]->h_value,
+			hTable->h_items[resultHash]->h_value
+			);
+			node = node->h_next;
+		}
+	} while (++hNodePtr < hNodePtrZ); 
+}
 
 // insert multpile keys
 //
 int main(){
 	HashTable *tableResult = h_create(10);
-//
+	assert(tableResult != NULL);
+	
 	HashNode  *nodeResult = h_insert(tableResult, "400", "101");
-//	HashNode  *nodeResult = h_insert(tableResult, "400", "101");
-	HashNode  *nolt = h_insert(tableResult, "400", "101");
+	assert(nodeResult != NULL);
+	
+	HashNode  *nodeResult2 = h_insert(tableResult, "401", "102");
+	
+	HashNode  *nodeResult3 = h_insert(tableResult, "400", "103");
 
 	HashNode *searchResult = h_search(tableResult,"400");
+	
 #if 0
 	int i = 0;
 
