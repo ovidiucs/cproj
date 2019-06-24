@@ -65,9 +65,12 @@ HashTable *h_create ( unsigned int size ) {
 	return hash;
 }
 // Find a key in a given linked list
+
 static HashNode *h_findKey(HashNode *hNode, char *key) {
+	
 	while (hNode != NULL) {
 		if(strcmp(hNode->h_key,key) == 0) {
+
 			break;
 		}
 	}
@@ -78,24 +81,36 @@ static HashNode *h_findKey(HashNode *hNode, char *key) {
 
 HashNode *h_insert (HashTable *hTable, char *key, char *value) {
 	HashNode *newNode;
-
+	// result hash will give same index and that index will already have 
+	// a node if there was a previous write here
 	size_t resultHash = hash(key,hTable->h_size);
-	newNode = hTable->h_items[resultHash];
-	newNode = h_findKey(newNode, key);
-	
-    if ( newNode == NULL ) {	
-	if ( (newNode = (HashNode *) malloc(sizeof(HashNode) ) ) == NULL ||
-			 (newNode->h_key = strdup(key) ) == NULL ||
-			 (newNode->h_value = strdup(value) ) == NULL ) {
 
-		perror("malloc () failed for HashNode");
-		exit(1);
-	}
-	newNode->h_next = hTable->h_items[resultHash];
-	hTable->h_items[resultHash] = newNode;
+	newNode = hTable->h_items[resultHash];
+	// overwrites pointer if two key are same. Collisions are overwritten
+	// cannot use realloc (save old pointer if this is the case)
+	//HashNode *oldNodePtr = newNode;
+	newNode = h_findKey(newNode, key);
+
+
+	// Executes only if the newNode is NULL-not visited before
+    if ( newNode == NULL ) {	
+		if ( (newNode = (HashNode *) malloc(sizeof(HashNode) ) ) == NULL ||
+				(newNode->h_key = strdup(key) ) == NULL ||
+				(newNode->h_value = strdup(value) ) == NULL ) {
+
+			perror("malloc () failed for HashNode");
+			exit(1);
+		}
+		// h_next will be null as the if executes when newNode is null
+		newNode->h_next = hTable->h_items[resultHash];
+		// the line below assumes the address is different - can be same if same hash
+	 	hTable->h_items[resultHash] = newNode;
      } else {
- 		// Key exists , reeuse key + 1 for '/0'
-     			newNode->h_value = (char *) realloc((void *) newNode->h_value, strlen(value)+1);
+ 		// Keys are the same , reeuse key and assign a different value + 1 for '/0'
+		// does not work as the value was not assigned from the argument to h_value
+     	// newNode->h_value = (char *) realloc((void *) oldNodePtr->h_value, strlen(value)+1);
+		 free(newNode->h_value);
+		 newNode->h_value = strdup(value);
      }
 			
 
@@ -114,61 +129,11 @@ HashNode *h_search (HashTable *hTable, char *key) {
 
 	//1. call hash function with key and table size
 	size_t resultHash = hash(key,hTable->h_size);
+	// the node to the hashed array index of the key 
 	newNode = hTable->h_items[resultHash];
+	// call findkey on the value found to get the key
 	newNode = h_findKey(newNode, key);
 
+	// return the pointer
 	return newNode;
 }
-#if 0
-	// 1a. arguments for strcmp
-	char *keyStrAtIndex = hTable->h_items[resultHash]->h_key;
-	
-	// 1b. nextvalue local variable
-	HashNode *nextValue = hTable->h_items[resultHash]->h_next;
-	
-	// 2. set return value to a friendly variable
-	HashNode *returnVar = hTable->h_items[resultHash];
-
-	fprintf(stderr, "'resultHash' is %zu for 'key' %s\n", resultHash, key);
-//2. search down link list in the array element using strcmp to find node that matches key
-  fprintf(stderr, "The hashtable table is at memory address: %p\n",hTable);
-	fprintf(stderr, "at index %zu in hastable we have the memory address %p that goes to our node \n", resultHash, hTable->h_items[resultHash] );
-	/*
-(lldb) print hTable->h_items[5]
-(HashNode *) $11 = 0x00005555555592e0
-(lldb) print *hTable->h_items[5]
-(HashNode) $12 = {
-  h_next = 0x0000000000000000
-  h_key = 0x0000555555559300 "400"
-  h_value = 0x0000555555559320 "101"
-}
- */
-		fprintf(stderr, "De-referencing the pointer at %p we have our nosde strcutre that holds:\n\
-					h_next:  Address: %p\n\
-					h_key:   Address: %p, Value: %s\n\
-					h_value: Address: %p, Value: %s\n", hTable->h_items[resultHash],
-					hTable->h_items[resultHash]->h_next,
-					hTable->h_items[resultHash]->h_next,
-					hTable->h_items[resultHash]->h_key,
-					hTable->h_items[resultHash]->h_key,
-					hTable->h_items[resultHash]->h_value,
-					hTable->h_items[resultHash]->h_value
-				);
-		if ( (nextValue == NULL) && (strcmp(keyStrAtIndex,key) == 0) )
-					fprintf(stderr, "They are the same\n");
-		else {
-				// looking for the key inside the next element of the linked list
-				char* keyAtNextValue = hTable->h_items[resultHash]->h_next->h_key;
-				while( nextValue != NULL)  {
-					fprintf(stderr, "Found a collision, traversing Linked list at address %p, key is: %s\n",
-							 nextValue, nextValue->h_key);
-					nextValue = nextValue->h_next;
-				}
-		}
-//		fprintf(stderr,"%s", )
-//3. return node that found or null if end of list
-	return returnVar;
-}
-
-//static HashTable *h_delete()
-#endif

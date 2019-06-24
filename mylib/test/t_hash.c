@@ -23,17 +23,16 @@ static void dumpTable (HashTable *table) {
 		node = *hNodePtr;
 		// Check first if node is not null - don't print info
 			while (node != NULL) {
-				fprintf(stderr, "De-referencing the pointer at %p we have our nosde linked list with values:\n\
+				fprintf(stderr, "De-ref the pointer at %p we have our nosde linked list with values:\n\
 					h_next:  Address: %p\n\
 					h_key:   Address: %p, Value: %s\n\
 					h_value: Address: %p, Value: %s\n", 
-					node,
-					node->h_next,
-					node->h_next,
-					node->h_key,
-					node->h_key,
-					node->h_value,
-					node->h_value
+					(void *)node,
+					(void *)node->h_next,
+					(void *)node->h_key,
+					(void *)node->h_key,
+					(void *)node->h_value,
+					(void *)node->h_value
 					);
 			// Should the linked list inside each *node contain extra elements
 			// in the case of a collision the we move to the next element in that list
@@ -59,6 +58,7 @@ int main(int argc, char** argv){
 
 	HashNode *searchResult = h_search(tableResult,"400");
 	
+	dumpTable(tableResult);
 #if 0
 	int i = 0;
 
