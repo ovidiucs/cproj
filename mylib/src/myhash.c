@@ -67,7 +67,7 @@ HashTable *h_create ( unsigned int size ) {
 // Find a key in a given linked list
 
 static HashNode *h_findKey(HashNode *hNode, char *key) {
-	
+
 	while (hNode != NULL) {
 		if(strcmp(hNode->h_key,key) == 0) {
 
@@ -76,12 +76,12 @@ static HashNode *h_findKey(HashNode *hNode, char *key) {
 	}
 	return hNode;
 }
- 
+
 // Insert a key-value pair into a hash table
 
 HashNode *h_insert (HashTable *hTable, char *key, char *value) {
 	HashNode *newNode;
-	// result hash will give same index and that index will already have 
+	// result hash will give same index and that index will already have
 	// a node if there was a previous write here
 	size_t resultHash = hash(key,hTable->h_size);
 
@@ -93,7 +93,7 @@ HashNode *h_insert (HashTable *hTable, char *key, char *value) {
 
 
 	// Executes only if the newNode is NULL-not visited before
-    if ( newNode == NULL ) {	
+    if ( newNode == NULL ) {
 		if ( (newNode = (HashNode *) malloc(sizeof(HashNode) ) ) == NULL ||
 				(newNode->h_key = strdup(key) ) == NULL ||
 				(newNode->h_value = strdup(value) ) == NULL ) {
@@ -107,12 +107,10 @@ HashNode *h_insert (HashTable *hTable, char *key, char *value) {
 	 	hTable->h_items[resultHash] = newNode;
      } else {
  		// Keys are the same , reeuse key and assign a different value + 1 for '/0'
-		// does not work as the value was not assigned from the argument to h_value
-     	// newNode->h_value = (char *) realloc((void *) oldNodePtr->h_value, strlen(value)+1);
-		 free(newNode->h_value);
-		 newNode->h_value = strdup(value);
+			newNode->h_value = (char *) realloc((void *) newNode->h_value, strlen(value)+1);
+			newNode->h_value = strcpy(newNode->h_value,value);
      }
-			
+
 
 
 	return newNode;
@@ -129,7 +127,7 @@ HashNode *h_search (HashTable *hTable, char *key) {
 
 	//1. call hash function with key and table size
 	size_t resultHash = hash(key,hTable->h_size);
-	// the node to the hashed array index of the key 
+	// the node to the hashed array index of the key
 	newNode = hTable->h_items[resultHash];
 	// call findkey on the value found to get the key
 	newNode = h_findKey(newNode, key);

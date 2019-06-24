@@ -7,16 +7,16 @@
 // test h_search - call on same keys and verify that is same result as the initial call to insert
 
 static void dumpTable (HashTable *table) {
-	// Scope - take a hashTable and iterate through each array element with each 
+	// Scope - take a hashTable and iterate through each array element with each
 	// element containing pointers to has nodes; in essence containing a linked list
 
-	// First eleemnt in array of pointers will be the first node 
+	// First eleemnt in array of pointers will be the first node
 	// HashNode **hNodePtr == &hNodePtr[i]
 	HashNode **hNodePtr = table->h_items;
-	// The last element of the array of pointer will be the size defined in the 
+	// The last element of the array of pointer will be the size defined in the
 	HashNode **hNodePtrZ = hNodePtr+ table->h_size;
 	// A new nash node - can be null or something else
-	HashNode *node;	
+	HashNode *node;
 
 	do {
 		// Derefenrce one level and set it to node
@@ -26,7 +26,7 @@ static void dumpTable (HashTable *table) {
 				fprintf(stderr, "De-ref the pointer at %p we have our nosde linked list with values:\n\
 					h_next:  Address: %p\n\
 					h_key:   Address: %p, Value: %s\n\
-					h_value: Address: %p, Value: %s\n", 
+					h_value: Address: %p, Value: %s\n",
 					(void *)node,
 					(void *)node->h_next,
 					(void *)node->h_key,
@@ -40,7 +40,7 @@ static void dumpTable (HashTable *table) {
 			node = node->h_next;
 		}
 	// Increase by one element inside the array (move by one array bucket )
-	} while (++hNodePtr < hNodePtrZ); 
+	} while (++hNodePtr < hNodePtrZ);
 }
 
 // insert multpile keys
@@ -48,16 +48,16 @@ static void dumpTable (HashTable *table) {
 int main(int argc, char** argv){
 	HashTable *tableResult = h_create(10);
 	assert(tableResult != NULL);
-	
+
 	HashNode  *nodeResult = h_insert(tableResult, "400", "101");
 	assert(nodeResult != NULL);
-	
+
 	HashNode  *nodeResult2 = h_insert(tableResult, "401", "102");
-	
-	HashNode  *nodeResult3 = h_insert(tableResult, "400", "103");
+
+	HashNode  *nodeResult3 = h_insert(tableResult, "400", "1034444444444444");
 
 	HashNode *searchResult = h_search(tableResult,"400");
-	
+
 	dumpTable(tableResult);
 #if 0
 	int i = 0;
