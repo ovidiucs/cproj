@@ -1,4 +1,5 @@
 #include <stddef.h>
+#include <stdio.h>
 #include <assert.h>
 #include "../include/myhash.h"
 
@@ -6,32 +7,46 @@
 // test h_search - call on same keys and verify that is same result as the initial call to insert
 
 static void dumpTable (HashTable *table) {
-	HashNode **hNodePtr = table->h_items;
-	HashNode **hNodePtrZ = hNodePtr+table->h_size;
-	HashNode *node;	
-	do {
-		node = *hNodePtr;
-			while (node != NULL) {
+	// Scope - take a hashTable and iterate through each array element with each 
+	// element containing pointers to has nodes; in essence containing a linked list
 
-	fprintf(stderr, "De-referencing the pointer at %p we have our nosde strcutre that holds:\n\
-			h_next:  Address: %p\n\
-			h_key:   Address: %p, Value: %s\n\
-			h_value: Address: %p, Value: %s\n", hTable->h_items[resultHash],
-			hTable->h_items[resultHash]->h_next,
-			hTable->h_items[resultHash]->h_next,
-			hTable->h_items[resultHash]->h_key,
-			hTable->h_items[resultHash]->h_key,
-			hTable->h_items[resultHash]->h_value,
-			hTable->h_items[resultHash]->h_value
-			);
+	// First eleemnt in array of pointers will be the first node 
+	// HashNode **hNodePtr == &hNodePtr[i]
+	HashNode **hNodePtr = table->h_items;
+	// The last element of the array of pointer will be the size defined in the 
+	HashNode **hNodePtrZ = hNodePtr+ table->h_size;
+	// A new nash node - can be null or something else
+	HashNode *node;	
+
+	do {
+		// Derefenrce one level and set it to node
+		node = *hNodePtr;
+		// Check first if node is not null - don't print info
+			while (node != NULL) {
+				fprintf(stderr, "De-referencing the pointer at %p we have our nosde linked list with values:\n\
+					h_next:  Address: %p\n\
+					h_key:   Address: %p, Value: %s\n\
+					h_value: Address: %p, Value: %s\n", 
+					node,
+					node->h_next,
+					node->h_next,
+					node->h_key,
+					node->h_key,
+					node->h_value,
+					node->h_value
+					);
+			// Should the linked list inside each *node contain extra elements
+			// in the case of a collision the we move to the next element in that list
+			// Otherwise if that next pointer is null then we printed our only value
 			node = node->h_next;
 		}
+	// Increase by one element inside the array (move by one array bucket )
 	} while (++hNodePtr < hNodePtrZ); 
 }
 
 // insert multpile keys
 //
-int main(){
+int main(int argc, char** argv){
 	HashTable *tableResult = h_create(10);
 	assert(tableResult != NULL);
 	
