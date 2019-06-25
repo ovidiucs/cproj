@@ -21,3 +21,4 @@ typedef struct  {
 extern HashNode *h_insert (HashTable *hTable, char *key, char *value);
 extern HashTable *h_create ( unsigned int size );
 extern HashNode *h_search (HashTable *hTable, char *key);
+extern void h_delete (HashTable *hTable, char *key);

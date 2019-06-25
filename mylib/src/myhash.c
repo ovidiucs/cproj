@@ -65,7 +65,7 @@ HashTable *h_create ( unsigned int size ) {
 	return hash;
 }
 // Find a key in a given linked list
-
+// called by h_insert and h_search and h_delete
 static HashNode *h_findKey(HashNode *hNode, char *key) {
 
 	while (hNode != NULL) {
@@ -79,6 +79,7 @@ static HashNode *h_findKey(HashNode *hNode, char *key) {
 
 // Insert a key-value pair into a hash table
 
+
 HashNode *h_insert (HashTable *hTable, char *key, char *value) {
 	HashNode *newNode;
 	// result hash will give same index and that index will already have
@@ -87,6 +88,8 @@ HashNode *h_insert (HashTable *hTable, char *key, char *value) {
 
 	newNode = hTable->h_items[resultHash];
 	// overwrites pointer if two key are same. Collisions are overwritten
+	// todo: allow for hash collisions by pushing to the next value
+
 	// cannot use realloc (save old pointer if this is the case)
 	//HashNode *oldNodePtr = newNode;
 	newNode = h_findKey(newNode, key);
@@ -134,4 +137,22 @@ HashNode *h_search (HashTable *hTable, char *key) {
 
 	// return the pointer
 	return newNode;
+}
+/*  
+ * Deletes a hashNode* 
+ * params: - key, hashTable
+ */
+//    #include <string.h>
+
+//        void *memset(void *s, int c, size_t n);
+
+void h_delete (HashTable *hTable, char *key) {
+
+	HashNode *freeNode;
+	freeNode = h_search(hTable,key);
+	//fprintf(stderr, "%d", sizeof(freeNode));
+	//free(freeNode->h_key);
+	//free(freeNode->h_value);
+	freeNode->h_key = (HashNode *) memset((HashNode *)freeNode, 0, sizeof(freeNode->h_key));
+	freeNode->h_value =  (HashNode *) memset((HashNode *)freeNode, 0, sizeof(freeNode->h_value));
 }

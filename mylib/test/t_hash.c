@@ -53,12 +53,13 @@ int main(int argc, char** argv){
 	assert(nodeResult != NULL);
 
 	HashNode  *nodeResult2 = h_insert(tableResult, "401", "102");
-
 	HashNode  *nodeResult3 = h_insert(tableResult, "400", "1034444444444444");
-
-	HashNode *searchResult = h_search(tableResult,"400");
-
 	dumpTable(tableResult);
+	printf("________________\n");
+	HashNode *searchResult = h_search(tableResult,"400");
+	h_delete(tableResult,"400");
+	dumpTable(tableResult);
+
 #if 0
 	int i = 0;
 
