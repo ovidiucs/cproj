@@ -138,8 +138,8 @@ HashNode *h_search (HashTable *hTable, char *key) {
 	// return the pointer
 	return newNode;
 }
-/*  
- * Deletes a hashNode* 
+/*
+ * Deletes a hashNode*
  * params: - key, hashTable
  */
 //    #include <string.h>
@@ -147,12 +147,32 @@ HashNode *h_search (HashTable *hTable, char *key) {
 //        void *memset(void *s, int c, size_t n);
 
 void h_delete (HashTable *hTable, char *key) {
-
+	size_t resultHash = hash(key,hTable->h_size);
 	HashNode *freeNode;
+	HashNode *emptyMpde = NULL;
+
 	freeNode = h_search(hTable,key);
 	//fprintf(stderr, "%d", sizeof(freeNode));
 	//free(freeNode->h_key);
 	//free(freeNode->h_value);
-	freeNode->h_key = (HashNode *) memset((HashNode *)freeNode, 0, sizeof(freeNode->h_key));
-	freeNode->h_value =  (HashNode *) memset((HashNode *)freeNode, 0, sizeof(freeNode->h_value));
+	// this deletes the values and key but does not clear the pointers
+	freeNode->h_key = (char *) memset((void *)freeNode->h_key, 0, sizeof(freeNode->h_key));
+	freeNode->h_value =  (char *) memset((void *)freeNode->h_value, 0, sizeof(freeNode->h_value));
+	//&freeNode = (HashNode *) memset((HashNode *)freeNode, 0, sizeof(freeNode));
+	 hTable->h_items[resultHash] = emptyMpde;
+	 free(freeNode);
+	 /*
+	 * (lldb) p *hTable->h_items[5]
+	 * (HashNode) $70 = {
+   * h_next = 0x0000000000000000
+   * h_key = 0x0000555555559300 "400"
+   * h_value = 0x0000555555559320 "1034444444444444"
+   * }
+	 * lldb)  p hTable->h_items[4]
+   * (HashNode *) $87 = 0x0000000000000000
+	 * (lldb)  p hTable->h_items[5]
+	 * (HashNode *) $81 = 0x00005555555592e0
+	 * (lldb)  p &hTable->h_items[5]
+   * (HashNode **) $83 = 0x00005555555592a8
+	 */
 }
