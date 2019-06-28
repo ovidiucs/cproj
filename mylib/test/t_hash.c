@@ -65,8 +65,10 @@ int main(int argc, char** argv){
 	int x = openFile("../testdata");
 	fprintf(stderr,"%d\n",x);
 	// read the file
-	int r = closefile(x);
-	fprintf(stderr,"%d\n",r);
+	readFile(x);
+	// close the file
+	int r = closeFile(x);
+	printf(stderr,"%d\n",r);
 
 
 #if 0

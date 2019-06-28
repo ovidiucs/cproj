@@ -23,5 +23,5 @@ extern HashTable *h_create ( unsigned int size );
 extern HashNode *h_search (HashTable *hTable, char *key);
 extern void h_delete (HashTable *hTable, char *key);
 extern int openFile(const char *fn);
-extern int readFile(int fd);
+void readFile(int fd);
 extern int closefile(int fd);

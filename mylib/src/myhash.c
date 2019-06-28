@@ -193,24 +193,30 @@ int openFile (const char *fn) {
 		return inputFd;
 }
 
-int readFile (int fd) {
+void readFile (int fd) {
 	// Read bytes from fd int numRead for read () 3rd arg
-	ssize_t countRead;
+	int countRead;
 
 	// Output file descriptor
 	int outputFd = 1; // stdout
 
 	// Set buffer for void *buf arg
 	char buf[BUFF];
+	// read (fd provided by openFile, buffer,  )
 
-	while ((countRead = read (fd, buf, BUFF)) > 0)
+	while ( (countRead = read (fd, buf, BUFF)) > 0)
 		//empty buffer
 			if (write(outputFd, buf, countRead) != countRead)
 				fprintf(stderr,"Could not write whole buffer.\n");
 }
 
-int closeFile(fd){
-	if ( close(fd) == -1)
+int closeFile(int fd){
+	int closeFd;
+	closeFd = close(fd);
+	if ( closeFd == -1)
 			perror("Error on close\n");
-	return 0;
+	else if(closeFd == 0) {
+		fprintf(stderr, "Closed file descriptior\n");
+		return closeFd;
+	}
 }
