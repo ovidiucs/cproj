@@ -3,9 +3,14 @@
 #include <string.h>
 #include "../include/myhash.h"
 #include "../include/mylib.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 
 #define DEFAULT_HASH_SIZE 97
-
+#define PATH_MAX 255
+#define BUFF 1024
 //  Free allocated memory for entire hash table
 #if 0
 void h_free (HashNode *hash) {
@@ -175,4 +180,28 @@ void h_delete (HashTable *hTable, char *key) {
 	 * (lldb)  p &hTable->h_items[5]
    * (HashNode **) $83 = 0x00005555555592a8
 	 */
+}
+void openFile (const char *fn) {
+		// Return value for open()
+		int inputFd;
+		// Output fd
+		int outputFd = 2; // stderr
+		// buffer
+
+		inputFd = open(fn,O_RDONLY);
+
+}
+
+void readFile (int fd) {
+	// Read bytes from fd int numRead for read () 3rd arg
+	ssize_t numRead;
+	// Set buffer for void *buf arg
+	char buf[BUFF];
+	while( (numRead = read (fd, buf, BUFF) > 0) {
+
+	}
+}
+
+void closeFile(fd){
+
 }
