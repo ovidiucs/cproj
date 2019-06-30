@@ -60,6 +60,15 @@ int main(int argc, char** argv){
 	h_delete(tableResult,"400");
 	dumpTable(tableResult);
 
+	// assign the file descriptor to the integer x
+	// and attempt to open a file
+	int x = openFile("../testdata");
+	fprintf(stderr,"%d\n",x);
+	// read the file
+	int r = closefile(x);
+	fprintf(stderr,"%d\n",r);
+
+
 #if 0
 	int i = 0;
 

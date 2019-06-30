@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 
 #define DEFAULT_HASH_SIZE 97
@@ -181,27 +182,35 @@ void h_delete (HashTable *hTable, char *key) {
    * (HashNode **) $83 = 0x00005555555592a8
 	 */
 }
-void openFile (const char *fn) {
+int openFile (const char *fn) {
 		// Return value for open()
 		int inputFd;
-		// Output fd
-		int outputFd = 2; // stderr
 		// buffer
-
 		inputFd = open(fn,O_RDONLY);
-
+		if (inputFd == -1){
+			perror("Error on open");
+		}
+		return inputFd;
 }
 
-void readFile (int fd) {
+int readFile (int fd) {
 	// Read bytes from fd int numRead for read () 3rd arg
-	ssize_t numRead;
+	ssize_t countRead;
+
+	// Output file descriptor
+	int outputFd = 1; // stdout
+
 	// Set buffer for void *buf arg
 	char buf[BUFF];
-	while( (numRead = read (fd, buf, BUFF) > 0) {
 
-	}
+	while ((countRead = read (fd, buf, BUFF)) > 0)
+		//empty buffer
+			if (write(outputFd, buf, countRead) != countRead)
+				fprintf(stderr,"Could not write whole buffer.\n");
 }
 
-void closeFile(fd){
-
+int closeFile(fd){
+	if ( close(fd) == -1)
+			perror("Error on close\n");
+	return 0;
 }
