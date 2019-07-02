@@ -11,7 +11,7 @@
 
 #define DEFAULT_HASH_SIZE 97
 #define PATH_MAX 255
-#define BUFF 1024
+#define BUFF 2048
 //  Free allocated memory for entire hash table
 #if 0
 void h_free (HashNode *hash) {
@@ -185,10 +185,12 @@ void h_delete (HashTable *hTable, char *key) {
 int openFile (const char *fn) {
 		// Return value for open()
 		int inputFd;
-		// buffer
-		inputFd = open(fn,O_RDONLY);
-		if (inputFd == -1){
+
+		// set fd and check it
+		if ( ( inputFd = open(fn,O_RDONLY) )  < 0){
 			perror("Error on open");
+			return -1;
+
 		}
 		return inputFd;
 }
@@ -202,12 +204,31 @@ void readFile (int fd) {
 
 	// Set buffer for void *buf arg
 	char buf[BUFF];
-	// read (fd provided by openFile, buffer,  )
+	// extra buffer to fill end of line.
+	char extraBuffer
+	// Keep track of offset after each '\n'
+	off_t offset = 0;
 
+	// store last string until '\m'
+	//if 
+	//off_t lseek(int fd, off_t offset, int whence);
+	//off_t newPos = lseek(fd,,SEEK_DATA)
 	while ( (countRead = read (fd, buf, BUFF)) > 0)
-		//empty buffer
+	  //pch = strtok (buf,":");
+	  //fprintf(stderr,"%s\n\n\t\n",buf);
 			if (write(outputFd, buf, countRead) != countRead)
 				fprintf(stderr,"Could not write whole buffer.\n");
+	//fprintf(stderr,"%s", pch);
+}
+/* readline `sz` bytes from file `fn`, begin at file `offset`
+ * storing all chars in `buf`. `buf` is terminated at the first
+ * newline found .
+ * return -1 on error, EOF with 0 chars read , success number of chars read
+ */
+ssize_t readLine(char *buf, size_t sz, char *fn, off_t *offset){
+	// Open the file as read only
+	int fd = openFile(fn);
+	
 }
 
 int closeFile(int fd){

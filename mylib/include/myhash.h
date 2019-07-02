@@ -25,3 +25,4 @@ extern void h_delete (HashTable *hTable, char *key);
 extern int openFile(const char *fn);
 void readFile(int fd);
 extern int closefile(int fd);
+ssize_t readLine(char *buf, size_t sz, char *fn, off_t *offset);
