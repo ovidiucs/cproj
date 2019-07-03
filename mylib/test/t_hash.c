@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <assert.h>
 #include "../include/myhash.h"
-
 // edit library implement search func.
 // test h_search - call on same keys and verify that is same result as the initial call to insert
 
@@ -17,6 +16,7 @@ static void dumpTable (HashTable *table) {
 	HashNode **hNodePtrZ = hNodePtr+ table->h_size;
 	// A new nash node - can be null or something else
 	HashNode *node;
+
 
 	do {
 		// Derefenrce one level and set it to node
@@ -65,11 +65,20 @@ int main(int argc, char** argv){
 	int x = openFile("../testdata");
 	fprintf(stderr,"%d\n",x);
 	// read the file
-	readFile(x);
+	//readFile(x);
 	// close the file
-	int r = closeFile(x);
-	printf(stderr,"%d\n",r);
+	closeFile(x);
+	//printf(stderr,"%d\n",r);
 
+
+    char line[128] = {0};
+    off_t offset = 0;
+    ssize_t len = 0;
+    size_t i = 0;
+
+    /* using open/read, read each line in file into 'line' */
+    while ((len = readLine (line, 128, "../testdata" , &offset)) != -1)
+        printf (" line[%2zu] : %s (%zd chars)\n", i++, line, len);
 
 #if 0
 	int i = 0;
