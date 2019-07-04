@@ -195,32 +195,6 @@ int openFile (const char *fn) {
 		return inputFd;
 }
 /*
-void readFile (int fd) {
-	// Read bytes from fd int numRead for read () 3rd arg
-	int countRead;
-
-	// Output file descriptor
-	int outputFd = 1; // stdout
-
-	// Set buffer for void *buf arg
-	char buf[BUFF];
-	// extra buffer to fill end of line.
-	//char extraBuffer
-	// Keep track of offset after each '\n'
-	//off_t offset = 0;
-
-	// store last string until '\m'
-	//if
-	//off_t lseek(int fd, off_t offset, int whence);
-	//off_t newPos = lseek(fd,,SEEK_DATA)
-	while ( (countRead = read (fd, buf, BUFF)) > 0)
-	  //pch = strtok (buf,":");
-	  //fprintf(stderr,"%s\n\n\t\n",buf);
-			if (write(outputFd, buf, countRead) != countRead)
-				fprintf(stderr,"Could not write whole buffer.\n");
-	//fprintf(stderr,"%s", pch);
-}
-
  * readline `sz` bytes from file `fn`, begin at file `offset`
  * storing all chars in `buf`. `buf` is terminated at the first
  * newline found .
@@ -232,13 +206,20 @@ ssize_t readLine(char *buf, size_t sz, char *fn, off_t 	*offset){
 	// Open the file as read only
 	int fd = openFile(fn);
 
-	ssize_t nchr = 0;
 	ssize_t idx = 0;
+
+	/* number of characetrs  */
+	ssize_t nchr = 0;
+
+  /* pointer to chars initialize to null */
 	char *p  = NULL;
 
 	/* position fd & read line */
 	if ( (nchr = lseek(fd, *offset, SEEK_SET)) !=-1  )
+	/* set number of bytes read into nchr variable */
 		nchr  = read (fd, buf, sz);
+	else
+		perror("Error on offset");
 	closeFile(fd);
 
 	/* read error */
@@ -253,6 +234,7 @@ ssize_t readLine(char *buf, size_t sz, char *fn, off_t 	*offset){
 	p = buf;
 	while( (idx < nchr) && (*p != '\n') )
 				p++, idx++;
+	/* if the value is: '\n' -> '\0' then:  */
 	*p = 0;
 
 	/* newline not found */
@@ -263,7 +245,7 @@ ssize_t readLine(char *buf, size_t sz, char *fn, off_t 	*offset){
 		return nchr < (ssize_t) sz ? nchr : 0;
 
 	}
-	// set *offset to 1+idx
+	/* set *offset to 1+idx*/
 	*offset += idx + 1;
 
 	return idx;
@@ -273,8 +255,8 @@ int closeFile(int fd){
 	int closeFd;
 	if ( (closeFd = close(fd)) < 0)
 			perror("Error on close\n");
-	else if(closeFd == 0) {
-			fprintf(stderr, "Closed file descriptior\n");
+//	else if(closeFd == 0) {
+//			fprintf(stderr, "Closed file descriptor\n");
 		return closeFd;
-	}
+//	}
 }

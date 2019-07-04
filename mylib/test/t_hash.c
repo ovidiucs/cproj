@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include <stdio.h>
+#include <string.h>
 #include <assert.h>
 #include "../include/myhash.h"
 // edit library implement search func.
@@ -75,10 +76,24 @@ int main(int argc, char** argv){
     off_t offset = 0;
     ssize_t len = 0;
     size_t i = 0;
-
+		char *token;
     /* using open/read, read each line in file into 'line' */
-    while ((len = readLine (line, 128, "../testdata" , &offset)) != -1)
-        printf (" line[%2zu] : %s (%zd chars)\n", i++, line, len);
+    while ((len = readLine (line, 128, "../testdata" , &offset)) != -1) {
+			//strtok(line,":");
+			//printf (" line[%2zu] : %s (%zd chars)\n", i++, line, len);
+			token = strtok(line,":");
+		 		while( token != NULL ) {
+      		printf( " %s\n", token );
+      		token = strtok(NULL, ":");
+   			}
+
+}
+			/*/while (token != NULL) {
+				fprintf(stderr, "%s\n", token);
+				 token = strtok(NULL, ":");
+			}
+			 */
+
 
 #if 0
 	int i = 0;
