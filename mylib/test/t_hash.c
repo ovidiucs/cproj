@@ -76,14 +76,31 @@ int main(int argc, char** argv){
     off_t offset = 0;
     ssize_t len = 0;
     size_t i = 0;
-		char *token;
+
+	char *token;
+	char *key;
+	char *value;
+
     /* using open/read, read each line in file into 'line' */
     while ((len = readLine (line, 128, "../testdata" , &offset)) != -1) {
 			//strtok(line,":");
 			//printf (" line[%2zu] : %s (%zd chars)\n", i++, line, len);
 			token = strtok(line,":");
-		 		while( token != NULL ) {
-      		printf( " %s\n", token );
+			while( token != NULL ) {
+					i++;
+			if( i & 1 ) {
+				//printf("%s",token+1);
+				char *key = token;
+				printf("%s\n", key);
+				//printf("if\n");
+
+			} else {
+				char *value = token;
+				printf("%s\n", value);
+				//printf("else\n");
+			printf("outside \n");
+			h_insert(tableResult, key, value);
+			}
       		token = strtok(NULL, ":");
    			}
 

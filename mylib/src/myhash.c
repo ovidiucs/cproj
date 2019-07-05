@@ -211,7 +211,7 @@ ssize_t readLine(char *buf, size_t sz, char *fn, off_t 	*offset){
 	/* number of characetrs  */
 	ssize_t nchr = 0;
 
-  /* pointer to chars initialize to null */
+    /* pointer to chars initialize to null */
 	char *p  = NULL;
 
 	/* position fd & read line */
