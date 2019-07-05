@@ -89,16 +89,9 @@ int main(int argc, char** argv){
 			while( token != NULL ) {
 					i++;
 			if( i & 1 ) {
-				//printf("%s",token+1);
 				char *key = token;
-				printf("%s\n", key);
-				//printf("if\n");
-
 			} else {
 				char *value = token;
-				printf("%s\n", value);
-				//printf("else\n");
-			printf("outside \n");
 			h_insert(tableResult, key, value);
 			}
       		token = strtok(NULL, ":");
