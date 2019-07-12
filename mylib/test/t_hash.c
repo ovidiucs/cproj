@@ -18,7 +18,7 @@ static void dumpTable (HashTable *table) {
 	// A new nash node - can be null or something else
 	HashNode *node;
 
-
+	fputs("HASHTABLE DUMP \n",stderr);
 	do {
 		// Derefenrce one level and set it to node
 		node = *hNodePtr;
@@ -44,12 +44,29 @@ static void dumpTable (HashTable *table) {
 	} while (++hNodePtr < hNodePtrZ);
 }
 
+
 // insert multpile keys
 //
+
+
 int main(int argc, char** argv){
 	HashTable *tableResult = h_create(10);
 	assert(tableResult != NULL);
-
+	FILE *stream;
+	// The pointer to the line which was read
+	char *line = NULL;
+	size_t len = 0;
+	ssize_t nread;
+	
+	if (argc != 2) {
+		fprintf(stderr,"Usage: %s <filename>\n", argv[0]);
+	} else {
+		if ( (stream = fopen(argv[1], "r") ) == NULL) {
+			perror("Open failed");
+			exit(1);
+		} else {
+			
+		
 	HashNode  *nodeResult = h_insert(tableResult, "400", "101");
 	assert(nodeResult != NULL);
 
@@ -61,84 +78,5 @@ int main(int argc, char** argv){
 	h_delete(tableResult,"400");
 	dumpTable(tableResult);
 
-	// assign the file descriptor to the integer x
-	// and attempt to open a file
-	int x = openFile("../testdata");
-	fprintf(stderr,"%d\n",x);
-	// read the file
-	//readFile(x);
-	// close the file
-	closeFile(x);
-	//printf(stderr,"%d\n",r);
-
-
-    char line[128] = {0};
-    off_t offset = 0;
-    ssize_t len = 0;
-    size_t i = 0;
-
-	char *token;
-	char *key;
-	char *value;
-
-    /* using open/read, read each line in file into 'line' */
-    while ((len = readLine (line, 128, "../testdata" , &offset)) != -1) {
-			//strtok(line,":");
-			//printf (" line[%2zu] : %s (%zd chars)\n", i++, line, len);
-			token = strtok(line,":");
-			while( token != NULL ) {
-					i++;
-			if( i & 1 ) {
-				char *key = token;
-			} else {
-				char *value = token;
-			h_insert(tableResult, key, value);
-			}
-      		token = strtok(NULL, ":");
-   			}
-
-}
-			/*/while (token != NULL) {
-				fprintf(stderr, "%s\n", token);
-				 token = strtok(NULL, ":");
-			}
-			 */
-
-
-#if 0
-	int i = 0;
-
-
-	char *strings[2];
-	strings[0] = "aac";
-	strings[1] = "ccc";
-	strings[2] = "ddd";`
-	char *sndstring[2];
-	sndstring[0] = "fff";
-	sndstring[1] = "ggg";
-	sndstring[2] = "hhh";
-
-	do {
-		// Otherwise add to the the index returnded by the hasing function
-		// Will print
-	fprintf(stderr,"Struct HashTable address: %p, HashNode** : %p, HashNode* : %p, hash->h_items[%d]: %p\n\n",
-					h_result,
-					h_result->h_items,
-					h_result->h_items[resultHash],
-					resultHash,
-					h_result->h_items[resultHash]
-					);
-	fprintf(stderr,"Struct HashNode address: %p, HashNode value: %s, HashNode key: %s, HashNode next: %p\n",
-					h_Nresult,
-					h_Nresult->h_value,
-					h_Nresult->h_key,
-					h_Nresult->h_next
-					);
-		// Set i to...
-		i +=1;
-		// While condition is bad
-	} while (h_result->h_items[i]  != NULL);
-
-#endif
 	return 0;
 }

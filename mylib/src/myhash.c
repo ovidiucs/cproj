@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,16 +15,11 @@
 #define BUFF 2048
 //  Free allocated memory for entire hash table
 #if 0
-void h_free (HashNode *hash) {
-	free(hash->h_key);
-	free(hash->h_value);
-	free(hash);
-}
 #endif
 
 // Hash a key and return integer result.
 
-static size_t hash(char *key, int hashSize) {
+static size_t hash(char *key, unsigned int hashSize) {
     unsigned int k = 0;
     while(*key != '\0')
             k = (k << 2) + (unsigned int) *key++;
@@ -152,111 +148,37 @@ HashNode *h_search (HashTable *hTable, char *key) {
 
 //        void *memset(void *s, int c, size_t n);
 
-void h_delete (HashTable *hTable, char *key) {
+bool h_delete (HashTable *hTable, char *key) {
+	// node 1 pointing to node priror to it
+	// node 2 is the current node we're on
+	HashNode *node1, *node2;
 	size_t resultHash = hash(key,hTable->h_size);
-	HashNode *freeNode;
-	HashNode *emptyMpde = NULL;
+	node1 = NULL;
+	node2 = hTable->h_items[resultHash];
 
-	freeNode = h_search(hTable,key);
-	//fprintf(stderr, "%d", sizeof(freeNode));
-	//free(freeNode->h_key);
-	//free(freeNode->h_value);
-	// this deletes the values and key but does not clear the pointers
-	freeNode->h_key = (char *) memset((void *)freeNode->h_key, 0, sizeof(freeNode->h_key));
-	freeNode->h_value =  (char *) memset((void *)freeNode->h_value, 0, sizeof(freeNode->h_value));
-	//&freeNode = (HashNode *) memset((HashNode *)freeNode, 0, sizeof(freeNode));
-	 hTable->h_items[resultHash] = emptyMpde;
-	 free(freeNode);
-	 /*
-	 * (lldb) p *hTable->h_items[5]
-	 * (HashNode) $70 = {
-   * h_next = 0x0000000000000000
-   * h_key = 0x0000555555559300 "400"
-   * h_value = 0x0000555555559320 "1034444444444444"
-   * }
-	 * lldb)  p hTable->h_items[4]
-   * (HashNode *) $87 = 0x0000000000000000
-	 * (lldb)  p hTable->h_items[5]
-	 * (HashNode *) $81 = 0x00005555555592e0
-	 * (lldb)  p &hTable->h_items[5]
-   * (HashNode **) $83 = 0x00005555555592a8
-	 */
-}
-int openFile (const char *fn) {
-		// Return value for open()
-		int inputFd;
-
-		// set fd and check it
-		if ( ( inputFd = open(fn,O_RDONLY) )  < 0){
-			perror("Error on open");
-			return -1;
-
+	
+	while (node2 != NULL) {
+	
+		if(strcmp(node2->h_key,key) == 0) {
+			// remove the node
+			free((void *) node2->h_key);
+			free((void *) node2->h_value);
+			if (node1 == NULL) {
+				hTable->h_items[resultHash] = node2->h_next;				
+			} else  {
+				node1->h_next = node2->h_next;					
+				// unlink from within the list and then do free and return
+				
+				// set node1 pointer to node2 next pointer
+			}
+			free((void *) node2);
+			return true;	
 		}
-		return inputFd;
-}
-/*
- * readline `sz` bytes from file `fn`, begin at file `offset`
- * storing all chars in `buf`. `buf` is terminated at the first
- * newline found .
- * return -1 on error, EOF with 0 chars read , success number of chars read
- */
-
-
-ssize_t readLine(char *buf, size_t sz, char *fn, off_t 	*offset){
-	// Open the file as read only
-	int fd = openFile(fn);
-
-	ssize_t idx = 0;
-
-	/* number of characetrs  */
-	ssize_t nchr = 0;
-
-    /* pointer to chars initialize to null */
-	char *p  = NULL;
-
-	/* position fd & read line */
-	if ( (nchr = lseek(fd, *offset, SEEK_SET)) !=-1  )
-	/* set number of bytes read into nchr variable */
-		nchr  = read (fd, buf, sz);
-	else
-		perror("Error on offset");
-	closeFile(fd);
-
-	/* read error */
-	if (nchr == -1)
-		fprintf(stderr, "%s(), error: read failure in '%s'.\n", __func__, fn);
-
-	/* end of file - no characters read */
-	if (nchr == 0)
-		return -1;
-
-	/* check each character */
-	p = buf;
-	while( (idx < nchr) && (*p != '\n') )
-				p++, idx++;
-	/* if the value is: '\n' -> '\0' then:  */
-	*p = 0;
-
-	/* newline not found */
-	if (idx == nchr) {
-		*offset += nchr;
-
-		/* check file for missing newline at end */
-		return nchr < (ssize_t) sz ? nchr : 0;
-
+		node1 = node2;
+		node2 = node2->h_next;	
 	}
-	/* set *offset to 1+idx*/
-	*offset += idx + 1;
+	
+	return false;
+	//free((void *) hash);
 
-	return idx;
-}
-
-int closeFile(int fd){
-	int closeFd;
-	if ( (closeFd = close(fd)) < 0)
-			perror("Error on close\n");
-//	else if(closeFd == 0) {
-//			fprintf(stderr, "Closed file descriptor\n");
-		return closeFd;
-//	}
 }
