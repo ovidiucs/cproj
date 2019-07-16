@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <stdlib.h>
 #include "../include/myhash.h"
 // edit library implement search func.
 // test h_search - call on same keys and verify that is same result as the initial call to insert
@@ -44,7 +45,49 @@ static void dumpTable (HashTable *table) {
 	} while (++hNodePtr < hNodePtrZ);
 }
 
+// readfile
+char *readFile(char *fn) {
+	// from https://stackoverflow.com/questions/3463426/in-c-how-should-i-read-a-text-file-and-print-all-strings
+	// FILE handle
+	FILE *stream;
+	stream = fopen(fn, "r");
 
+	// buffer
+	char *buf = NULL;
+	size_t stringSize;
+	size_t readSize;
+
+	if (stream) {
+		// Seek last bytes on the stream
+		fseek(stream, 0, SEEK_END);
+		// get current value of file position
+		stringSize = ftell(stream);
+		// rewind to the start of the file
+		rewind(stream);
+
+		// Allocate string that can hold all of the data
+		// includes + 1 for newline char
+		buf = (char *) malloc(sizeof(char) * (stringSize + 1));
+
+
+		// read
+		readSize = fread(buf, sizeof(char), stringSize, fn);
+
+		// append null at end
+		buf[stringSize] = '\0';
+
+		if (stringSize != readSize) {
+			free(buf);
+			buf = NULL;
+		}
+		fclose(stream);
+	//close file at end
+	} else {
+			perror("Open failed");
+			exit(1);
+	}
+	return buf;
+}
 // insert multpile keys
 //
 
@@ -52,21 +95,21 @@ static void dumpTable (HashTable *table) {
 int main(int argc, char** argv){
 	HashTable *tableResult = h_create(10);
 	assert(tableResult != NULL);
-	FILE *stream;
+
 	// The pointer to the line which was read
 	char *line = NULL;
 	size_t len = 0;
 	ssize_t nread;
-	
+
+	// filename
+	char *fn = argv[1];
+
 	if (argc != 2) {
 		fprintf(stderr,"Usage: %s <filename>\n", argv[0]);
 	} else {
-		if ( (stream = fopen(argv[1], "r") ) == NULL) {
-			perror("Open failed");
-			exit(1);
-		} else {
-			
-		
+		readFile(fn);
+	}
+	#if 0
 	HashNode  *nodeResult = h_insert(tableResult, "400", "101");
 	assert(nodeResult != NULL);
 
@@ -77,6 +120,6 @@ int main(int argc, char** argv){
 	HashNode *searchResult = h_search(tableResult,"400");
 	h_delete(tableResult,"400");
 	dumpTable(tableResult);
-
+	# endif
 	return 0;
 }
