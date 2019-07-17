@@ -71,15 +71,16 @@ char *readFile(char *fn) {
 
 
 		// read
-		readSize = fread(buf, sizeof(char), stringSize, fn);
+		readSize = fread(buf, sizeof(char), stringSize, stream);
 
 		// append null at end
 		buf[stringSize] = '\0';
-
+		// something is not right free resources
 		if (stringSize != readSize) {
 			free(buf);
 			buf = NULL;
 		}
+		// close the stream
 		fclose(stream);
 	//close file at end
 	} else {
@@ -88,6 +89,14 @@ char *readFile(char *fn) {
 	}
 	return buf;
 }
+#if 0 
+(char *) fn = 0x00007fffffffedaf "../testdata"
+(char *) buf = 0x0000000000000000
+(FILE *) stream = 0x00005555555592e0
+(size_t) stringSize = 115322
+(size_t) readSize = <variable not available>
+
+#endif 
 // insert multpile keys
 //
 
