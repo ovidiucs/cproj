@@ -116,7 +116,12 @@ int main(int argc, char** argv){
 	if (argc != 2) {
 		fprintf(stderr,"Usage: %s <filename>\n", argv[0]);
 	} else {
-		readFile(fn);
+		char *fileRead = readFile(fn);
+		char *strings = strsep(&fileRead,":");
+		while (strings != NULL) {
+			fprintf(stderr, "%s", strings);
+			
+		}
 	}
 	#if 0
 	HashNode  *nodeResult = h_insert(tableResult, "400", "101");
