@@ -89,14 +89,14 @@ char *readFile(char *fn) {
 	}
 	return buf;
 }
-#if 0 
+#if 0
 (char *) fn = 0x00007fffffffedaf "../testdata"
 (char *) buf = 0x0000000000000000
 (FILE *) stream = 0x00005555555592e0
 (size_t) stringSize = 115322
 (size_t) readSize = <variable not available>
 
-#endif 
+#endif
 // insert multpile keys
 //
 
@@ -104,11 +104,10 @@ char *readFile(char *fn) {
 int main(int argc, char** argv){
 	HashTable *tableResult = h_create(10);
 	assert(tableResult != NULL);
-
 	// The pointer to the line which was read
-	char *line = NULL;
-	size_t len = 0;
-	ssize_t nread;
+	//char *line = NULL;
+	//size_t len = 0;
+	//ssize_t nread;
 
 	// filename
 	char *fn = argv[1];
@@ -117,10 +116,14 @@ int main(int argc, char** argv){
 		fprintf(stderr,"Usage: %s <filename>\n", argv[0]);
 	} else {
 		char *fileRead = readFile(fn);
-		char *strings = strsep(&fileRead,":");
-		while (strings != NULL) {
-			fprintf(stderr, "%s", strings);
-			
+		//char *string = strsep(&fileRead,":");
+		char *found;
+		size_t counter = 0;
+		while ( (found = strsep(&fileRead, ":")) != NULL) {
+			if (counter % 2) {
+				fprintf(stderr, "%s\n", found);
+			}
+			counter++;
 		}
 	}
 	#if 0
