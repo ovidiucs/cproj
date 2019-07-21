@@ -69,12 +69,12 @@ HashTable *h_create ( unsigned int size ) {
 // Find a key in a given linked list
 // called by h_insert and h_search and h_delete
 static HashNode *h_findKey(HashNode *hNode, char *key) {
-
+// increment a global variable to find out how many times strcmp has been called
 	while (hNode != NULL) {
 		if(strcmp(hNode->h_key,key) == 0) {
-
 			break;
 		}
+		hNode = hNode->h_next;
 	}
 	return hNode;
 }

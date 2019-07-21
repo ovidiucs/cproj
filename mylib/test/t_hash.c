@@ -2,12 +2,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <sys/stat.h>
 #include <stdlib.h>
 #include "../include/myhash.h"
 // edit library implement search func.
 // test h_search - call on same keys and verify that is same result as the initial call to insert
 
-static void dumpTable (HashTable *table) {
+static void dumpTable (HashTable *table, bool verbose) {
 	// Scope - take a hashTable and iterate through each array element with each
 	// element containing pointers to has nodes; in essence containing a linked list
 
@@ -43,6 +44,7 @@ static void dumpTable (HashTable *table) {
 		}
 	// Increase by one element inside the array (move by one array bucket )
 	} while (++hNodePtr < hNodePtrZ);
+	
 }
 
 // readfile
@@ -54,31 +56,36 @@ char *readFile(char *fn) {
 
 	// buffer
 	char *buf = NULL;
-	size_t stringSize;
+//	size_t stringSize;
 	size_t readSize;
-
+	
 	if (stream) {
 		// Seek last bytes on the stream
-		fseek(stream, 0, SEEK_END);
+//		fseek(stream, 0, SEEK_END);
 		// get current value of file position
-		stringSize = ftell(stream);
+//		stringSize = ftell(stream);
 		// rewind to the start of the file
-		rewind(stream);
+//		rewind(stream);
 
+		struct stat s;
+		fstat(fileno(stream),&s);
+		
 		// Allocate string that can hold all of the data
-		// includes + 1 for newline char
-		buf = (char *) malloc(sizeof(char) * (stringSize + 1));
+		// includes + 1 for null character
+		buf = (char *) malloc(sizeof(char) * (s.st_size + 1));
 
 
 		// read
-		readSize = fread(buf, sizeof(char), stringSize, stream);
+		readSize = fread(buf, sizeof(char), s.st_size, stream);
 
 		// append null at end
-		buf[stringSize] = '\0';
+		buf[s.st_size] = '\0';
 		// something is not right free resources
-		if (stringSize != readSize) {
+		if (s.st_size != readSize) {
 			free(buf);
 			buf = NULL;
+			perror("fread failure");
+			exit(1);
 		}
 		// close the stream
 		fclose(stream);
@@ -93,7 +100,7 @@ char *readFile(char *fn) {
 (char *) fn = 0x00007fffffffedaf "../testdata"
 (char *) buf = 0x0000000000000000
 (FILE *) stream = 0x00005555555592e0
-(size_t) stringSize = 115322
+(size_t) s.st_size = 115322
 (size_t) readSize = <variable not available>
 
 #endif
@@ -119,24 +126,36 @@ int main(int argc, char** argv){
 		//char *string = strsep(&fileRead,":");
 		char *found;
 		size_t counter = 0;
-		while ( (found = strsep(&fileRead, ":")) != NULL) {
-			if (counter % 2) {
-				fprintf(stderr, "%s\n", found);
+		char *str1;
+		while ( (found = strsep(&fileRead, "\n")) != NULL) {
+			str1 = strchr(found,':');
+			if (str1 == NULL) {
+				fprintf(stderr, "No colon was found %s\n",found);
 			}
-			counter++;
+			else {
+				*str1 = '\0';
+				fprintf(stderr,"Key is: %s, Value is: %s\n",found,str1+1);
+				h_insert(tableResult, found,str1+1);
+			}
+
 		}
 	}
 	#if 0
-	HashNode  *nodeResult = h_insert(tableResult, "400", "101");
-	assert(nodeResult != NULL);
+	hashnode  *noderesult = h_insert(tableresult, "400", "101");
+	assert(noderesult != null);
 
-	HashNode  *nodeResult2 = h_insert(tableResult, "401", "102");
-	HashNode  *nodeResult3 = h_insert(tableResult, "400", "1034444444444444");
-	dumpTable(tableResult);
+	hashnode  *noderesult2 = h_insert(tableresult, "401", "102");
+	hashnode  *noderesult3 = h_insert(tableresult, "400", "1034444444444444");
+	dumptable(tableresult);
 	printf("________________\n");
-	HashNode *searchResult = h_search(tableResult,"400");
-	h_delete(tableResult,"400");
-	dumpTable(tableResult);
+	hashnode *searchresult = h_search(tableresult,"400");
+	h_delete(tableresult,"400");
+	1. read file
+	2. delete first 50 keys
+	3. write out hastable to stdout, key: value\n
+	4. quit / from shell cut first 50 lines from the input file and take rest of file, sort it, save to tmp file
+	take output of program and sort it then compare the tmp file and output provided by program. 
 	# endif
+	dumpTable(tableResult);
 	return 0;
 }
