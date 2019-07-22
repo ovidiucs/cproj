@@ -44,7 +44,7 @@ static void dumpTable (HashTable *table, bool verbose) {
 				// Otherwise if that next pointer is null then we printed our only value
 				} else {
 					fprintf(stdout,"Key is: %s, Value is: %s\n",(void *)node->h_key,(void *)node->h_value);
-				} 
+				}
 				// Set node to the next pointer
 				node = node->h_next;
 				//fprintf(stderr,"Key is: %s, Value is: %s\n",found,str1+1);
@@ -53,43 +53,52 @@ static void dumpTable (HashTable *table, bool verbose) {
 	} while (++hNodePtr < hNodePtrZ);
 
 }
-// insert elements into hash table
-static void t_hinsert(char *fn, HashTable *ht) {
-	// Don't pass NULL filename
-	assert(fn != NULL);
 
-	// fileread from filename
-	char *fileRead = readFile(fn);
-	// found - the string from \0 to \0 
+// insert elements into hash table
+kvpair *t_kvp(char *fptr) {
+	// Don't pass NULL filename
+	assert(fptr != NULL);
+	kvpair *kvp;
+	assert(kvp != NULL);
+	// found - the string from \0 to \0
 	char *found = NULL;
 	// str1 the value in the key-value
 	char *str1 = NULL;
-
-	while ( (found = strsep(&fileRead, "\n")) != NULL) {
+	//strsep
+	while ( (found = strsep(&fptr, "\n")) != NULL) {
 		str1 = strchr(found,':');
 		if (str1 == NULL) {
 			fprintf(stderr, "No colon was found %s\n",found);
+			continue;
 		}
 		else {
+			// now format will be  "key"\0"value"\0"key"\0...
 			*str1 = '\0';
-			h_insert(ht, found,str1+1);
+			// and insert the key and value into the hash table
+			kvp->key = found;
+			kvp->value = str1+1;
 		}
 	}
+	return kvp;
 }
+
 // remvoe elements from hashtale
-#if 0 
-static void t_hdelete(HashTable *ht) {
+#if 0
+static void t_hdelete(HashTable *ht, int keys, char *fptr) {
 	// operate a delet on an already allocated data
-	
+
 	// Don't pass nothing
-	assert(ht != NULL);
+	assert( (ht != NULL) && (fptr != NULL) );
 	// read first 50 keys;
 	char *found = NULL;
-	
-	h_delete(ht,key)
+	fprintf(stderr, "%s", fptr);
+
+	//for (i < keys)
+	//h_delete(ht,key)
 
 }
 #endif
+
 // readfile
 static char *readFile(char *fn) {
 	// from https://stackoverflow.com/questions/3463426/in-c-how-should-i-read-a-text-file-and-print-all-strings
@@ -102,18 +111,11 @@ static char *readFile(char *fn) {
 	char *buf = NULL;
 //	size_t stringSize;
 	size_t readSize;
-	
-	if (stream) {
-		// Seek last bytes on the stream
-//		fseek(stream, 0, SEEK_END);
-		// get current value of file position
-//		stringSize = ftell(stream);
-		// rewind to the start of the file
-//		rewind(stream);
 
+	if (stream) {
 		struct stat s;
 		fstat(fileno(stream),&s);
-		
+
 		// Allocate string that can hold all of the data
 		// includes + 1 for null character
 		buf = (char *) malloc(sizeof(char) * (s.st_size + 1));
@@ -140,11 +142,6 @@ static char *readFile(char *fn) {
 	return buf;
 }
 #if 0
-(char *) fn = 0x00007fffffffedaf "../testdata"
-(char *) buf = 0x0000000000000000
-(FILE *) stream = 0x00005555555592e0
-(size_t) s.st_size = 115322
-(size_t) readSize = <variable not available>
 
 #endif
 // insert multpile keys
@@ -155,14 +152,24 @@ int main(int argc, char** argv){
 	assert(tableResult != NULL);
 
 	// initialise filename to NULL
-
+	char *fileRead = NULL;
 	if (argc != 2) {
 		fprintf(stderr,"Usage: %s <filename>\n", argv[0]);
 	} else {
 		char *fn = argv[1];
-		t_hinsert(fn,tableResult);
-		//t_hdelete(tableResult,50);
-		
+		// fileread from filename
+		fileRead = readFile(fn);
+		//t_hinsert(fileRead,tableResult);
+		//t_hdelete(tableResult,50,fileRead);
+			//	fprintf(stderr,"%s,%s\n");
+
+		//t_hinsert(fileRead,tableResult);
+		kvpair *pairs = t_kvp(fileRead);
+	//t_kvp(fileRead);
+		fprintf(stderr,"%s,%s\n",pairs->key,pairs->value);
+		//fprintf(stderr,"%s,%s\n",key,value);
+			//h_insert(tableResult, key,value);
+
 	}
 	#if 0
 	hashnode *searchresult = h_search(tableresult,"400");
@@ -171,8 +178,8 @@ int main(int argc, char** argv){
 	2. delete first 50 keys
 	3. write out hastable to stdout, key: value\n
 	4. quit / from shell cut first 50 lines from the input file and take rest of file, sort it, save to tmp file
-	take output of program and sort it then compare the tmp file and output provided by program. 
-		
+	take output of program and sort it then compare the tmp file and output provided by program.
+
 
 	# endif
 	dumpTable(tableResult,0);

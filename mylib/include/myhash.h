@@ -4,6 +4,10 @@
 
 // Associative array
 // Also called a map, symbol table or dictionary.
+typedef struct kvpair 	{
+	char *key;
+	char *value;
+} kvpair;
 
 typedef struct HashNode {
 	// Next node in the key collision list.
@@ -18,6 +22,7 @@ typedef struct  {
 	HashNode **h_items;
 	unsigned int h_size;
 } HashTable;
+
 extern HashNode *h_insert (HashTable *hTable, char *key, char *value);
 extern HashTable *h_create ( unsigned int size );
 extern HashNode *h_search (HashTable *hTable, char *key);
