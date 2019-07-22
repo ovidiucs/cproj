@@ -7,6 +7,7 @@
 #include "../include/myhash.h"
 // edit library implement search func.
 // test h_search - call on same keys and verify that is same result as the initial call to insert
+static char *readFile(char *fn);
 
 static void dumpTable (HashTable *table, bool verbose) {
 	// Scope - take a hashTable and iterate through each array element with each
@@ -20,37 +21,80 @@ static void dumpTable (HashTable *table, bool verbose) {
 	// A new nash node - can be null or something else
 	HashNode *node;
 
-	fputs("HASHTABLE DUMP \n",stderr);
-	do {
-		// Derefenrce one level and set it to node
-		node = *hNodePtr;
-		// Check first if node is not null - don't print info
-			while (node != NULL) {
-				fprintf(stderr, "De-ref the pointer at %p we have our nosde linked list with values:\n\
-					h_next:  Address: %p\n\
-					h_key:   Address: %p, Value: %s\n\
-					h_value: Address: %p, Value: %s\n",
-					(void *)node,
-					(void *)node->h_next,
-					(void *)node->h_key,
-					(void *)node->h_key,
-					(void *)node->h_value,
-					(void *)node->h_value
-					);
-			// Should the linked list inside each *node contain extra elements
-			// in the case of a collision the we move to the next element in that list
-			// Otherwise if that next pointer is null then we printed our only value
-			node = node->h_next;
+		fputs("HASHTABLE DUMP \n",stderr);
+		do {
+			// Derefenrce one level and set it to node
+			node = *hNodePtr;
+			// Check first if node is not null - don't print info
+				while (node != NULL) {
+				if (verbose) {
+					fprintf(stdout, "De-ref the pointer at %p we have our nosde linked list with values:\n\
+						h_next:  Address: %p\n\
+						h_key:   Address: %p, Value: %s\n\
+						h_value: Address: %p, Value: %s\n",
+						(void *)node,
+						(void *)node->h_next,
+						(void *)node->h_key,
+						(void *)node->h_key,
+						(void *)node->h_value,
+						(void *)node->h_value
+						);
+				// Should the linked list inside each *node contain extra elements
+				// in the case of a collision the we move to the next element in that list
+				// Otherwise if that next pointer is null then we printed our only value
+				} else {
+					fprintf(stdout,"Key is: %s, Value is: %s\n",(void *)node->h_key,(void *)node->h_value);
+				} 
+				// Set node to the next pointer
+				node = node->h_next;
+				//fprintf(stderr,"Key is: %s, Value is: %s\n",found,str1+1);
+		// Increase by one element inside the array (move by one array bucket )
 		}
-	// Increase by one element inside the array (move by one array bucket )
 	} while (++hNodePtr < hNodePtrZ);
-	
-}
 
+}
+// insert elements into hash table
+static void t_hinsert(char *fn, HashTable *ht) {
+	// Don't pass NULL filename
+	assert(fn != NULL);
+
+	// fileread from filename
+	char *fileRead = readFile(fn);
+	// found - the string from \0 to \0 
+	char *found = NULL;
+	// str1 the value in the key-value
+	char *str1 = NULL;
+
+	while ( (found = strsep(&fileRead, "\n")) != NULL) {
+		str1 = strchr(found,':');
+		if (str1 == NULL) {
+			fprintf(stderr, "No colon was found %s\n",found);
+		}
+		else {
+			*str1 = '\0';
+			h_insert(ht, found,str1+1);
+		}
+	}
+}
+// remvoe elements from hashtale
+#if 0 
+static void t_hdelete(HashTable *ht) {
+	// operate a delet on an already allocated data
+	
+	// Don't pass nothing
+	assert(ht != NULL);
+	// read first 50 keys;
+	char *found = NULL;
+	
+	h_delete(ht,key)
+
+}
+#endif
 // readfile
-char *readFile(char *fn) {
+static char *readFile(char *fn) {
 	// from https://stackoverflow.com/questions/3463426/in-c-how-should-i-read-a-text-file-and-print-all-strings
 	// FILE handle
+	assert(fn != NULL);
 	FILE *stream;
 	stream = fopen(fn, "r");
 
@@ -73,7 +117,6 @@ char *readFile(char *fn) {
 		// Allocate string that can hold all of the data
 		// includes + 1 for null character
 		buf = (char *) malloc(sizeof(char) * (s.st_size + 1));
-
 
 		// read
 		readSize = fread(buf, sizeof(char), s.st_size, stream);
@@ -107,47 +150,21 @@ char *readFile(char *fn) {
 // insert multpile keys
 //
 
-
 int main(int argc, char** argv){
 	HashTable *tableResult = h_create(10);
 	assert(tableResult != NULL);
-	// The pointer to the line which was read
-	//char *line = NULL;
-	//size_t len = 0;
-	//ssize_t nread;
 
-	// filename
-	char *fn = argv[1];
+	// initialise filename to NULL
 
 	if (argc != 2) {
 		fprintf(stderr,"Usage: %s <filename>\n", argv[0]);
 	} else {
-		char *fileRead = readFile(fn);
-		//char *string = strsep(&fileRead,":");
-		char *found;
-		size_t counter = 0;
-		char *str1;
-		while ( (found = strsep(&fileRead, "\n")) != NULL) {
-			str1 = strchr(found,':');
-			if (str1 == NULL) {
-				fprintf(stderr, "No colon was found %s\n",found);
-			}
-			else {
-				*str1 = '\0';
-				fprintf(stderr,"Key is: %s, Value is: %s\n",found,str1+1);
-				h_insert(tableResult, found,str1+1);
-			}
-
-		}
+		char *fn = argv[1];
+		t_hinsert(fn,tableResult);
+		//t_hdelete(tableResult,50);
+		
 	}
 	#if 0
-	hashnode  *noderesult = h_insert(tableresult, "400", "101");
-	assert(noderesult != null);
-
-	hashnode  *noderesult2 = h_insert(tableresult, "401", "102");
-	hashnode  *noderesult3 = h_insert(tableresult, "400", "1034444444444444");
-	dumptable(tableresult);
-	printf("________________\n");
 	hashnode *searchresult = h_search(tableresult,"400");
 	h_delete(tableresult,"400");
 	1. read file
@@ -155,7 +172,10 @@ int main(int argc, char** argv){
 	3. write out hastable to stdout, key: value\n
 	4. quit / from shell cut first 50 lines from the input file and take rest of file, sort it, save to tmp file
 	take output of program and sort it then compare the tmp file and output provided by program. 
+		
+
 	# endif
-	dumpTable(tableResult);
+	dumpTable(tableResult,0);
+
 	return 0;
 }
