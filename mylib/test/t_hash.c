@@ -75,15 +75,11 @@ static void dumpTable (HashTable *table, bool verbose) {
 			fprintf(stderr, "No colon was found %s\n",found);
 		}
 		else {
-			//kvpair *kvp;
 			*str1 = '\0';
-			//fprintf(stderr,"%s\n", value);
-				struct Tuple r = {found, str1+1};
-				return r;
+			struct Tuple r = {found, str1+1};
+			return r;
 
 		}
-		//fprintf(stderr,"Done\n");
-
 	}
 }
 // remvoe elements from hashtale
@@ -99,7 +95,6 @@ static char *readFile(char *fn) {
 
 	// buffer
 	char *buf = NULL;
-//	size_t stringSize;
 	size_t readSize;
 
 	if (stream) {
@@ -131,9 +126,7 @@ static char *readFile(char *fn) {
 	}
 	return buf;
 }
-#if 0
 
-#endif
 // insert multpile keys
 //
 
