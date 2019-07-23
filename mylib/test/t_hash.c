@@ -9,6 +9,11 @@
 // test h_search - call on same keys and verify that is same result as the initial call to insert
 static char *readFile(char *fn);
 
+struct Tuple {
+    char *key;
+    char *value;
+};
+
 static void dumpTable (HashTable *table, bool verbose) {
 	// Scope - take a hashTable and iterate through each array element with each
 	// element containing pointers to has nodes; in essence containing a linked list
@@ -55,49 +60,34 @@ static void dumpTable (HashTable *table, bool verbose) {
 }
 
 // insert elements into hash table
-kvpair *t_kvp(char *fptr) {
+
+ static struct Tuple t_kvp (char *fptr) {
 	// Don't pass NULL filename
-	assert(fptr != NULL);
-	kvpair *kvp;
-	assert(kvp != NULL);
+	assert(fptr);
+
 	// found - the string from \0 to \0
 	char *found = NULL;
 	// str1 the value in the key-value
 	char *str1 = NULL;
-	//strsep
 	while ( (found = strsep(&fptr, "\n")) != NULL) {
 		str1 = strchr(found,':');
 		if (str1 == NULL) {
 			fprintf(stderr, "No colon was found %s\n",found);
-			continue;
 		}
 		else {
-			// now format will be  "key"\0"value"\0"key"\0...
+			//kvpair *kvp;
 			*str1 = '\0';
-			// and insert the key and value into the hash table
-			kvp->key = found;
-			kvp->value = str1+1;
+			//fprintf(stderr,"%s\n", value);
+				struct Tuple r = {found, str1+1};
+				return r;
+
 		}
+		//fprintf(stderr,"Done\n");
+
 	}
-	return kvp;
 }
-
 // remvoe elements from hashtale
-#if 0
-static void t_hdelete(HashTable *ht, int keys, char *fptr) {
-	// operate a delet on an already allocated data
 
-	// Don't pass nothing
-	assert( (ht != NULL) && (fptr != NULL) );
-	// read first 50 keys;
-	char *found = NULL;
-	fprintf(stderr, "%s", fptr);
-
-	//for (i < keys)
-	//h_delete(ht,key)
-
-}
-#endif
 
 // readfile
 static char *readFile(char *fn) {
@@ -157,31 +147,14 @@ int main(int argc, char** argv){
 		fprintf(stderr,"Usage: %s <filename>\n", argv[0]);
 	} else {
 		char *fn = argv[1];
+
 		// fileread from filename
 		fileRead = readFile(fn);
-		//t_hinsert(fileRead,tableResult);
-		//t_hdelete(tableResult,50,fileRead);
-			//	fprintf(stderr,"%s,%s\n");
+		struct Tuple testing = t_kvp(fileRead);
 
-		//t_hinsert(fileRead,tableResult);
-		kvpair *pairs = t_kvp(fileRead);
-	//t_kvp(fileRead);
-		fprintf(stderr,"%s,%s\n",pairs->key,pairs->value);
-		//fprintf(stderr,"%s,%s\n",key,value);
-			//h_insert(tableResult, key,value);
-
+		fprintf(stderr,"%s%s\n",testing.key, testing.value);
 	}
-	#if 0
-	hashnode *searchresult = h_search(tableresult,"400");
-	h_delete(tableresult,"400");
-	1. read file
-	2. delete first 50 keys
-	3. write out hastable to stdout, key: value\n
-	4. quit / from shell cut first 50 lines from the input file and take rest of file, sort it, save to tmp file
-	take output of program and sort it then compare the tmp file and output provided by program.
 
-
-	# endif
 	dumpTable(tableResult,0);
 
 	return 0;
