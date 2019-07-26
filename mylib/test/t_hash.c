@@ -79,12 +79,12 @@ static void dumpTable (HashTable *table, bool verbose) {
 }
 // remvoe elements from hashtale
 
-static Tuple kv_format(char *fptr, int iterNum){
-	assert (fptr);
-	char *save  = fptr;
-	int counter = iterNum;
-	while()
-	return;
+static bool *kv_format(Tuple *tptr,char *fptr){
+	
+	tptr->key = fptr;
+	tptr->value = fptr+1;
+
+	return 0;
 }
 
 // readfile
@@ -104,14 +104,15 @@ static char *readFile(char *fn) {
 		fstat(fileno(stream),&s);
 
 		// Allocate string that can hold all of the data
-		// includes + 1 for null character
-		buf = (char *) malloc(sizeof(char) * (s.st_size + 1));
+		// includes + 1 for null character + 1 to codfy end of file for Tuple
+		buf = (char *) malloc(sizeof(char) * (s.st_size + 2));
 
 		// read
 		readSize = fread(buf, sizeof(char), s.st_size, stream);
 
 		// append null at end
 		buf[s.st_size] = '\0';
+		buf[s.st_size+1] = '\0';
 		// something is not right free resources
 		if (s.st_size != readSize) {
 			free(buf);
@@ -139,6 +140,10 @@ int main(int argc, char** argv){
 	// initialise filename to NULL
 	char *fileRead = NULL;
 	char *format = NULL;
+	struct Tuple abc
+	{
+		
+	};
 	if (argc != 2) {
 		fprintf(stderr,"Usage: %s <filename>\n", argv[0]);
 	} else {
@@ -147,7 +152,7 @@ int main(int argc, char** argv){
 		// fileread from filename
 		fileRead = readFile(fn);
 		format = t_kvp(fileRead);
-		kvFormat = kv_format(format);
+		kv_format = kv_format(format);
 	}
 
 	dumpTable(tableResult,0);
