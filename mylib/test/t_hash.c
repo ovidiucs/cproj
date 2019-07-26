@@ -61,29 +61,31 @@ static void dumpTable (HashTable *table, bool verbose) {
 
 // insert elements into hash table
 
- static struct Tuple t_kvp (char *fptr) {
+ static char *t_kvp (char *fptr) {
 	// Don't pass NULL filename
 	assert(fptr);
-
+	char *save = fptr;
 	// found - the string from \0 to \0
 	char *found = NULL;
 	// str1 the value in the key-value
 	char *str1 = NULL;
 	while ( (found = strsep(&fptr, "\n")) != NULL) {
 		str1 = strchr(found,':');
-		if (str1 == NULL) {
-			fprintf(stderr, "No colon was found %s\n",found);
-		}
-		else {
-			*str1 = '\0';
-			struct Tuple r = {found, str1+1};
-			return r;
-
-		}
+		if (str1 == NULL)
+			continue;
+		*str1 = '\0';
 	}
+	return save;
 }
 // remvoe elements from hashtale
 
+static Tuple kv_format(char *fptr, int iterNum){
+	assert (fptr);
+	char *save  = fptr;
+	int counter = iterNum;
+	while()
+	return;
+}
 
 // readfile
 static char *readFile(char *fn) {
@@ -136,6 +138,7 @@ int main(int argc, char** argv){
 
 	// initialise filename to NULL
 	char *fileRead = NULL;
+	char *format = NULL;
 	if (argc != 2) {
 		fprintf(stderr,"Usage: %s <filename>\n", argv[0]);
 	} else {
@@ -143,9 +146,8 @@ int main(int argc, char** argv){
 
 		// fileread from filename
 		fileRead = readFile(fn);
-		struct Tuple testing = t_kvp(fileRead);
-
-		fprintf(stderr,"%s%s\n",testing.key, testing.value);
+		format = t_kvp(fileRead);
+		kvFormat = kv_format(format);
 	}
 
 	dumpTable(tableResult,0);
