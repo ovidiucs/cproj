@@ -48,7 +48,7 @@ static void dumpTable (HashTable *table, bool verbose) {
 				// in the case of a collision the we move to the next element in that list
 				// Otherwise if that next pointer is null then we printed our only value
 				} else {
-					fprintf(stdout,"Key is: %s, Value is: %s\n",(void *)node->h_key,(void *)node->h_value);
+					fprintf(stdout,"%s:%s\n",(void *)node->h_key,(void *)node->h_value);
 				}
 				// Set node to the next pointer
 				node = node->h_next;
@@ -61,7 +61,7 @@ static void dumpTable (HashTable *table, bool verbose) {
 
 // insert elements into hash table
 
- static char *t_kvp (char *fptr) {
+static char *t_parseBuff (char *fptr) {
 	// Don't pass NULL filename
 	assert(fptr);
 	char *save = fptr;
@@ -77,20 +77,29 @@ static void dumpTable (HashTable *table, bool verbose) {
 	}
 	return save;
 }
-// remvoe elements from hashtale
-
-static bool *kv_format(Tuple *tptr,char *fptr){
-	
-	tptr->key = fptr;
-	tptr->value = fptr+1;
-
-	return 0;
+//
+// Returns key value pair - returns bool. 
+// Arguments: struct Tuple pointer, indirect buffer pointer
+ 
+static bool kv_format(struct Tuple *tptr,char **fptr){
+	char *fptr1 = *fptr;
+	char *str = NULL;
+	// If the beginning of the buffer (next key which we want to read) is a null byte
+	// then return false	
+	if (*fptr1 == '\0')
+		return false;
+	// Otherwise set the key and the value of the caller's struct
+	tptr->key = fptr1;
+	str = strchr(fptr1, '\0');
+	tptr->value = str + 1;
+	*fptr = strchr(str + 1, '\0') + 1;
+	return true;
 }
 
 // readfile
 static char *readFile(char *fn) {
 	// from https://stackoverflow.com/questions/3463426/in-c-how-should-i-read-a-text-file-and-print-all-strings
-	// FILE handle
+ 	// FILE handle
 	assert(fn != NULL);
 	FILE *stream;
 	stream = fopen(fn, "r");
@@ -139,11 +148,11 @@ int main(int argc, char** argv){
 
 	// initialise filename to NULL
 	char *fileRead = NULL;
-	char *format = NULL;
-	struct Tuple abc
-	{
-		
-	};
+	
+	char *format,*format0;
+	
+	struct Tuple kv_tuple;	
+	
 	if (argc != 2) {
 		fprintf(stderr,"Usage: %s <filename>\n", argv[0]);
 	} else {
@@ -151,10 +160,21 @@ int main(int argc, char** argv){
 
 		// fileread from filename
 		fileRead = readFile(fn);
-		format = t_kvp(fileRead);
-		kv_format = kv_format(format);
+		format = t_parseBuff(fileRead);
+		format0 = format;
+		
+		while (kv_format(&kv_tuple,&format)) {
+			h_insert(tableResult,kv_tuple.key, kv_tuple.value);	
+		}
+		int counter = 0;
+		format = format0;
+		while (kv_format(&kv_tuple,&format)) {
+			h_delete(tableResult,kv_tuple.key);
+			if(++counter ==  50)
+				break;
+			}
+				
 	}
-
 	dumpTable(tableResult,0);
 
 	return 0;
