@@ -112,6 +112,7 @@ HashNode *h_insert (HashTable *hTable, char *key, char *value) {
 	 	hTable->h_items[resultHash] = newNode;
      } else {
  		// Keys are the same , reeuse key and assign a different value + 1 for '/0'
+		// Latest value will be used for the key.
 			newNode->h_value = (char *) realloc((void *) newNode->h_value, strlen(value)+1);
 			newNode->h_value = strcpy(newNode->h_value,value);
      }

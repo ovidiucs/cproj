@@ -114,7 +114,7 @@ static char *readFile(char *fn) {
 
 		// Allocate string that can hold all of the data
 		// includes + 1 for null character + 1 to codfy end of file for Tuple
-		buf = (char *) malloc(sizeof(char) * (s.st_size + 2));
+		buf = (char *) malloc(s.st_size + 2);
 
 		// read
 		readSize = fread(buf, sizeof(char), s.st_size, stream);
@@ -148,9 +148,9 @@ int main(int argc, char** argv){
 
 	// initialise filename to NULL
 	char *fileRead = NULL;
-	
+	// the two strings need to be stored  
 	char *format,*format0;
-	
+	// local data strucure to store strucutre
 	struct Tuple kv_tuple;	
 	
 	if (argc != 2) {
@@ -161,6 +161,7 @@ int main(int argc, char** argv){
 		// fileread from filename
 		fileRead = readFile(fn);
 		format = t_parseBuff(fileRead);
+		// save 
 		format0 = format;
 		
 		while (kv_format(&kv_tuple,&format)) {
@@ -173,7 +174,6 @@ int main(int argc, char** argv){
 			if(++counter ==  50)
 				break;
 			}
-				
 	}
 	dumpTable(tableResult,0);
 
