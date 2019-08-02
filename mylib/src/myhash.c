@@ -12,6 +12,7 @@
 
 #define DEFAULT_HASH_SIZE 97
 #define PATH_MAX 255
+#define ARRAY_MAX 0.7
 #define BUFF 2048
 //  Free allocated memory for entire hash table
 #if 0
@@ -26,17 +27,19 @@ static size_t hash(char *key, unsigned int hashSize) {
     return k % (unsigned int) hashSize;
 }
 
+// Global variables static for resizing
+static int usedArrayElements = 0;
+
 // initialises a new hash table
 // size - how many HashNodes we want to store
 // default at 97 HashNodes
 // initialise the array of items with calloc
 
+
 HashTable *h_create ( unsigned int size ) {
 
 	// Create hash pointer (for malloc)
 	HashTable *hash;
-	// Hold the prime number
-	unsigned int primeSize = 0;
 
 	if ( (hash = (HashTable *) malloc(sizeof(HashTable) ) ) == NULL ) {
 		perror("malloc () failed");
@@ -47,6 +50,9 @@ HashTable *h_create ( unsigned int size ) {
 	if (size == 0)
 		hash->h_size = DEFAULT_HASH_SIZE;
 	else {
+		// Hold the prime number
+		unsigned int primeSize = 0;
+	
 		primeSize = prime(size);
 		if (primeSize == 0) {
 			fprintf(stderr, "Can't get prime number for %d size\n", size );
@@ -54,10 +60,10 @@ HashTable *h_create ( unsigned int size ) {
 		}
 		hash->h_size = primeSize;
 	}
-
+	 
 	// calloc - allocate the array and init to null
-
-	hash->h_items = (HashNode**) calloc((size_t) size ,sizeof(HashNode*));
+	
+	hash->h_items = (HashNode**) calloc((size_t) hash->h_size ,sizeof(HashNode*));
 	if (hash->h_items == NULL) {
 		perror("calloc () failed");
 		exit(1);
@@ -66,11 +72,15 @@ HashTable *h_create ( unsigned int size ) {
 	// return hash
 	return hash;
 }
+
+extern size_t cmpCount;
+
 // Find a key in a given linked list
 // called by h_insert and h_search and h_delete
 static HashNode *h_findKey(HashNode *hNode, char *key) {
 // increment a global variable to find out how many times strcmp has been called
 	while (hNode != NULL) {
+	cmpCount++;
 		if(strcmp(hNode->h_key,key) == 0) {
 			break;
 		}
@@ -91,14 +101,28 @@ HashNode *h_insert (HashTable *hTable, char *key, char *value) {
 	newNode = hTable->h_items[resultHash];
 	// overwrites pointer if two key are same. Collisions are overwritten
 	// todo: allow for hash collisions by pushing to the next value
-
+	// new node is null, increase counter of used array elements
+	if (newNode == NULL)
+		usedArrayElements++;
+	float quota = usedArrayElements/hTable->h_size;
+	if (quota > ARRAY_MAX)
+		//h_resize(hTable);
+		// calloc to allocate a new array with a new size
+		// seprate functions - called from - resize and h_insert
+		// keep existing hash table and change its array memeber
+		// - newNode if condition - separate function
+		// - and also the newNode = h_findKey
+		// for each element in the current array / rehash to find new key in new array/
+		// ---///--- create new function for resizing.
+		int (*x)(char *y, int *z) = &h_finKey;
+		(*x)(			
 	// cannot use realloc (save old pointer if this is the case)
 	//HashNode *oldNodePtr = newNode;
 	newNode = h_findKey(newNode, key);
 
 
 	// Executes only if the newNode is NULL-not visited before
-    if ( newNode == NULL ) {
+        if ( newNode == NULL ) {
 		if ( (newNode = (HashNode *) malloc(sizeof(HashNode) ) ) == NULL ||
 				(newNode->h_key = strdup(key) ) == NULL ||
 				(newNode->h_value = strdup(value) ) == NULL ) {

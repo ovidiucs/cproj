@@ -114,7 +114,7 @@ static char *readFile(char *fn) {
 
 		// Allocate string that can hold all of the data
 		// includes + 1 for null character + 1 to codfy end of file for Tuple
-		buf = (char *) malloc(s.st_size + 2);
+		buf = (char *) malloc( (unsigned) s.st_size + 2);
 
 		// read
 		readSize = fread(buf, sizeof(char), s.st_size, stream);
@@ -141,9 +141,10 @@ static char *readFile(char *fn) {
 
 // insert multpile keys
 //
+size_t cmpCount = 0;
 
 int main(int argc, char** argv){
-	HashTable *tableResult = h_create(10);
+	HashTable *tableResult = h_create(10000);
 	assert(tableResult != NULL);
 
 	// initialise filename to NULL
@@ -176,6 +177,6 @@ int main(int argc, char** argv){
 			}
 	}
 	dumpTable(tableResult,0);
-
+	fprintf(stderr,"Number of strcmps is: %lu\n", cmpCount);
 	return 0;
 }
