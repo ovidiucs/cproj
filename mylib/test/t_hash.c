@@ -144,7 +144,7 @@ static char *readFile(char *fn) {
 size_t cmpCount = 0;
 
 int main(int argc, char** argv){
-	HashTable *tableResult = h_create(10000);
+	HashTable *tableResult = h_create(10);
 	assert(tableResult != NULL);
 
 	// initialise filename to NULL

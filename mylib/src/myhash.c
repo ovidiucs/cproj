@@ -61,7 +61,9 @@ HashTable *h_create ( unsigned int size ) {
 		hash->h_size = primeSize;
 	}
 	 
-	// calloc - allocate the array and init to null
+	// calloc - allocate the array and init to null 
+	// 01.08 - set the argument to calloc to be the size of the hash table 
+	//		   not the size passed in the function call.
 	
 	hash->h_items = (HashNode**) calloc((size_t) hash->h_size ,sizeof(HashNode*));
 	if (hash->h_items == NULL) {
@@ -89,9 +91,22 @@ static HashNode *h_findKey(HashNode *hNode, char *key) {
 	return hNode;
 }
 
+HashTable *h_resize (HashTable *oldHashTable, unsigned int size) {
+	HashTable *biggerHashTable;
+	// We will have to create a new HashTable first
+	biggerHashTable = h_create(size);
+	// We now have the zeroed array of pointers 
+	// Next we need to re-index 
+	HashNode *oldNode;
+	char *oldKey = oldHashTable->h_items;
+	size_t resultHash = hash(oldKey,biggerHashTable->h_size);
+	oldNode = oldHashTable->h_items[resultHash];
+	fprintf(stdout,"%p,%u\n",biggerHashTable, hTable->h_size);
+	
+	return biggerHashTable;
+}
 // Insert a key-value pair into a hash table
-
-
+// until a given condition then call h_resize
 HashNode *h_insert (HashTable *hTable, char *key, char *value) {
 	HashNode *newNode;
 	// result hash will give same index and that index will already have
@@ -100,13 +115,22 @@ HashNode *h_insert (HashTable *hTable, char *key, char *value) {
 
 	newNode = hTable->h_items[resultHash];
 	// overwrites pointer if two key are same. Collisions are overwritten
-	// todo: allow for hash collisions by pushing to the next value
-	// new node is null, increase counter of used array elements
-	if (newNode == NULL)
+	// todo: allow for hash collisions by pushing to the next value - not done 02.08
+	
+	// a) new node is null, increase counter of used array elements 
+	// b) then if the number is greater than a given value 
+	// c) we will need to create ask for a new block of memory in the heap 
+	// and do a re-indexing on the keys on the new node 
+	// after the new index is known then move the pointers from the old 
+ 	if (newNode == NULL)
 		usedArrayElements++;
-	float quota = usedArrayElements/hTable->h_size;
-	if (quota > ARRAY_MAX)
-		//h_resize(hTable);
+	// b)
+	//fprintf (stdout,"%d\n",usedArrayElements);
+	float quota = (float) usedArrayElements/hTable->h_size;
+	// c) 
+	if ( quota > ARRAY_MAX)
+		hTable = h_resize(hTable,hTable->h_size*(1+ARRAY_MAX));
+		//	fprintf (stdout,"%lu\n%lu\n",hTable->h_size*hTable->h_size,hTable->h_size);
 		// calloc to allocate a new array with a new size
 		// seprate functions - called from - resize and h_insert
 		// keep existing hash table and change its array memeber
@@ -114,8 +138,7 @@ HashNode *h_insert (HashTable *hTable, char *key, char *value) {
 		// - and also the newNode = h_findKey
 		// for each element in the current array / rehash to find new key in new array/
 		// ---///--- create new function for resizing.
-		int (*x)(char *y, int *z) = &h_finKey;
-		(*x)(			
+		
 	// cannot use realloc (save old pointer if this is the case)
 	//HashNode *oldNodePtr = newNode;
 	newNode = h_findKey(newNode, key);
@@ -140,8 +163,6 @@ HashNode *h_insert (HashTable *hTable, char *key, char *value) {
 			newNode->h_value = (char *) realloc((void *) newNode->h_value, strlen(value)+1);
 			newNode->h_value = strcpy(newNode->h_value,value);
      }
-
-
 
 	return newNode;
 }
