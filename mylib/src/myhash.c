@@ -98,10 +98,12 @@ HashTable *h_resize (HashTable *oldHashTable, unsigned int size) {
 	// We now have the zeroed array of pointers 
 	// Next we need to re-index 
 	HashNode *oldNode;
-	char *oldKey = oldHashTable->h_items;
+	HashNode *newNode;
+	oldNode = *oldHashTable->h_items;
+	char *oldKey = oldNode->h_key;
 	size_t resultHash = hash(oldKey,biggerHashTable->h_size);
-	oldNode = oldHashTable->h_items[resultHash];
-	fprintf(stdout,"%p,%u\n",biggerHashTable, hTable->h_size);
+	newNode = biggerHashTable->h_items[resultHash];
+	fprintf(stdout,"%p,%u,%s,%s\n",biggerHashTable, oldHashTable->h_size, oldKey,resultHash);
 	
 	return biggerHashTable;
 }
@@ -129,7 +131,7 @@ HashNode *h_insert (HashTable *hTable, char *key, char *value) {
 	float quota = (float) usedArrayElements/hTable->h_size;
 	// c) 
 	if ( quota > ARRAY_MAX)
-		hTable = h_resize(hTable,hTable->h_size*(1+ARRAY_MAX));
+		hTable = h_resize(hTable,(hTable->h_size*(1+ARRAY_MAX)) );
 		//	fprintf (stdout,"%lu\n%lu\n",hTable->h_size*hTable->h_size,hTable->h_size);
 		// calloc to allocate a new array with a new size
 		// seprate functions - called from - resize and h_insert
