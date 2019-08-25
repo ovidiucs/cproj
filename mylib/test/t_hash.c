@@ -22,7 +22,7 @@ static void dumpTable (HashTable *table, bool verbose) {
 	// HashNode **hNodePtr == &hNodePtr[i]
 	HashNode **hNodePtr = table->h_items;
 	// The last element of the array of pointer will be the size defined in the
-	HashNode **hNodePtrZ = hNodePtr+ table->h_size;
+	HashNode **hNodePtrZ = hNodePtr + table->h_size;
 	// A new nash node - can be null or something else
 	HashNode *node;
 
@@ -32,7 +32,7 @@ static void dumpTable (HashTable *table, bool verbose) {
 			node = *hNodePtr;
 			// Check first if node is not null - don't print info
 				while (node != NULL) {
-				if (verbose) {
+					if (verbose) {
 					fprintf(stdout, "De-ref the pointer at %p we have our nosde linked list with values:\n\
 						h_next:  Address: %p\n\
 						h_key:   Address: %p, Value: %s\n\
@@ -168,6 +168,7 @@ int main(int argc, char** argv){
 		while (kv_format(&kv_tuple,&format)) {
 			h_insert(tableResult,kv_tuple.key, kv_tuple.value);	
 		}
+		/*
 		int counter = 0;
 		format = format0;
 		while (kv_format(&kv_tuple,&format)) {
@@ -175,6 +176,7 @@ int main(int argc, char** argv){
 			if(++counter ==  50)
 				break;
 			}
+			*/
 	}
 	dumpTable(tableResult,0);
 	fprintf(stderr,"Number of strcmps is: %lu\n", cmpCount);
