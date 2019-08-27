@@ -118,15 +118,21 @@ HashTable *h_resize (HashTable *oldHashTable, unsigned int size) {
 		oldNode = *hNodePtr;
 		// Check first if node is not null
 			while (oldNode != NULL) {
+				fprintf(stderr,"OldNode is not null, it is %s",oldNode->h_value);
+				HashNode* tempVar = oldNode->h_next;
+					if (tempVar == NULL) {
+						fprintf(stderr,"tempVar is null, skipping\n");
+						break;
+					}
+
 			// Transfer from old table to new table
 			// oldnode is not not null
 			// 1. grab  next pointer before move put it in a temp variable hashnode*
 			// 2. move node to new hash table - find index, rehash key , etc
 			// 3. oldnode = temp variable
-					
+		}
 	} while (++hNodePtr < hNodePtrZ);
 	// free old array
-
 
 	return biggerHashTable;
 }
