@@ -90,7 +90,8 @@ static HashNode *h_findKey(HashNode *hNode, char *key) {
 	}
 	return hNode;
 }
-
+// h_resize called by h_insert in case the array gets too small and a new hash
+// table will need to be created. 
 HashTable *h_resize (HashTable *oldHashTable, unsigned int size) {
 	fprintf(stderr,"Running h_resize with new size of %u\n",size);
 	
@@ -101,7 +102,6 @@ HashTable *h_resize (HashTable *oldHashTable, unsigned int size) {
 	// We now have the zeroed array of pointers 
 	// Next we need to re-index 
 
-	
 	// Assign first eleemnt in array of pointers from the old hash table
 	HashNode **hNodePtr = oldHashTable->h_items;
 	
@@ -112,19 +112,22 @@ HashTable *h_resize (HashTable *oldHashTable, unsigned int size) {
 	HashNode *newNode;
 	HashNode *oldNode;
 
-	
 	do {
 		// Derefenrce one level and set it to node
 		oldNode = *hNodePtr;
 		// Check first if node is not null
 			while (oldNode != NULL) {
-				fprintf(stderr,"OldNode is not null, it is %s",oldNode->h_value);
+				fprintf(stderr,"Value from oldNode, is: %s and key is: %s\n",oldNode->h_value,oldNode->h_key);
 				HashNode* tempVar = oldNode->h_next;
 					if (tempVar == NULL) {
-						fprintf(stderr,"tempVar is null, skipping\n");
+						fprintf(stderr,"tempvar is null, skipping\n");
 						break;
 					}
-
+				// Call h_insert to insert the data into the new bigger hash table.
+				h_insert(biggerHashTable,oldNode->h_key,oldNode->h_value);
+				// Assign the temporary variable which holds the next value which is not null
+				// into old node. 
+				oldNode = tempVar;
 			// Transfer from old table to new table
 			// oldnode is not not null
 			// 1. grab  next pointer before move put it in a temp variable hashnode*
