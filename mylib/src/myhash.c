@@ -108,7 +108,7 @@ HashTable *h_resize (HashTable *oldHashTable, unsigned int size) {
 	// The last element of the array of pointer will be the size defined in hNodePtrZ
 	HashNode **hNodePtrZ = hNodePtr + oldHashTable->h_size;
 	
-	// A new nash node - can be null or something else
+	// A new hash node - can be null or something else
 	HashNode *newNode;
 	HashNode *oldNode;
 
@@ -120,7 +120,7 @@ HashTable *h_resize (HashTable *oldHashTable, unsigned int size) {
 				fprintf(stderr,"Value from oldNode, is: %s and key is: %s\n",oldNode->h_value,oldNode->h_key);
 				HashNode* tempVar = oldNode->h_next;
 					if (tempVar == NULL) {
-						fprintf(stderr,"tempvar is null, skipping\n");
+						//fprintf(stderr,"tempvar is null, skipping\n");
 						break;
 					}
 				// Call h_insert to insert the data into the new bigger hash table.
@@ -182,6 +182,7 @@ HashNode *h_insert (HashTable *hTable, char *key, char *value) {
 		float quota = (float) nodeCount/hTable->h_size;
 		// c) 
 		if ( quota > ARRAY_MAX)
+			fprintf(stderr,"Resizing array\n quota is %f ",quota);
 			hTable = h_resize(hTable,(unsigned int) (hTable->h_size*(1+ARRAY_MAX)) );
 
 			//	fprintf (stdout,"%lu\n%lu\n",hTable->h_size*hTable->h_size,hTable->h_size);
