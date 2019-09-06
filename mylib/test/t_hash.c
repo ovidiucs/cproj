@@ -8,7 +8,7 @@
 // edit library implement search func.
 // test h_search - call on same keys and verify that is same result as the initial call to insert
 static char *readFile(char *fn);
-
+#define INIT_HSIZE 97
 struct Tuple {
     char *key;
     char *value;
@@ -144,7 +144,7 @@ static char *readFile(char *fn) {
 size_t cmpCount = 0;
 
 int main(int argc, char** argv){
-	HashTable *tableResult = h_create(10);
+	HashTable *tableResult = h_create(INIT_HSIZE);
 	assert(tableResult != NULL);
 
 	// initialise filename to NULL

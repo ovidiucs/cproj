@@ -18,6 +18,7 @@ typedef struct HashNode {
 typedef struct  {
 	HashNode **h_items;
 	unsigned int h_size;
+	unsigned int h_count;
 } HashTable;
 
 extern HashNode *h_insert (HashTable *hTable, char *key, char *value);

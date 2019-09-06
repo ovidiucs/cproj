@@ -27,8 +27,6 @@ static size_t hash(char *key, unsigned int hashSize) {
     return k % (unsigned int) hashSize;
 }
 
-// Global variables static for resizing
-static int nodeCount = 0;
 
 // initialises a new hash table
 // size - how many HashNodes we want to store
@@ -70,7 +68,8 @@ HashTable *h_create ( unsigned int size ) {
 		perror("calloc () failed");
 		exit(1);
 	}
-
+	// set h_count to 0;
+	hash->h_count = 0;
 	// return hash
 	return hash;
 }
@@ -93,11 +92,12 @@ static HashNode *h_findKey(HashNode *hNode, char *key) {
 // h_resize called by h_insert in case the array gets too small and a new hash
 // table will need to be created. 
 HashTable *h_resize (HashTable *oldHashTable, unsigned int size) {
-	fprintf(stderr,"Running h_resize with new size of %u\n",size);
 	
 	// We will have to create a new HashTable first
+	
 	HashTable *biggerHashTable;
 	biggerHashTable = h_create(size);
+	fprintf(stderr,"Calculated new hash size is: %u\n",biggerHashTable->h_size);
 
 	// We now have the zeroed array of pointers 
 	// Next we need to re-index 
@@ -116,34 +116,36 @@ HashTable *h_resize (HashTable *oldHashTable, unsigned int size) {
 		// Derefenrce one level and set it to node
 		oldNode = *hNodePtr;
 		// Check first if node is not null
-			while (oldNode != NULL) {
-				fprintf(stderr,"Value from oldNode, is: %s and key is: %s\n",oldNode->h_value,oldNode->h_key);
-				HashNode* tempVar = oldNode->h_next;
-					if (tempVar == NULL) {
-						//fprintf(stderr,"tempvar is null, skipping\n");
-						break;
-					}
-				// Call h_insert to insert the data into the new bigger hash table.
-				h_insert(biggerHashTable,oldNode->h_key,oldNode->h_value);
-				// Assign the temporary variable which holds the next value which is not null
-				// into old node. 
-				oldNode = tempVar;
-			// Transfer from old table to new table
-			// oldnode is not not null
-			// 1. grab  next pointer before move put it in a temp variable hashnode*
-			// 2. move node to new hash table - find index, rehash key , etc
-			// 3. oldnode = temp variable
+		while (oldNode != NULL) {
+			fprintf(stderr,"Value from oldNode, is: %s and key is: %s\n",oldNode->h_value,oldNode->h_key);
+			HashNode* tempVar = oldNode->h_next;
+			// Call h_insert to insert the data into the new bigger hash table.
+			h_insert(biggerHashTable,oldNode->h_key,oldNode->h_value);
+			// Assign the temporary variable which holds the next value which is not null
+			// into old node. 
+			oldNode = tempVar;
+		// Transfer from old table to new table
+		// oldnode is not not null
+		// 1. grab  next pointer before move put it in a temp variable hashnode*
+		// 2. move node to new hash table - find index, rehash key , etc
+		// 3. oldnode = temp variable
 		}
 	} while (++hNodePtr < hNodePtrZ);
 	// free old array
-
-	return biggerHashTable;
+	free((void *) oldHashTable->h_items);
+	//oldHashTable->h_items = biggerHashTable->h_items;
+	//oldHashTable->h_size = biggerHashTable->h_size;
+	*oldHashTable = *biggerHashTable;
+	free((void *) biggerHashTable);
+	
+	return oldHashTable;
 }
 
 // Insert a key-value pair into a hash table
 // until a given condition then call h_resize
 HashNode *h_insert (HashTable *hTable, char *key, char *value) {
 	HashNode *newNode;
+	fprintf(stderr,"Begin h_insert with key %s\n", key);
 	// result hash will give same index and that index will already have
 	// a node if there was a previous write here
 	size_t resultHash = hash(key,hTable->h_size);
@@ -166,7 +168,7 @@ HashNode *h_insert (HashTable *hTable, char *key, char *value) {
 
 	// Executes only if the newNode is NULL-not visited before
         if ( newNode == NULL ) {
-        	nodeCount++;
+        	hTable->h_count++;
 		if ( (newNode = (HashNode *) malloc(sizeof(HashNode) ) ) == NULL ||
 				(newNode->h_key = strdup(key) ) == NULL ||
 				(newNode->h_value = strdup(value) ) == NULL ) {
@@ -179,12 +181,12 @@ HashNode *h_insert (HashTable *hTable, char *key, char *value) {
 		// the line below assumes the address is different - can be same if same hash
 	 	hTable->h_items[resultHash] = newNode;
 	
-		float quota = (float) nodeCount/hTable->h_size;
+		double quota1 = (double) hTable->h_count/hTable->h_size;
 		// c) 
-		if ( quota > ARRAY_MAX)
-			fprintf(stderr,"Resizing array\n quota is %f ",quota);
+		if ( quota1 > ARRAY_MAX) {
+			fprintf(stderr,"Resizing array\n quota is %f ",quota1);
 			hTable = h_resize(hTable,(unsigned int) (hTable->h_size*(1+ARRAY_MAX)) );
-
+		}
 			//	fprintf (stdout,"%lu\n%lu\n",hTable->h_size*hTable->h_size,hTable->h_size);
 			// calloc to allocate a new array with a new size
 			// seprate functions - called from - resize and h_insert
@@ -255,7 +257,8 @@ bool h_delete (HashTable *hTable, char *key) {
 				// set node1 pointer to node2 next pointer
 			}
 			free((void *) node2);
-			return true;	
+			hTable->h_count--;
+			return true;
 		}
 		node1 = node2;
 		node2 = node2->h_next;	
