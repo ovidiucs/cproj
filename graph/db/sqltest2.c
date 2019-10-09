@@ -1,5 +1,5 @@
 #include <stdio.h> // fprintf, printf
-#include "/home/econovi/local/include/sqlite3.h"
+#include "../../local/include/sqlite3.h"
 
   // Set a glbal string that will hold some SQL sample
   // data
