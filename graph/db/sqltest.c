@@ -89,7 +89,7 @@ int main(int argc, char **argv) {
   // 4th arg - *ppStmt pointing to a compiled statement that can be run with sqlite3_step()
   // the calling proc is responsable for deleting the SQL statement with sqlite3_finalize()
   // 5th arg - pzTail point to the first byte past the end of the first SQL  staement
-  rc = sqlite3_prepare_v2(db, "SELECT SQLITE VERSION()", -1, &res, 0);
+  rc = sqlite3_prepare_v2(db, "SELECT sqlite_version()", -1, &res, 0);
   fprintf(stderr,"%d\n\r",rc);
   if (rc == SQLITE_ROW) {
           fprintf(stdout,"SQLite Version is: %s\n",sqlite3_column_text(res,0));
@@ -102,7 +102,7 @@ int main(int argc, char **argv) {
   if (!dbInsert(db,sSql) ) {
         fprintf(stdout,"Inserted data succesfully\n");
   }
-  char *zSelect = "SELECT SQLITE VERSION()";
+  char *zSelect = "SELECT * from Friends;";
   if (!dbSelect(db,zSelect) ) {
         fprintf(stdout,"Select data succesfully\n");
         }
@@ -159,18 +159,18 @@ int dbSelect(sqlite3 *db, char *data) {
   }
   char *zErrMsg = NULL;
   int rc = 0;
-  // Prepare
+  //1. Prepare
   // int rc = sqlite3_prepare_v2(db,data,-1,&res,0);
 #if DEBUG == 1
   fprintf(stderr,"Database is: %s ; Data is: %s, ; Return Code is: %d ; stmt is %p\n",
                   db,data,rc,res);
 #endif
 
-  rc = sqlite3_prepare_v2(db, "SELECT SQLITE VERSION()", -1, &res, 0);
+  rc = sqlite3_prepare_v2(db, data, -1, &res, 0);
 
 #if DEBUG == 1
   fprintf(stderr,"Database is: %s ; Data is: %s, ; Return Code is: %d ; stmt is %p\n",
-                  db,data,rc,res);
+                  db,data,rc,res );
 #endif
   // On success the sqlite3_prepare() returns SQLITE_OK
   if ( rc != SQLITE_OK ) {
@@ -181,25 +181,27 @@ int dbSelect(sqlite3 *db, char *data) {
          return 1;
   }
 
-  // Step
+  //2.Step
+  // 1st arg - pointed data by sqlite_stmt
+  // returns int
   rc = sqlite3_step(res);
-      fprintf(stdout, "%s",rc);
-  // If there is a row
   if ( rc == SQLITE_ROW ) {
-      fprintf(stdout, "%s",rc);
-  }
-
+          // we got a row
   // Column
-  rc = sqlite3_column_type(res,0);
-      fprintf(stdout, "%s",rc);
+ //  rc = sqlite3_column_type(res,0);
+          fprintf(stdout,"SQLite Version is: %d\n",sqlite3_column_type(res,1));
+
+  }//  fprintf(stdout, "%s",rc);
 
   // Finalize
   rc = sqlite3_finalize(res);
-      fprintf(stdout, "%s",rc);
+      fprintf(stdout, "%d\n",rc);
 
 
   return 0;
 }
+
+// int (*callback)(sqlite_stmt *res,
 
 // Update data
 // Delete data
