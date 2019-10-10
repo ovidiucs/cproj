@@ -9,18 +9,19 @@
 
   // sample test data
 char *sSql = "DROP TABLE IF EXISTS Friends;"
-            "CREATE TABLE Friends(Id INTEGER PRIMARY KEY, Name TEXT);"
-            "INSERT INTO Friends(Name) VALUES ('Tom');"
-            "INSERT INTO Friends(Name) VALUES ('Rebecca');"
-            "INSERT INTO Friends(Name) VALUES ('Jim');"
-            "INSERT INTO Friends(Name) VALUES ('Roger');"
-            "INSERT INTO Friends(Name) VALUES ('Robert');";
+            "CREATE TABLE Friends(Id INTEGER PRIMARY KEY, Name TEXT, Age INTEGER);"
+            "INSERT INTO Friends(Name,Age) VALUES ('Tom',10);"
+            "INSERT INTO Friends(Name,Age) VALUES ('Rebecca',32);"
+            "INSERT INTO Friends(Name,Age) VALUES ('Jim',34);"
+            "INSERT INTO Friends(Name,Age) VALUES ('Roger',12);"
+            "INSERT INTO Friends(Name,Age) VALUES ('Robert',16);";
 
 // --------------------------------------------------------------------------------------------------
 
 int dbInsert(sqlite3 *db, char *data);
 int dbSelect(sqlite3 *db, char *data);
-//int callback(sqlite3_stmt *res );
+int (*callback)(int row);
+
 // --------------------------------------------------------------------------------------------------
 
 int main(int argc, char **argv) {
@@ -112,6 +113,8 @@ int main(int argc, char **argv) {
 
 }
 // --------------------------------------------------------------------------------------------------
+// Inserting data
+
 int dbInsert(sqlite3 *db, char *data) {
   // Check that a database was passed and we have an open database connection
   // Note: do not close db connection while sqlite3_exec is running
@@ -140,12 +143,11 @@ int dbInsert(sqlite3 *db, char *data) {
   return 0;
 }
 
-
+// --------------------------------------------------------------------------------------------------
 // Select data
-// 1st arg an open db
-// 2nd arg table
-// 3rd arg condition/selection
-// rows
+
+// 1st arg - an opened db
+// 2nd arg - select statement
 
 int dbSelect(sqlite3 *db, char *data) {
   // Note: does not use the wrapper function (test) -
@@ -187,21 +189,26 @@ int dbSelect(sqlite3 *db, char *data) {
   rc = sqlite3_step(res);
   if ( rc == SQLITE_ROW ) {
           // we got a row
-  // Column
- //  rc = sqlite3_column_type(res,0);
-          fprintf(stdout,"SQLite Version is: %d\n",sqlite3_column_type(res,1));
-
+    callback(rc);
   }//  fprintf(stdout, "%s",rc);
 
   // Finalize
   rc = sqlite3_finalize(res);
-      fprintf(stdout, "%d\n",rc);
+  if ( rc != SQLITE_OK ) {
+          fprintf(stderr, "SQL error occured: %s with code %d\n", zErrMsg, rc);
+          sqlite3_free(zErrMsg);
+          sqlite3_close(db);
 
+          return 1;
+    }
 
   return 0;
 }
 
-// int (*callback)(sqlite_stmt *res,
-
+void (*callback)(int row) {
+  while (row == 100) {
+   fprintf(stdout,"SQLite Version is: %s\n",sqlite3_column_text(res,1));)
+  }
+}
 // Update data
 // Delete data
