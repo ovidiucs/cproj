@@ -190,6 +190,10 @@ int dbSelect(sqlite3 *db, char *data) {
   rc = sqlite3_step(res);
   if ( rc == SQLITE_ROW ) {
    fprintf(stdout,"SQLite data is: %s\n",sqlite3_column_text(res,1));
+     rc = sqlite3_step(res);
+       if ( rc == SQLITE_ROW ) {
+   fprintf(stdout,"SQLite data is: %s\n",sqlite3_column_text(res,1));
+       }
   }//  fprintf(stdout, "%s",rc);
 
   // Finalize
