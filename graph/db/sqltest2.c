@@ -1,5 +1,6 @@
 #include <stdio.h> // fprintf, printf
-#include "../../local/include/sqlite3.h"
+//#include "../../local/include/sqlite3.h"
+#include <sqlite3.h>
 
   // Set a glbal string that will hold some SQL sample
   // data
@@ -15,7 +16,8 @@ char *sSql = "DROP TABLE IF EXISTS Friends;"
             "INSERT INTO Friends(Name) VALUES ('Jim');"
             "INSERT INTO Friends(Name) VALUES ('Roger');"
             "INSERT INTO Friends(Name) VALUES ('Robert');";
-
+int dbInsert(sqlite3 *db, char *data);
+int (*callback)()
 // --------------------------------------------------------------------------------------------------
 
 int dbInsert(sqlite3 *db, char *data) {
@@ -48,6 +50,21 @@ int dbInsert(sqlite3 *db, char *data) {
 
 
 // Select data
+
+  // Select and return row(s) of data
+  // 1st arg - an open database - sqlite3_prepare
+int dbSelectData(sqlite3 *db,char *zSql) {
+  // prepare
+
+  // step
+
+  // column
+
+  // finalize
+
+  // return
+}
+
 // Update data
 // Delete data
 // --------------------------------------------------------------------------------------------------
