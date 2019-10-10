@@ -20,7 +20,8 @@ char *sSql = "DROP TABLE IF EXISTS Friends;"
 
 int dbInsert(sqlite3 *db, char *data);
 int dbSelect(sqlite3 *db, char *data);
-int (*callback)(int row);
+void (*callback)(int row);
+
 
 // --------------------------------------------------------------------------------------------------
 
@@ -188,8 +189,7 @@ int dbSelect(sqlite3 *db, char *data) {
   // returns int
   rc = sqlite3_step(res);
   if ( rc == SQLITE_ROW ) {
-          // we got a row
-    callback(rc);
+   fprintf(stdout,"SQLite data is: %s\n",sqlite3_column_text(res,1));
   }//  fprintf(stdout, "%s",rc);
 
   // Finalize
@@ -204,11 +204,12 @@ int dbSelect(sqlite3 *db, char *data) {
 
   return 0;
 }
-
+/*
 void (*callback)(int row) {
   while (row == 100) {
-   fprintf(stdout,"SQLite Version is: %s\n",sqlite3_column_text(res,1));)
+   fprintf(stdout,"SQLite data is: %s\n",sqlite3_column_text(res,1));
   }
 }
+*/
 // Update data
 // Delete data
