@@ -185,17 +185,15 @@ int dbSelect(sqlite3 *db, char *data) {
   // 1st arg - pointed data by sqlite_stmt
   // returns integer - the result of the operation
   // Useful routines;
-    // - sqlite3_data_count() will return 0 if sqlite3_step was not called
-                  fprintf(stdout,"SQL column is: %d\n", sqlite3_data_count(res));
   rc = sqlite3_step(res);
-    // - sqlite3_column_count() will return the number of columns before sqlite3_step
-                  fprintf(stdout,"SQL column is: %d\n", sqlite3_data_count(res));
-
-  if ( rc == SQLITE_ROW ) {
-  }
+          for ( int i = 0; i < sqlite3_data_count(res) ; i++ ) {
+               fprintf(stdout,"| %s\t",sqlite3_column_origin_name(res,i));
+          }
+          fprintf(stdout,"\r\n");
   while ( rc == SQLITE_ROW ) {
           int i = 0;
   // If the return code is SQLITE_ROW we can now iterate thorugh the entire column, row by row
+    // - sqlite3_data_count() will return 0 if sqlite3_step was not called
           for ( i = 0; i < sqlite3_data_count(res) ; i++ ) {
                fprintf(stdout,"| %s\t",sqlite3_column_text(res,i));
            }
