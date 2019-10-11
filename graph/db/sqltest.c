@@ -20,9 +20,7 @@ char *sSql = "DROP TABLE IF EXISTS Friends;"
 
 int dbInsert(sqlite3 *db, char *data);
 int dbSelect(sqlite3 *db, char *data);
-void (*callback)(int row);
-
-
+//int callback(sqlite3_stmt *res );
 // --------------------------------------------------------------------------------------------------
 
 int main(int argc, char **argv) {
@@ -32,7 +30,7 @@ int main(int argc, char **argv) {
   // to an instance of the opaque structure named sqlite3
   sqlite3 *db;
 
-  // Return code - if the database is opened or created succesfully SQLITE_OK is returned
+  // Return code - if the database is opened or created successfully SQLITE_OK is returned
   // otherwise an error is returned
   int rc;
 
@@ -114,8 +112,6 @@ int main(int argc, char **argv) {
 
 }
 // --------------------------------------------------------------------------------------------------
-// Inserting data
-
 int dbInsert(sqlite3 *db, char *data) {
   // Check that a database was passed and we have an open database connection
   // Note: do not close db connection while sqlite3_exec is running
@@ -144,11 +140,12 @@ int dbInsert(sqlite3 *db, char *data) {
   return 0;
 }
 
-// --------------------------------------------------------------------------------------------------
-// Select data
 
-// 1st arg - an opened db
-// 2nd arg - select statement
+// Select data
+// 1st arg an open db
+// 2nd arg table
+// 3rd arg condition/selection
+// rows
 
 int dbSelect(sqlite3 *db, char *data) {
   // Note: does not use the wrapper function (test) -
@@ -186,34 +183,33 @@ int dbSelect(sqlite3 *db, char *data) {
 
   //2.Step
   // 1st arg - pointed data by sqlite_stmt
-  // returns int
-  rc = sqlite3_step(res);
-  if ( rc == SQLITE_ROW ) {
-   fprintf(stdout,"SQLite data is: %s\n",sqlite3_column_text(res,1));
-     rc = sqlite3_step(res);
-       if ( rc == SQLITE_ROW ) {
-   fprintf(stdout,"SQLite data is: %s\n",sqlite3_column_text(res,1));
-       }
-  }//  fprintf(stdout, "%s",rc);
+  // returns integer - the result of the operation
 
-  // Finalize
+  rc = sqlite3_step(res);
+  while ( rc == SQLITE_ROW) {
+
+  // If the return code is SQLITE_ROW we can now iterate thorugh the entire column, row by row
+       fprintf(stdout,"SQLite data is: %s\t",sqlite3_column_text(res,1));
+       fprintf(stdout," %d\n",sqlite3_column_int(res,2));
+        rc = sqlite3_step(res);
+
+  }
+
+  // Finalize - clean up after using.
   rc = sqlite3_finalize(res);
   if ( rc != SQLITE_OK ) {
-          fprintf(stderr, "SQL error occured: %s with code %d\n", zErrMsg, rc);
+          fprintf(stderr,"SQL error occured on sqlite3_finalize(): %s with code: %d, zErrMsg, rc");
           sqlite3_free(zErrMsg);
           sqlite3_close(db);
 
           return 1;
-    }
+  }
+
 
   return 0;
 }
-/*
-void (*callback)(int row) {
-  while (row == 100) {
-   fprintf(stdout,"SQLite data is: %s\n",sqlite3_column_text(res,1));
-  }
-}
-*/
+
+// int (*callback)(sqlite_stmt *res,
+
 // Update data
 // Delete data
