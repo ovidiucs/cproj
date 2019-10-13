@@ -5,7 +5,7 @@ BinName = http_server
 Libs = -lc
 
 # Options and arguments to the C compiler.
-CC = clang
+CC = clang --std=c11
 #CFLAGS = -g -funsigned-char -W -Wall -ggdb3 -Wunused\
 # -Wno-comment -Wno-missing-field-initializers -Wno-missing-braces -Wno-parentheses\
 # -Wno-pointer-sign -Wno-unused-parameter -Wno-unused-result $(COPTS)\
@@ -37,10 +37,12 @@ CFLAGS = -g \
 -Wredundant-decls \
 -Wshadow \
 -Wsign-conversion \
+-Wconversion \
 -Wstrict-overflow=5 \
 -Wstrict-prototypes \
 -Wswitch-default \
 -Wunreachable-code \
+-Wunused-macros \
 
 
 # Targets.

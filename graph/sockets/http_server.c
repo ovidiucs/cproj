@@ -8,7 +8,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-#define PORT 6969
+//#define PORT 6969
 
 
 char response[] = 
@@ -26,11 +26,22 @@ char response[] =
 // ----------------------------------------------------------------
 
 int main (int argc, char **argv) {
-      if (argc != 2) {
-      fprintf(stderr, "Usage: %s address\n", argv[0]);
+      if (argc < 2) {
+      fprintf(stderr, "Usage: %s <port>>\n", argv[0]);
       // Return error code
-      return 1;
+      exit(1);
 
+     }
+     uint16_t port = 0;
+
+     {
+        char *endptr;
+        port = (uint16_t) strtoul(argv[1], &endptr, 10);
+
+        if (endptr == argv[1]) {
+            fprintf(stderr, "Invalid. %s is not a valid port number\n", argv[1]);
+            exit(1);
+        }
      }
 
     // 1. Create the socket
@@ -45,10 +56,10 @@ int main (int argc, char **argv) {
 
     memset(&serverAddr, 0, sizeof(serverAddr));
     serverAddr.sin_family = AF_INET;
-    serverAddr.sin_port = htons(PORT);
+    serverAddr.sin_port = htons(port);
 
     // 2. Bind the socket
-    int err = bind (server_fd, (struct sockaddr*) &serverAddr, sizeof(serverAddr));
+    ssize_t err = bind (server_fd, (struct sockaddr*) &serverAddr, sizeof(serverAddr));
     if (err < 0) {
         fprintf (stderr, "Could not bind socket %s\n", strerror (errno));
         exit(1);
@@ -58,14 +69,14 @@ int main (int argc, char **argv) {
     // backlog - number of connection we want to support in queue
     err = listen(server_fd, 69);
     if (err < 0) {
-        fprintf (stderr, "Could not listen to socket %s\n", strerror (err));
+        fprintf (stderr, "Could not listen to socket %s\n", strerror (errno));
         exit(1);
     }
 
     //4. Keep accepting connections
     // we will get back a file descriptor 
     for (;;) {
-        
+
         struct sockaddr_in clientAddr;
         socklen_t clientAddrLen = 0;
         
