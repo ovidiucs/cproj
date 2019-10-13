@@ -70,17 +70,15 @@ void handleRequest(int fd) {
     };
     String line;
 
-    buffer = chop_line(buffer, &line);
+    buffer = trim_end(chop_line(&buffer));
 
     fprintf (stderr, "* Size of buffer is: %zd bytes\n",buffer.len);
     while (buffer.len != 0 && line.len != 0) {
-        char newline = '\n';
-        char bar = '|';
-        write(STDOUT_FILENO,&bar,1);
-        write(STDOUT_FILENO,line.data,line.len);
-        write(STDOUT_FILENO,&bar,1);
-        write(STDOUT_FILENO,&newline,1);
-        buffer = chop_line(buffer, &line);
+        putchar('|');
+          fwrite(line.data,1,line.len,stdout);
+        putchar('|');
+        putchar('\n');
+        line = trim(chop_line(buffer, &line));
     }
 
 }

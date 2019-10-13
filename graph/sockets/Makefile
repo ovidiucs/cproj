@@ -42,7 +42,7 @@ CFLAGS = -g \
 -Wstrict-prototypes \
 -Wswitch-default \
 -Wunreachable-code \
--Wunused-macros \
+ # -Wunused-macros \
 
 
 # Targets.
