@@ -8,13 +8,11 @@
 #include <setjmp.h> // for jump 
 #include <sys/types.h>
 #include <sys/socket.h>
+#include "s.h"
 
 // ----------------------------------------------------------------
 
-typedef struct __attribute__((packed)){
-    uint64_t len;
-    char *data;
-} String;
+
 // ----------------------------------------------------------------
 
 //#define PORT 6969
@@ -66,13 +64,24 @@ void handleRequest(int fd) {
     if (requestBufSize < 0) {
         requestError(strerror(errno));
     }
-    // Add a newline as read does not add a newline.
-    char newline = '\n';
+    String buffer = {
+        .len = (uint16_t) requestBufSize,
+        .data = requestBuffer
+    };
+    String line;
 
-    write(STDOUT_FILENO,requestBuffer,(size_t) requestBufSize);
-    write(STDOUT_FILENO,&newline,1);
+    buffer = chop_line(buffer, &line);
 
-    fprintf (stderr, "* Size of buffer is: %zd bytes\n",requestBufSize);
+    fprintf (stderr, "* Size of buffer is: %zd bytes\n",buffer.len);
+    while (buffer.len != 0 && line.len != 0) {
+        char newline = '\n';
+        char bar = '|';
+        write(STDOUT_FILENO,&bar,1);
+        write(STDOUT_FILENO,line.data,line.len);
+        write(STDOUT_FILENO,&bar,1);
+        write(STDOUT_FILENO,&newline,1);
+        buffer = chop_line(buffer, &line);
+    }
 
 }
 // ----------------------------------------------------------------
@@ -155,7 +164,7 @@ int main (int argc, char **argv) {
             fprintf(stderr, "Could not send data %s\n", strerror(errno));
         }
         // close the connection
-        err  = shutdown(client_fd,SHUT_WR);
+        err  = close(client_fd);
         if (err < 0) {
             fprintf(stderr, "Could not close client connection from %s\n", strerror(errno));
         }
