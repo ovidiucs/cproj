@@ -8,6 +8,13 @@
 #include <setjmp.h> // for jump 
 #include <sys/types.h>
 #include <sys/socket.h>
+
+// ----------------------------------------------------------------
+
+typedef struct __attribute__((packed)){
+    uint64_t len;
+    char *data;
+} String;
 // ----------------------------------------------------------------
 
 //#define PORT 6969
