@@ -5,11 +5,26 @@
 #include <netinet/in.h> // sockaddr_in
 #include <assert.h> // for assert
 #include <unistd.h> // for write to fd
+#include <setjmp.h> // for jump 
 #include <sys/types.h>
 #include <sys/socket.h>
+// ----------------------------------------------------------------
 
 //#define PORT 6969
+// Macros for data sizes
+#define KILO 1024
+#define MEGA (1024 * KILO)
+#define GIGA (1024 * MEGA)
+// Macro for a 640 kilobyte buffer
+#define REQUEST_BUFFER_CAPACITY (640 * KILO)
 
+// ----------------------------------------------------------------
+
+int requestError(const char *message);
+void handleRequest(int fd);
+// set 640KB of char array 
+
+char requestBuffer[REQUEST_BUFFER_CAPACITY];
 
 char response[] = 
         "HTTP/1.1 200 OK\n"
@@ -23,6 +38,36 @@ char response[] =
             "<h1>PHP is the best</h1>"
         "</body>"
      "</html>";
+
+// save the jump point
+jmp_buf handleRequestError;
+
+int requestError(const char *message) {
+
+    fprintf (stderr, "%s\n",message);
+    longjmp (handleRequestError,1);
+}
+// Request handler to write to stdout the request comming in 
+// from the web client. Takes a file descriptor. 
+void handleRequest(int fd) {
+
+    ssize_t requestBufSize = read(fd, requestBuffer,REQUEST_BUFFER_CAPACITY);
+    // If the allocation was succesfull the read syscall will return 0
+    if (requestBufSize == 0) {
+        requestError("EOF");
+    }
+    if (requestBufSize < 0) {
+        requestError(strerror(errno));
+    }
+    // Add a newline as read does not add a newline.
+    char newline = '\n';
+
+    write(STDOUT_FILENO,requestBuffer,(size_t) requestBufSize);
+    write(STDOUT_FILENO,&newline,1);
+
+    fprintf (stderr, "* Size of buffer is: %zd bytes\n",requestBufSize);
+
+}
 // ----------------------------------------------------------------
 
 int main (int argc, char **argv) {
@@ -88,6 +133,15 @@ int main (int argc, char **argv) {
         assert(clientAddrLen == sizeof(clientAddr));
 
         //write to file descriptor
+        // does not unwind the stack
+        if (setjmp(handleRequestError) == 0) {
+            // try
+            handleRequest(client_fd);
+        } else {
+            // catch
+            fprintf (stderr, "Something went wrong.%s", strerror (errno));
+        }
+
         // response is array of chars not pointer to char. it can take the sizeof operator
         write(client_fd, response, sizeof(response));
         if (err < 0) {
