@@ -94,7 +94,7 @@ int main (int argc, char **argv) {
             fprintf(stderr, "Could not send data %s\n", strerror(errno));
         }
         // close the connection
-        err  = close(client_fd);
+        err  = shutdown(client_fd,SHUT_WR);
         if (err < 0) {
             fprintf(stderr, "Could not close client connection from %s\n", strerror(errno));
         }
