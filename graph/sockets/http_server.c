@@ -5,7 +5,7 @@
 #include <netinet/in.h> // sockaddr_in
 #include <assert.h> // for assert
 #include <unistd.h> // for write to fd
-#include <setjmp.h> // for jump 
+#include <setjmp.h> // for jump
 #include <sys/types.h>
 #include <sys/socket.h>
 #include "s.h"
@@ -27,11 +27,11 @@
 
 int requestError(const char *message);
 void handleRequest(int fd);
-// set 640KB of char array 
+// set 640KB of char array
 
 char requestBuffer[REQUEST_BUFFER_CAPACITY];
 
-char response[] = 
+char response[] =
         "HTTP/1.1 200 OK\n"
         "Content-Type: text/html\n"
         "\n"
@@ -52,8 +52,8 @@ int requestError(const char *message) {
     fprintf (stderr, "%s\n",message);
     longjmp (handleRequestError,1);
 }
-// Request handler to write to stdout the request comming in 
-// from the web client. Takes a file descriptor. 
+// Request handler to write to stdout the request comming in
+// from the web client. Takes a file descriptor.
 void handleRequest(int fd) {
 
     ssize_t requestBufSize = read(fd, requestBuffer,REQUEST_BUFFER_CAPACITY);
@@ -65,20 +65,17 @@ void handleRequest(int fd) {
         requestError(strerror(errno));
     }
     String buffer = {
-        .len = (uint16_t) requestBufSize,
+        .len = (uint64_t) requestBufSize,
         .data = requestBuffer
     };
-    String line;
 
-    buffer = trim_end(chop_line(&buffer));
 
-    fprintf (stderr, "* Size of buffer is: %zd bytes\n",buffer.len);
-    while (buffer.len != 0 && line.len != 0) {
-        putchar('|');
-          fwrite(line.data,1,line.len,stdout);
-        putchar('|');
-        putchar('\n');
-        line = trim(chop_line(buffer, &line));
+    String line = trim_end(chop_line(&buffer));
+
+    while (buffer.len && line.len) {
+        printf("|%*s|\n", (int)line.len, line.data);
+        //fprintf (stderr, "[INFO] Size of buffer is: %zd bytes\n",line.len);
+        line = trim_end(chop_line(&buffer));
     }
 
 }
@@ -133,12 +130,12 @@ int main (int argc, char **argv) {
     }
 
     //4. Keep accepting connections
-    // we will get back a file descriptor 
+    // we will get back a file descriptor
     for (;;) {
 
         struct sockaddr_in clientAddr;
         socklen_t clientAddrLen = 0;
-        
+
         int client_fd = accept (server_fd,(struct sockaddr*) &clientAddr, &clientAddrLen);
         if (client_fd < 0 ){
             fprintf (stderr, "Could not accept connection from %s\n", strerror (errno));
@@ -147,7 +144,8 @@ int main (int argc, char **argv) {
         assert(clientAddrLen == sizeof(clientAddr));
 
         //write to file descriptor
-        // does not unwind the stack
+        //does not unwind the stack
+
         if (setjmp(handleRequestError) == 0) {
             // try
             handleRequest(client_fd);
@@ -155,6 +153,7 @@ int main (int argc, char **argv) {
             // catch
             fprintf (stderr, "Something went wrong.%s", strerror (errno));
         }
+                // /printf("------------------------------\n");
 
         // response is array of chars not pointer to char. it can take the sizeof operator
         write(client_fd, response, sizeof(response));
