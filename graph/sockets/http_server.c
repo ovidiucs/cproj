@@ -77,7 +77,15 @@ void handleRequest(int fd) {
     }
 
     String method = chop_word(&line);
-    if (string_equal(method, string_null("GET")));
+    if (!string_equal(method, string_null("GET"))) {
+        http_error(405,"Unknown method");
+    }
+
+    String path = chop_word(&line);
+    if(!string_equal(path,string_null("/"))) {
+        http_error(404,"Unknown path");
+    }
+
 }
 // ----------------------------------------------------------------
 
