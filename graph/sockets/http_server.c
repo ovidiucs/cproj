@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h> // strerror
@@ -27,6 +28,7 @@
 
 int http_error(int code,const char *message);
 void handleRequest(int fd);
+void write_response(int fd, int code);
 // set 640KB of char array
 
 char requestBuffer[REQUEST_BUFFER_CAPACITY];
@@ -47,10 +49,25 @@ char response[] =
 // save the jump point
 jmp_buf handleRequestError;
 
+void write_response(int fd, int code) {
+    dprintf(fd,
+        "HTTP/1.1 %d BLABLA\n"
+        "Content-Type: text/html\n"
+        "\n"
+        "<html>"
+            "<head>"
+            "<title>Error code %d</title>"
+            "</head>"
+        "<body>"
+            "<h1>Error code %d</h1>"
+        "</body>"
+    "</html>",
+     code,code,code);
+}
 int http_error(int code, const char *message) {
     (void) code;
     fprintf (stderr, "%s\n",message);
-    longjmp (handleRequestError,1);
+    longjmp (handleRequestError,code);
 }
 
 // Request handler to write to stdout the request comming in
@@ -65,11 +82,11 @@ void handleRequest(int fd) {
     if (requestBufSize < 0) {
         http_error(500, strerror(errno));
     }
+
     String buffer = {
         .len = (uint64_t) requestBufSize,
         .data = requestBuffer
     };
-
 
     String line = trim_end(chop_line(&buffer));
     if (!line.len) {
@@ -154,25 +171,23 @@ int main (int argc, char **argv) {
 
         //write to file descriptor
         //does not unwind the stack
-
-        if (setjmp(handleRequestError) == 0) {
+        int code = setjmp(handleRequestError);
+        if (code == 0) {
             // try
             handleRequest(client_fd);
+              // response is array of chars not pointer to char. it can take the sizeof operator
+            err = write(client_fd, response, sizeof(response));
+            if (err < 0) {
+                fprintf(stderr, "Could not send data %s\n", strerror(errno));
+            }
         } else {
-            // catch
-            fprintf (stderr, "Something went wrong.%s", strerror (errno));
+            write_response(client_fd, code);
         }
 
         printf("------------------------------\n");
 
-        // response is array of chars not pointer to char. it can take the sizeof operator
-        write(client_fd, response, sizeof(response));
-        if (err < 0) {
-            fprintf(stderr, "Could not send data %s\n", strerror(errno));
-        }
-        // close the connection
-
         err  = close(client_fd);
+        // close the connection
         if (err < 0) {
             fprintf(stderr, "Could not close client connection from %s\n", strerror(errno));
         }
