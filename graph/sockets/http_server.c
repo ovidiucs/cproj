@@ -25,7 +25,7 @@
 
 // ----------------------------------------------------------------
 
-int requestError(const char *message);
+int http_error(int code,const char *message);
 void handleRequest(int fd);
 // set 640KB of char array
 
@@ -47,11 +47,12 @@ char response[] =
 // save the jump point
 jmp_buf handleRequestError;
 
-int requestError(const char *message) {
-
+int http_error(int code, const char *message) {
+    (void) code;
     fprintf (stderr, "%s\n",message);
     longjmp (handleRequestError,1);
 }
+
 // Request handler to write to stdout the request comming in
 // from the web client. Takes a file descriptor.
 void handleRequest(int fd) {
@@ -59,10 +60,10 @@ void handleRequest(int fd) {
     ssize_t requestBufSize = read(fd, requestBuffer,REQUEST_BUFFER_CAPACITY);
     // If the allocation was succesfull the read syscall will return 0
     if (requestBufSize == 0) {
-        requestError("EOF");
+        http_error(400,"EOF");
     }
     if (requestBufSize < 0) {
-        requestError(strerror(errno));
+        http_error(500, strerror(errno));
     }
     String buffer = {
         .len = (uint64_t) requestBufSize,
@@ -71,13 +72,12 @@ void handleRequest(int fd) {
 
 
     String line = trim_end(chop_line(&buffer));
-
-    while (buffer.len && line.len) {
-        printf("|%*s|\n", (int)line.len, line.data);
-        //fprintf (stderr, "[INFO] Size of buffer is: %zd bytes\n",line.len);
-        line = trim_end(chop_line(&buffer));
+    if (!line.len) {
+        http_error(400, "Empty status line");
     }
 
+    String method = chop_word(&line);
+    if (string_equal(method, string_null("GET")));
 }
 // ----------------------------------------------------------------
 
@@ -131,6 +131,7 @@ int main (int argc, char **argv) {
 
     //4. Keep accepting connections
     // we will get back a file descriptor
+
     for (;;) {
 
         struct sockaddr_in clientAddr;
@@ -153,7 +154,8 @@ int main (int argc, char **argv) {
             // catch
             fprintf (stderr, "Something went wrong.%s", strerror (errno));
         }
-                // /printf("------------------------------\n");
+
+        printf("------------------------------\n");
 
         // response is array of chars not pointer to char. it can take the sizeof operator
         write(client_fd, response, sizeof(response));
@@ -161,6 +163,7 @@ int main (int argc, char **argv) {
             fprintf(stderr, "Could not send data %s\n", strerror(errno));
         }
         // close the connection
+
         err  = close(client_fd);
         if (err < 0) {
             fprintf(stderr, "Could not close client connection from %s\n", strerror(errno));
