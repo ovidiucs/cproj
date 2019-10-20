@@ -1,4 +1,5 @@
 #include <stdio.h> // fprintf, printf
+#include <stdlib.h> // exit,
 #include "../../include/sqlite3.h"
 
   // Set a glbal string that will hold some SQL sample
@@ -16,15 +17,16 @@ char *sSql = "DROP TABLE IF EXISTS Friends;"
             "INSERT INTO Friends(Name,Age) VALUES ('Roger',12);"
             "INSERT INTO Friends(Name,Age) VALUES ('Robert',16);";
 
+  
 // --------------------------------------------------------------------------------------------------
-
+int mainmenu(void);
 int dbInsert(sqlite3 *db, char *data);
 int dbSelect(sqlite3 *db, char *data);
 //int callback(sqlite3_stmt *res );
 // --------------------------------------------------------------------------------------------------
 
 int main(int argc, char **argv) {
-
+	
   // 1. Definitions
   // Each opened SQLite database is represented by a pointer
   // to an instance of the opaque structure named sqlite3
@@ -37,81 +39,129 @@ int main(int argc, char **argv) {
   // This string will hold the english language of the error description
   char *zErrMsg;
 
-  // Ensure that the proper arguments are given.`
-  if (argc != 3) {
+  // Ensure that the proper arguments are given.
+  if (argc != 3 && argc != 1) {
       fprintf(stderr, "Usage: %s DATABASE SQL-STATEMENT\n", argv[0]);
       // Return error code
       return 1;
-
-  }
-
-  // 2. Get the return code from sqlite3_open
+  } else if (argc == 3) {
+    
+	  // 2. Get the return code from sqlite3_open
 
 #if MEMWRITE == 1
-  rc = sqlite3_open(":memory:", &db);
+	  rc = sqlite3_open(":memory:", &db);
 #else
-  rc = sqlite3_open("sqltest.db", &db);
+	  rc = sqlite3_open("sqltest.db", &db);
 #endif
 
-  // Test that the return code is OK
-  if (rc != SQLITE_OK) {
+	  // Test that the return code is OK
+	  if (rc != SQLITE_OK) {
 
-      fprintf(stderr,"Error opening sqlite3 database in memory %s\n",sqlite3_errmsg(db) );
-      fprintf(stderr,"Clearing resoursces used for sqlite3_open\n");
+	      fprintf(stderr,"Error opening sqlite3 database in memory %s\n",sqlite3_errmsg(db) );
+	      fprintf(stderr,"Clearing resoursces used for sqlite3_open\n");
 
-      // Whether or not an error occurs when it is opened,
-      // resources associated with the database connection
-      // handle should be released by passing it to
-      // sqlite3_close() when it is no longer required.
-        sqlite3_close(db);
-        fprintf(stderr,"Database closed.\n");
+	      // Whether or not an error occurs when it is opened,
+	      // resources associated with the database connection
+	      // handle should be released by passing it to
+	      // sqlite3_close() when it is no longer required.
+	        sqlite3_close(db);
+	        fprintf(stderr,"Database closed.\n");
 
-            // Return error code
-        return 1;
+	            // Return error code
+	        return 1;
 
-   }
+	   }
 
-        // Let us know if the database connection was succesfull.
-        fprintf(stdout,"Opened database connection succesfully\n");
+	        // Let us know if the database connection was succesfull.
+	        fprintf(stdout,"Opened database connection succesfully\n");
 
-  // Display the SQLite version - debug
+	  // Display the SQLite version - debug
 
 #if DEBUG == 1
-  // The sqlite3_stmt represents a single SQL statement
-  sqlite3_stmt *res;
-  // Seeing if the global variable is printed
-  fprintf(stdout,"The SQL statement is: %s\n", sSql);
-  // The sqlite3_prepare is the constructor for the sqlite3_stmt
-  // compile sql text into byte code that will do the work for querying
-  // 1st arg - database connection - obtained  from sqlite3_open()
-  // 2nd arg - zSql - statement to be compiled
-  // 3rd arg - nByte - negative -> read up to the first zero terminator
-  // 4th arg - *ppStmt pointing to a compiled statement that can be run with sqlite3_step()
-  // the calling proc is responsable for deleting the SQL statement with sqlite3_finalize()
-  // 5th arg - pzTail point to the first byte past the end of the first SQL  staement
-  rc = sqlite3_prepare_v2(db, "SELECT sqlite_version()", -1, &res, 0);
-  fprintf(stderr,"%d\n\r",rc);
-  if (rc == SQLITE_ROW) {
-          fprintf(stdout,"SQLite Version is: %s\n",sqlite3_column_text(res,0));
-  }
+	  // The sqlite3_stmt represents a single SQL statement
+	  sqlite3_stmt *res;
+	  // Seeing if the global variable is printed
+	  fprintf(stdout,"The SQL statement is: %s\n", sSql);
+	  // The sqlite3_prepare is the constructor for the sqlite3_stmt
+	  // compile sql text into byte code that will do the work for querying
+	  // 1st arg - database connection - obtained  from sqlite3_open()
+	  // 2nd arg - zSql - statement to be compiled
+	  // 3rd arg - nByte - negative -> read up to the first zero terminator
+	  // 4th arg - *ppStmt pointing to a compiled statement that can be run with sqlite3_step()
+	  // the calling proc is responsable for deleting the SQL statement with sqlite3_finalize()
+	  // 5th arg - pzTail point to the first byte past the end of the first SQL  staement
+	  rc = sqlite3_prepare_v2(db, "SELECT sqlite_version()", -1, &res, 0);
+	  fprintf(stderr,"%d\n\r",rc);
+	  if (rc == SQLITE_ROW) {
+	          fprintf(stdout,"SQLite Version is: %s\n",sqlite3_column_text(res,0));
+	  }
 #endif
 
-  // 3.Inserting data - calls dbInsert
-  // 1st arg - open database handle
-  // 2nd arg - string to insert
-  if (!dbInsert(db,sSql) ) {
-        fprintf(stdout,"Inserted data succesfully\n");
+	  // 3.Inserting data - calls dbInsert
+	  // 1st arg - open database handle
+	  // 2nd arg - string to insert
+	  if (!dbInsert(db,sSql) ) {
+	        fprintf(stdout,"Inserted data succesfully\n");
+	  }
+	  char *zSelect = "SELECT * from Friends;";
+	  if (!dbSelect(db,zSelect) ) {
+	        fprintf(stdout,"Select data succesfully\n");
+	        }
+
+	  // Close the database connection.
+	  sqlite3_close(db);
+  } else {
+	mainmenu();
   }
-  char *zSelect = "SELECT * from Friends;";
-  if (!dbSelect(db,zSelect) ) {
-        fprintf(stdout,"Select data succesfully\n");
-        }
-  // Close the database connection.
-  sqlite3_close(db);
   return 0;
 
 }
+
 // --------------------------------------------------------------------------------------------------
+int mainmenu(void) {
+	char menu[] = 
+			"\n-----------------------\n"
+		      	"1. View database entries\n"
+			"2. Update database records\n"
+			"3. Delete database record\n"
+			"4. Quit\n"
+			"\n-----------------------\n";
+ 
+	//displaymenu
+	//	promptuser
+	//	switch responses for each entry 
+	//last item should be quit as long
+	//as there are no errors
+	char response[128];
+	unsigned int item;
+	for (;;) {
+		fputs(menu,stdout);
+		
+		fputs("Enter a choice > ",stdout);
+		// fflush();
+		
+		if(fgets(response, sizeof(response), stdin) == NULL) {
+			exit(1);
+		}
+		if(sscanf(response,"%u",&item) != 1) {
+			fputs("Error reading commnad. Please try again\n",stdout);
+		} else {
+			
+		switch (item) {
+			case 1:
+				fputs("dbSelect()\n",stdout);
+		 		break;
+			case 2:
+				fputs("Option 2\n",stdout);
+				break;
+			default:
+				fputs("Please choose a valid menu option\n",stdout);
+			}		
+		}	
+	return 0; 
+	}
+}
+
 int dbInsert(sqlite3 *db, char *data) {
   // Check that a database was passed and we have an open database connection
   // Note: do not close db connection while sqlite3_exec is running
@@ -207,7 +257,7 @@ int dbSelect(sqlite3 *db, char *data) {
   // Finalize - clean up after using.
   rc = sqlite3_finalize(res);
   if ( rc != SQLITE_OK ) {
-          fprintf(stderr,"SQL error occured on sqlite3_finalize(): %s with code: %d, zErrMsg, rc");
+          fprintf(stderr,"SQL error occured on sqlite3_finalize(): %s with code: %d\n",zErrMsg, rc);
           sqlite3_free(zErrMsg);
           sqlite3_close(db);
 
@@ -221,4 +271,5 @@ int dbSelect(sqlite3 *db, char *data) {
 // int (*callback)(sqlite_stmt *res,
 
 // Update data
+
 // Delete data
