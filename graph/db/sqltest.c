@@ -50,7 +50,9 @@ int main(int argc, char **argv) {
       // Return error code
       return 1;
   } else if (argc == 3) {
-			db = setup(db);
+			db = setup(&db);
+			int i[5] = {0,1,2,3,4};
+			
   } else {
 			db = setup(db);
 			fprintf(stderr,"2. db Sqlite3 address is: %p\n", &db);
@@ -62,7 +64,9 @@ int main(int argc, char **argv) {
 }
 
 // -----------------------------END MAIN-------------------------------------------------------
-sqlite3 *setup(sqlite3 *db) {
+int setup(sqlite3 **p_db) {
+	
+	sqlite3 *db = NULL;
 			fprintf(stderr,"3.db Sqlite3 address is: %p\n", &db);
 
   // Return code - if the database is opened or created successfully SQLITE_OK is returned
@@ -131,7 +135,8 @@ sqlite3 *setup(sqlite3 *db) {
 
 	  // Close the database connection.
 	  //sqlite3_close(db);
-		return db;
+	  *p_db = db;
+	  return 0;
 }
 
 int mainmenu(sqlite3 *db) {
@@ -231,11 +236,11 @@ int dbInsert(sqlite3 *db, char *data) {
 		// the database closes. Syntax errors should not close the DB .
 		// Determine the correct behavior.
 			if ( rc != SQLITE_OK ) {
-				fprintf(stderr, "SQL error occured: %s\n", zErrMsg);
+				fprintf(s`tderr, "SQL error occured: %s\n", zErrMsg);
 				sqlite3_free(zErrMsg);
-				sqlite3_close(db);
+				//sqlite3_close(db);
 
-				return 1;
+				return rc;
 				}
 
   return 0;
