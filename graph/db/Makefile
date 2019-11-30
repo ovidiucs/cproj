@@ -2,7 +2,7 @@
 
 # Definitions.
 BinName = sqltest
-Libs = -lc -lsqlite3
+Libs = -lc -lsqlite3 -lreadline
 
 # Options and arguments to the C compiler.
 CC = clang

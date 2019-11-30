@@ -1,5 +1,8 @@
 #include <stdio.h> // fprintf, printf
 #include <stdlib.h> // exit,
+#include <readline/readline.h> // readline
+#include <readline/history.h> //
+
 #include "../../include/sqlite3.h"
 //#include "./sqltest.h"
   // Set a glbal string that will hold some SQL sample
@@ -19,11 +22,12 @@ char *sSql = "DROP TABLE IF EXISTS Friends;"
 
 char *uSql = "UPDATE Friends SET Name = 'Jerry' WHRE id = 1;";
 // ---------------------------------FUNCTION DECLARATIONS--------------------------------------------
+
 int mainmenu(sqlite3 *db);
 int dbInsert(sqlite3 *db, char *data);
 int dbSelect(sqlite3 *db, char *data);
 int dbUpdate(sqlite3 *db, char *data);
-sqlite3 *setup(sqlite3 *db);
+int setup(sqlite3 **db);
 static int callback(void *data, int argc, char **argv, char **azColName );
 
 // ---------------------------------START MAIN------------------------------------------------------
@@ -35,8 +39,7 @@ int main(int argc, char **argv) {
   // to an instance of the opaque structure named sqlite3
   sqlite3 *db = NULL;
 
-			fprintf(stderr,"1. db Sqlite3 address is: %p vs is \n", &db);
-
+  int rc;
 
   // This string will hold the english language of the error description
   char *zErrMsg;
@@ -44,18 +47,15 @@ int main(int argc, char **argv) {
 
 
 
-  // Ensure that the proper arguments are given.
+  // Ensure that the proper arguments are given.````````
   if (argc != 3 && argc != 1) {
       fprintf(stderr, "Usage: %s DATABASE SQL-STATEMENT\n", argv[0]);
       // Return error code
       return 1;
   } else if (argc == 3) {
-			db = setup(&db);
-			int i[5] = {0,1,2,3,4};
-			
+			rc = setup(&db);
   } else {
-			db = setup(db);
-			fprintf(stderr,"2. db Sqlite3 address is: %p\n", &db);
+			rc = setup(&db);
       // Execute the main menu function
 	    mainmenu(db);
   }
@@ -65,16 +65,14 @@ int main(int argc, char **argv) {
 
 // -----------------------------END MAIN-------------------------------------------------------
 int setup(sqlite3 **p_db) {
-	
-	sqlite3 *db = NULL;
-			fprintf(stderr,"3.db Sqlite3 address is: %p\n", &db);
 
+	sqlite3 *db = NULL;
   // Return code - if the database is opened or created successfully SQLITE_OK is returned
   // otherwise an error is returned
   int rc;
 
 #if MEMWRITE == 1
-	  rc = sqlite3_open(":memory:", &db);
+	  rc = psqlite3_open(":memory:", &db);
 #else
 	  rc = sqlite3_open("sqltest.db", &db);
 #endif
@@ -99,7 +97,6 @@ int setup(sqlite3 **p_db) {
 
 		// Let us know if the database connection was succesfull.
 		fprintf(stdout,"Opened database connection succesfully\n");
-		fprintf(stderr,"4.db Sqlite3 address is: %p\n", &db);
 
 	  // Display the SQLite version - debug
 
@@ -157,26 +154,26 @@ int mainmenu(sqlite3 *db) {
 	//last item should be quit as long
 	//as there are no errors
 	char response[1024];
+	char *buf;
 	int rc=0;
-	unsigned int item;
+	unsigned int item = 0;
 	for (;;) {
 		fputs(menu,stdout);
 
 		fputs("Enter a choice > ",stdout);
-		// fflush();
+//		fflush();
 
 		if(fgets(response, sizeof(response), stdin) == NULL) {
 			exit(1);
 		}
 		if(sscanf(response,"%u",&item) != 1) {
-			fputs("Error reading commnad. Please enter a valid integer\n",stdout);
+			fprintf(stderr,"Error reading commnad. Please enter a valid integer\n");
 		} else {
 		switch (item) {
 			case 1:
-				fputs("Enter query: > ",stdout);
-				fgets(response, sizeof(response), stdin);
-				fputs("Calling dbSelect()...\n", stdout);
-				dbSelect(db, response);
+				buf = readline("Enter query: > ");
+				dbSelect(db, buf);
+				free(buf);
 				break;
 			case 2:
 				fputs("dbDelete`\n",stdout);
@@ -187,13 +184,9 @@ int mainmenu(sqlite3 *db) {
 				fputs("dbUpdate()\n",stdout);
 				break;
 			case 41:
-				fputs("Insert test data via command.\n",stdout);
-				fgets(response, sizeof(response), stdin);
-					if (!dbInsert(db,response) ) {
-					fprintf(stdout,"Inserted data ok\n");
-					} else {
-						setup(db);
-						fprintf(stdout,"Error\n");
+				buf = readline("Insert test data via command.\n");
+					if (!dbInsert(db,buf) ) {
+					fprintf(stdout,"Inserted data OK\n");
 					}
 				break;
 			case 42:
@@ -208,10 +201,12 @@ int mainmenu(sqlite3 *db) {
 				fputs("Please choose a valid menu option\n",stdout);
 			}
 		}
+
 	}
-Exit:
+		Exit:
 	return 0;
 }
+//}
 // --------------------------- End MainMenu ---------------------------
 
 int dbInsert(sqlite3 *db, char *data) {
@@ -236,9 +231,8 @@ int dbInsert(sqlite3 *db, char *data) {
 		// the database closes. Syntax errors should not close the DB .
 		// Determine the correct behavior.
 			if ( rc != SQLITE_OK ) {
-				fprintf(s`tderr, "SQL error occured: %s\n", zErrMsg);
+				fprintf(stderr, "SQL error occured: %s\n", zErrMsg);
 				sqlite3_free(zErrMsg);
-				//sqlite3_close(db);
 
 				return rc;
 				}
@@ -283,7 +277,6 @@ int dbSelect(sqlite3 *db, char *data) {
   if ( rc != SQLITE_OK ) {
 	 fprintf(stderr, "SQL error occured: %s with code %d\n", zErrMsg, rc);
 	 sqlite3_free(zErrMsg);
-	 sqlite3_close(db);
 
 	 return 1;
   }
@@ -313,7 +306,6 @@ int dbSelect(sqlite3 *db, char *data) {
   if ( rc != SQLITE_OK ) {
 	  fprintf(stderr,"SQL error occured on sqlite3_finalize(): %s with code: %d\n",zErrMsg, rc);
 	  sqlite3_free(zErrMsg);
-	  sqlite3_close(db);
 
 	  return 1;
   }
@@ -343,13 +335,12 @@ int dbUpdate (sqlite3 *db, char *data) {
    }
    // Prepare & check
    rc = sqlite3_prepare_v2(db, data, -1, &res, 0);
-   if (rc != SQLITE_OK) {
-	 fprintf(stderr, "SQL error occured: %s with code %d\n", zErrMsg, rc);
-	 sqlite3_free(zErrMsg);
-	 sqlite3_close(db);
+			if (rc != SQLITE_OK) {
+			fprintf(stderr, "SQL error occured: %s with code %d\n", zErrMsg, rc);
+			sqlite3_free(zErrMsg);
 
-	 return 1;
-   }
+			return 1;
+			}
 //    rc = sqlite3_exec (db, data,callback,(void*) msg, &zErrMsg);
     fprintf(stdout,"%d\n",rc);
 
