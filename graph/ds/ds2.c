@@ -7,14 +7,15 @@ char string[STRSIZE];
 char s1[] = "test1";
 //char s2[] = "test2";
 
-int strln(char string[]);
+int strln(char *string);
 int strpos(char s1[],char s2[]);
 
-int strln(char string[]) {
+int strln(char *string) {
 //  char *string;
-  int i;
-  for ( i=0;string[i] != '\0';i++ )
-      ;
+  int i = 0;
+  while(string[i] != '\0'){
+    i++;
+  }
   return i;
 }
 int strpos(char s1[],char s2[]) {
