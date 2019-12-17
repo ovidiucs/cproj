@@ -1,0 +1,18 @@
+&incdir  = include/
+&objdir  = obj/
+&docsdis = docs/
+&srcdir  = src/
+&bindir  = bin/
+
+CFLAGS += -Weverything
+CFLAGS += -fcolor-diagnostics
+CFLAGS += -std=c11
+CFLAGS += -g
+CFLAGS += -Og
+CFLAGS += -Wall
+CFLAGS += -ggdb3
+TPL += --templates templates/custom/
+
+!cc = |> clang $(CFLAGS) -I&(incdir) -c %f -o &(objdir)/%o |> %B.o
+!ar = |> ar crs %o %f |>
+!docs = |> doxygenparser $(TPL) --debug %f |>
