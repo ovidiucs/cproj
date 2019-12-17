@@ -1,0 +1,5 @@
+<map id="dbInsert" name="dbInsert">
+<area shape="rect" id="node1" title="Inserting database records." alt="" coords="291,5,389,41"/>
+<area shape="rect" id="node2" href="$sqltest_8c.html#a749a2b3d23cf2c52bd39b7827142c18c" title="Mainmenu function Each open SQLite database is represented by a pointer to an instance of the opaque ..." alt="" coords="121,5,243,41"/>
+<area shape="rect" id="node3" href="$sqltest_8c.html#a3c04138a5bfe5d72780bb7e82a18e627" title="Main program function." alt="" coords="5,5,73,41"/>
+</map>
