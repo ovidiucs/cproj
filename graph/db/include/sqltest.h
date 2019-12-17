@@ -1,4 +1,5 @@
-
+#ifndef SQLTEST_H
+#define SQLTEST_H
  /*!
   *  @dir include
   *  @brief include directory for header files
@@ -90,3 +91,5 @@ int setup(sqlite3 **p_db);
  * @return int
  */
 static int callback(void *data, int argc, char **argv, char **azColName );
+
+#endif
