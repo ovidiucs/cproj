@@ -3,16 +3,19 @@
 
 #define STRSIZE 80
 char string[STRSIZE] = "test__";
-char s1[STRSIZE] = "0000010";
-char s2[STRSIZE] = "010";
+char s1[STRSIZE] = "abcdefghijk";
+char s2[STRSIZE] = "f";
+char *strct(char* str1, char* str2);
+char *subtr (char *str1, int i, int j, char *str2);
 
 int strln(char str[]);
 int strpos(char str1[],char str2[]);
 
-
 int main () {
   fprintf(stdout,"String length is: %d\n",strln(string));
   fprintf(stdout,"String position is: %d\n",strpos(s1,s2));
+  fprintf(stdout,"String concatenation is: %s\n",strct(s1,s2));
+  fprintf(stdout,"Sub-string is: %s\n",subtr(s1,2,4,s2));
   return EXIT_SUCCESS;
 }
 
@@ -30,9 +33,45 @@ strln(char str[]) {
   }
   return i;
 }
+char *strct(char* str1, char* str2) {
+  /*****
+  *	The result of concatenation of two strings
+  * consists of the characters of the first
+  * followed by the characters of the second
+  * The function sets str1 to the concatenation of str1 and str2
+  *****/
+  int i;
+  int j;
 
-int
-strpos(char str1[],char str2[]) {
+  for (i=0; str1[i] != '\0'; i++)
+    printf("\n i is %d  str1[i] is %c\t", i,str1[i]);
+    ;
+  for (j=0; str2[j] != '\0'; str1[i+
+  +] = str2[j++])
+    printf("\nj is %d\t  str2[j] is %c\t\n ", j,str2[j]);
+    ;
+  return str1;
+}
+char *subtr (char *str1, int i, int j, char *str2) {
+  int k;
+  int m;
+
+  for ( k = i, m = 0;m < j; str2[m++] = str1[k++]) {
+      ;
+  }
+  str2[m] = '\0';
+  return str2;
+}
+/**
+* @brief Brief description of class or function (fits a single line)
+* @ingroup
+*
+* @params[in]:
+* @params[out]:
+* @return:
+*/
+
+int strpos(char str1[],char str2[]) {
   /*****
   * Param: two strings
   *	Return: integer, starting location of
