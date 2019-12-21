@@ -10,7 +10,7 @@
 #include <readline/readline.h>  	// readline
 #include <readline/history.h> 		//
 #include <sqlite3.h>							//
-#include "../include/sqltest.h"    //
+#include "sqltest.h"    //
 
 /*! @defgroup defines Defines
  * @{ */

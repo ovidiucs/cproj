@@ -4,13 +4,15 @@
  *  @details No other details
  */
 #include <sqlite3.h>
+#include "sqltest.h"
 
-#include "../include/sqltest.h"
 
+
+#include <criterion/assert.h>
 #include <criterion/criterion.h>
-
 #include <stdio.h> // fprintf, printf
 #include <stdlib.h> // exit,
+
 
 
 // --------------------------------------------------------
@@ -28,10 +30,11 @@ void t_setup(){
 void teardown(){
 }
 
-Test(tSuite_1, t_001, .init=t_setup, .fini=teardown){
+//Test(tSuite_1, t_001, .init=t_setup, .fini=teardown){
+Test(asserts, t_001, .init=t_setup, .fini=teardown){
   // test contents
   int rc = setup(&db);
-  cr_assert( rc == 0);
+  cr_assert(rc == 0);
 }
 
 Test(tSuite_2, t_002) {

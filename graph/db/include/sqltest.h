@@ -1,5 +1,6 @@
 #ifndef SQLTEST_H
 #define SQLTEST_H
+
  /*!
   *  @dir include
   *  @brief include directory for header files
@@ -78,7 +79,7 @@ int dbUpdate(sqlite3 *db, char *data);
   *
   * @endcode
 */
-int setup(sqlite3 **p_db);
+extern int setup(sqlite3 **p_db);
 
 /*!
  * @brief traverse SELECT statements with multiple records.
