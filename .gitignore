@@ -1,4 +1,4 @@
-**/.tup
+**/*.tup
 *.a
 *.o
 **/bin/program*
