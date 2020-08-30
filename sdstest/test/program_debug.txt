@@ -1,112 +1,231 @@
-==88053== Memcheck, a memory error detector
-==88053== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==88053== Using Valgrind-3.16.1-36d6727e1d-20200622X and LibVEX; rerun with -h for copyright info
-==88053== Command: ../bin/program_debug
-==88053== Parent PID: 88040
-==88053== 
---88053-- 
---88053-- Valgrind options:
---88053--    --leak-check=full
---88053--    --show-leak-kinds=all
---88053--    --track-origins=yes
---88053--    --verbose
---88053--    --log-file=program_debug.txt
---88053-- Contents of /proc/version:
---88053--   Linux version 5.8.5-arch1-1 (linux@archlinux) (gcc (GCC) 10.2.0, GNU ld (GNU Binutils) 2.35) #1 SMP PREEMPT Thu, 27 Aug 2020 18:53:02 +0000
---88053-- 
---88053-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-lzcnt-rdtscp-sse3-ssse3-avx-avx2-bmi-f16c-rdrand
---88053-- Page sizes: currently 4096, max supported 4096
---88053-- Valgrind library directory: /usr/lib/valgrind
---88053-- Reading syms from /home/kiro/proj/cproj/sdstest/bin/program_debug
---88053-- Reading syms from /usr/lib/ld-2.32.so
---88053-- Reading syms from /usr/lib/valgrind/memcheck-amd64-linux
---88053--    object doesn't have a dynamic symbol table
---88053-- Scheduler: using generic scheduler lock implementation.
---88053-- Reading suppressions file: /usr/lib/valgrind/default.supp
-==88053== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-88053-by-???-on-???
-==88053== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-88053-by-???-on-???
-==88053== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-88053-by-???-on-???
-==88053== 
-==88053== TO CONTROL THIS PROCESS USING vgdb (which you probably
-==88053== don't want to do, unless you know exactly what you're doing,
-==88053== or are doing some strange experiment):
-==88053==   /usr/lib/valgrind/../../bin/vgdb --pid=88053 ...command...
-==88053== 
-==88053== TO DEBUG THIS PROCESS USING GDB: start GDB like this
-==88053==   /path/to/gdb ../bin/program_debug
-==88053== and then give GDB the following command
-==88053==   target remote | /usr/lib/valgrind/../../bin/vgdb --pid=88053
-==88053== --pid is optional if only one valgrind process is running
-==88053== 
---88053-- REDIR: 0x4021ee0 (ld-linux-x86-64.so.2:strlen) redirected to 0x580b9662 (vgPlain_amd64_linux_REDIR_FOR_strlen)
---88053-- REDIR: 0x4021cb0 (ld-linux-x86-64.so.2:index) redirected to 0x580b967c (vgPlain_amd64_linux_REDIR_FOR_index)
---88053-- Reading syms from /usr/lib/valgrind/vgpreload_core-amd64-linux.so
---88053-- Reading syms from /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so
-==88053== WARNING: new redirection conflicts with existing -- ignoring it
---88053--     old: 0x04021ee0 (strlen              ) R-> (0000.0) 0x580b9662 vgPlain_amd64_linux_REDIR_FOR_strlen
---88053--     new: 0x04021ee0 (strlen              ) R-> (2007.0) 0x0483dd90 strlen
---88053-- REDIR: 0x401e6c0 (ld-linux-x86-64.so.2:strcmp) redirected to 0x483ec60 (strcmp)
---88053-- REDIR: 0x4022440 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x4842450 (mempcpy)
---88053-- Reading syms from /usr/lib/libc-2.32.so
---88053-- REDIR: 0x492a8c0 (libc.so.6:memmove) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x4929db0 (libc.so.6:strncpy) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x492ac00 (libc.so.6:strcasecmp) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x4929850 (libc.so.6:strcat) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x4929e10 (libc.so.6:rindex) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x492bfb0 (libc.so.6:rawmemchr) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x4944500 (libc.so.6:wmemchr) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x4944040 (libc.so.6:wcscmp) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x492aa20 (libc.so.6:mempcpy) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x492a850 (libc.so.6:bcmp) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x4929d40 (libc.so.6:strncmp) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x4929900 (libc.so.6:strcmp) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x492a990 (libc.so.6:memset) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x4944000 (libc.so.6:wcschr) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x4929ca0 (libc.so.6:strnlen) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x49299e0 (libc.so.6:strcspn) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x492ac50 (libc.so.6:strncasecmp) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x4929980 (libc.so.6:strcpy) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x492ada0 (libc.so.6:memcpy@@GLIBC_2.14) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x4945750 (libc.so.6:wcsnlen) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x4944080 (libc.so.6:wcscpy) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x4929e50 (libc.so.6:strpbrk) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x49298b0 (libc.so.6:index) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x4929c60 (libc.so.6:strlen) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x49303a0 (libc.so.6:memrchr) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x492aca0 (libc.so.6:strcasecmp_l) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x492a810 (libc.so.6:memchr) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x4944150 (libc.so.6:wcslen) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x4929f80 (libc.so.6:strspn) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x492aba0 (libc.so.6:stpncpy) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x492ab40 (libc.so.6:stpcpy) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x492bff0 (libc.so.6:strchrnul) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x492acf0 (libc.so.6:strncasecmp_l) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
---88053-- REDIR: 0x49fc8a0 (libc.so.6:__strrchr_avx2) redirected to 0x483d7d0 (rindex)
---88053-- REDIR: 0x49fca70 (libc.so.6:__strlen_avx2) redirected to 0x483dc70 (strlen)
---88053-- REDIR: 0x4925c90 (libc.so.6:malloc) redirected to 0x483a710 (malloc)
---88053-- REDIR: 0x49ffa80 (libc.so.6:__memcpy_avx_unaligned_erms) redirected to 0x48414b0 (memmove)
---88053-- REDIR: 0x49fc6b0 (libc.so.6:__strchrnul_avx2) redirected to 0x4841f40 (strchrnul)
---88053-- REDIR: 0x49ffa60 (libc.so.6:__mempcpy_avx_unaligned_erms) redirected to 0x4842050 (mempcpy)
---88053-- REDIR: 0x49262f0 (libc.so.6:free) redirected to 0x483b940 (free)
-==88053== 
-==88053== HEAP SUMMARY:
-==88053==     in use at exit: 14 bytes in 1 blocks
-==88053==   total heap usage: 2 allocs, 1 frees, 4,110 bytes allocated
-==88053== 
-==88053== Searching for pointers to 1 not-freed blocks
-==88053== Checked 70,944 bytes
-==88053== 
-==88053== 14 bytes in 1 blocks are definitely lost in loss record 1 of 1
-==88053==    at 0x483A77F: malloc (vg_replace_malloc.c:307)
-==88053==    by 0x10933B: sdsnewlen (sds.c:99)
-==88053==    by 0x10947F: sdsnew (sds.c:156)
-==88053==    by 0x109266: main (main.c:13)
-==88053== 
-==88053== LEAK SUMMARY:
-==88053==    definitely lost: 14 bytes in 1 blocks
-==88053==    indirectly lost: 0 bytes in 0 blocks
-==88053==      possibly lost: 0 bytes in 0 blocks
-==88053==    still reachable: 0 bytes in 0 blocks
-==88053==         suppressed: 0 bytes in 0 blocks
-==88053== 
-==88053== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==88929== Memcheck, a memory error detector
+==88929== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==88929== Using Valgrind-3.16.1-36d6727e1d-20200622X and LibVEX; rerun with -h for copyright info
+==88929== Command: ../bin/program_debug
+==88929== Parent PID: 88916
+==88929== 
+--88929-- 
+--88929-- Valgrind options:
+--88929--    --leak-check=full
+--88929--    --show-leak-kinds=all
+--88929--    --track-origins=yes
+--88929--    --verbose
+--88929--    --log-file=program_debug.txt
+--88929-- Contents of /proc/version:
+--88929--   Linux version 5.8.5-arch1-1 (linux@archlinux) (gcc (GCC) 10.2.0, GNU ld (GNU Binutils) 2.35) #1 SMP PREEMPT Thu, 27 Aug 2020 18:53:02 +0000
+--88929-- 
+--88929-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-lzcnt-rdtscp-sse3-ssse3-avx-avx2-bmi-f16c-rdrand
+--88929-- Page sizes: currently 4096, max supported 4096
+--88929-- Valgrind library directory: /usr/lib/valgrind
+--88929-- Reading syms from /home/kiro/proj/cproj/sdstest/bin/program_debug
+--88929-- Reading syms from /usr/lib/ld-2.32.so
+--88929-- Reading syms from /usr/lib/valgrind/memcheck-amd64-linux
+--88929--    object doesn't have a dynamic symbol table
+--88929-- Scheduler: using generic scheduler lock implementation.
+--88929-- Reading suppressions file: /usr/lib/valgrind/default.supp
+==88929== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-88929-by-???-on-???
+==88929== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-88929-by-???-on-???
+==88929== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-88929-by-???-on-???
+==88929== 
+==88929== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==88929== don't want to do, unless you know exactly what you're doing,
+==88929== or are doing some strange experiment):
+==88929==   /usr/lib/valgrind/../../bin/vgdb --pid=88929 ...command...
+==88929== 
+==88929== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==88929==   /path/to/gdb ../bin/program_debug
+==88929== and then give GDB the following command
+==88929==   target remote | /usr/lib/valgrind/../../bin/vgdb --pid=88929
+==88929== --pid is optional if only one valgrind process is running
+==88929== 
+--88929-- REDIR: 0x4021ee0 (ld-linux-x86-64.so.2:strlen) redirected to 0x580b9662 (vgPlain_amd64_linux_REDIR_FOR_strlen)
+--88929-- REDIR: 0x4021cb0 (ld-linux-x86-64.so.2:index) redirected to 0x580b967c (vgPlain_amd64_linux_REDIR_FOR_index)
+--88929-- Reading syms from /usr/lib/valgrind/vgpreload_core-amd64-linux.so
+--88929-- Reading syms from /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so
+==88929== WARNING: new redirection conflicts with existing -- ignoring it
+--88929--     old: 0x04021ee0 (strlen              ) R-> (0000.0) 0x580b9662 vgPlain_amd64_linux_REDIR_FOR_strlen
+--88929--     new: 0x04021ee0 (strlen              ) R-> (2007.0) 0x0483dd90 strlen
+--88929-- REDIR: 0x401e6c0 (ld-linux-x86-64.so.2:strcmp) redirected to 0x483ec60 (strcmp)
+--88929-- REDIR: 0x4022440 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x4842450 (mempcpy)
+--88929-- Reading syms from /usr/lib/libc-2.32.so
+--88929-- REDIR: 0x492a8c0 (libc.so.6:memmove) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x4929db0 (libc.so.6:strncpy) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x492ac00 (libc.so.6:strcasecmp) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x4929850 (libc.so.6:strcat) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x4929e10 (libc.so.6:rindex) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x492bfb0 (libc.so.6:rawmemchr) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x4944500 (libc.so.6:wmemchr) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x4944040 (libc.so.6:wcscmp) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x492aa20 (libc.so.6:mempcpy) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x492a850 (libc.so.6:bcmp) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x4929d40 (libc.so.6:strncmp) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x4929900 (libc.so.6:strcmp) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x492a990 (libc.so.6:memset) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x4944000 (libc.so.6:wcschr) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x4929ca0 (libc.so.6:strnlen) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x49299e0 (libc.so.6:strcspn) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x492ac50 (libc.so.6:strncasecmp) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x4929980 (libc.so.6:strcpy) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x492ada0 (libc.so.6:memcpy@@GLIBC_2.14) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x4945750 (libc.so.6:wcsnlen) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x4944080 (libc.so.6:wcscpy) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x4929e50 (libc.so.6:strpbrk) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x49298b0 (libc.so.6:index) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x4929c60 (libc.so.6:strlen) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x49303a0 (libc.so.6:memrchr) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x492aca0 (libc.so.6:strcasecmp_l) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x492a810 (libc.so.6:memchr) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x4944150 (libc.so.6:wcslen) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x4929f80 (libc.so.6:strspn) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x492aba0 (libc.so.6:stpncpy) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x492ab40 (libc.so.6:stpcpy) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x492bff0 (libc.so.6:strchrnul) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x492acf0 (libc.so.6:strncasecmp_l) redirected to 0x48301c0 (_vgnU_ifunc_wrapper)
+--88929-- REDIR: 0x49fc8a0 (libc.so.6:__strrchr_avx2) redirected to 0x483d7d0 (rindex)
+--88929-- REDIR: 0x49fca70 (libc.so.6:__strlen_avx2) redirected to 0x483dc70 (strlen)
+--88929-- REDIR: 0x4925c90 (libc.so.6:malloc) redirected to 0x483a710 (malloc)
+--88929-- REDIR: 0x49ffa80 (libc.so.6:__memcpy_avx_unaligned_erms) redirected to 0x48414b0 (memmove)
+--88929-- REDIR: 0x49262f0 (libc.so.6:free) redirected to 0x483b940 (free)
+--88929-- REDIR: 0x49fc6b0 (libc.so.6:__strchrnul_avx2) redirected to 0x4841f40 (strchrnul)
+--88929-- REDIR: 0x49ffa60 (libc.so.6:__mempcpy_avx_unaligned_erms) redirected to 0x4842050 (mempcpy)
+==88929== Invalid read of size 1
+==88929==    at 0x483DC72: strlen (vg_replace_strmem.c:459)
+==88929==    by 0x4907AB7: __vfprintf_internal (in /usr/lib/libc-2.32.so)
+==88929==    by 0x48F2AE9: fprintf (in /usr/lib/libc-2.32.so)
+==88929==    by 0x1092B7: main (main.c:18)
+==88929==  Address 0x4a66041 is 1 bytes inside a block of size 14 free'd
+==88929==    at 0x483B9AB: free (vg_replace_malloc.c:538)
+==88929==    by 0x10952E: sdsfree (sds.c:167)
+==88929==    by 0x109289: main (main.c:15)
+==88929==  Block was alloc'd at
+==88929==    at 0x483A77F: malloc (vg_replace_malloc.c:307)
+==88929==    by 0x10935B: sdsnewlen (sds.c:99)
+==88929==    by 0x10949F: sdsnew (sds.c:156)
+==88929==    by 0x109276: main (main.c:13)
+==88929== 
+==88929== Invalid read of size 1
+==88929==    at 0x483DC84: strlen (vg_replace_strmem.c:459)
+==88929==    by 0x4907AB7: __vfprintf_internal (in /usr/lib/libc-2.32.so)
+==88929==    by 0x48F2AE9: fprintf (in /usr/lib/libc-2.32.so)
+==88929==    by 0x1092B7: main (main.c:18)
+==88929==  Address 0x4a66042 is 2 bytes inside a block of size 14 free'd
+==88929==    at 0x483B9AB: free (vg_replace_malloc.c:538)
+==88929==    by 0x10952E: sdsfree (sds.c:167)
+==88929==    by 0x109289: main (main.c:15)
+==88929==  Block was alloc'd at
+==88929==    at 0x483A77F: malloc (vg_replace_malloc.c:307)
+==88929==    by 0x10935B: sdsnewlen (sds.c:99)
+==88929==    by 0x10949F: sdsnew (sds.c:156)
+==88929==    by 0x109276: main (main.c:13)
+==88929== 
+==88929== Invalid read of size 1
+==88929==    at 0x48420D0: mempcpy (vg_replace_strmem.c:1536)
+==88929==    by 0x491B8D1: _IO_file_xsputn@@GLIBC_2.2.5 (in /usr/lib/libc-2.32.so)
+==88929==    by 0x490780A: __vfprintf_internal (in /usr/lib/libc-2.32.so)
+==88929==    by 0x48F2AE9: fprintf (in /usr/lib/libc-2.32.so)
+==88929==    by 0x1092B7: main (main.c:18)
+==88929==  Address 0x4a6604c is 12 bytes inside a block of size 14 free'd
+==88929==    at 0x483B9AB: free (vg_replace_malloc.c:538)
+==88929==    by 0x10952E: sdsfree (sds.c:167)
+==88929==    by 0x109289: main (main.c:15)
+==88929==  Block was alloc'd at
+==88929==    at 0x483A77F: malloc (vg_replace_malloc.c:307)
+==88929==    by 0x10935B: sdsnewlen (sds.c:99)
+==88929==    by 0x10949F: sdsnew (sds.c:156)
+==88929==    by 0x109276: main (main.c:13)
+==88929== 
+==88929== Invalid read of size 1
+==88929==    at 0x48420DE: mempcpy (vg_replace_strmem.c:1536)
+==88929==    by 0x491B8D1: _IO_file_xsputn@@GLIBC_2.2.5 (in /usr/lib/libc-2.32.so)
+==88929==    by 0x490780A: __vfprintf_internal (in /usr/lib/libc-2.32.so)
+==88929==    by 0x48F2AE9: fprintf (in /usr/lib/libc-2.32.so)
+==88929==    by 0x1092B7: main (main.c:18)
+==88929==  Address 0x4a6604a is 10 bytes inside a block of size 14 free'd
+==88929==    at 0x483B9AB: free (vg_replace_malloc.c:538)
+==88929==    by 0x10952E: sdsfree (sds.c:167)
+==88929==    by 0x109289: main (main.c:15)
+==88929==  Block was alloc'd at
+==88929==    at 0x483A77F: malloc (vg_replace_malloc.c:307)
+==88929==    by 0x10935B: sdsnewlen (sds.c:99)
+==88929==    by 0x10949F: sdsnew (sds.c:156)
+==88929==    by 0x109276: main (main.c:13)
+==88929== 
+==88929== 
+==88929== HEAP SUMMARY:
+==88929==     in use at exit: 0 bytes in 0 blocks
+==88929==   total heap usage: 2 allocs, 2 frees, 4,110 bytes allocated
+==88929== 
+==88929== All heap blocks were freed -- no leaks are possible
+==88929== 
+==88929== ERROR SUMMARY: 25 errors from 4 contexts (suppressed: 0 from 0)
+==88929== 
+==88929== 1 errors in context 1 of 4:
+==88929== Invalid read of size 1
+==88929==    at 0x483DC72: strlen (vg_replace_strmem.c:459)
+==88929==    by 0x4907AB7: __vfprintf_internal (in /usr/lib/libc-2.32.so)
+==88929==    by 0x48F2AE9: fprintf (in /usr/lib/libc-2.32.so)
+==88929==    by 0x1092B7: main (main.c:18)
+==88929==  Address 0x4a66041 is 1 bytes inside a block of size 14 free'd
+==88929==    at 0x483B9AB: free (vg_replace_malloc.c:538)
+==88929==    by 0x10952E: sdsfree (sds.c:167)
+==88929==    by 0x109289: main (main.c:15)
+==88929==  Block was alloc'd at
+==88929==    at 0x483A77F: malloc (vg_replace_malloc.c:307)
+==88929==    by 0x10935B: sdsnewlen (sds.c:99)
+==88929==    by 0x10949F: sdsnew (sds.c:156)
+==88929==    by 0x109276: main (main.c:13)
+==88929== 
+==88929== 
+==88929== 5 errors in context 2 of 4:
+==88929== Invalid read of size 1
+==88929==    at 0x48420DE: mempcpy (vg_replace_strmem.c:1536)
+==88929==    by 0x491B8D1: _IO_file_xsputn@@GLIBC_2.2.5 (in /usr/lib/libc-2.32.so)
+==88929==    by 0x490780A: __vfprintf_internal (in /usr/lib/libc-2.32.so)
+==88929==    by 0x48F2AE9: fprintf (in /usr/lib/libc-2.32.so)
+==88929==    by 0x1092B7: main (main.c:18)
+==88929==  Address 0x4a6604a is 10 bytes inside a block of size 14 free'd
+==88929==    at 0x483B9AB: free (vg_replace_malloc.c:538)
+==88929==    by 0x10952E: sdsfree (sds.c:167)
+==88929==    by 0x109289: main (main.c:15)
+==88929==  Block was alloc'd at
+==88929==    at 0x483A77F: malloc (vg_replace_malloc.c:307)
+==88929==    by 0x10935B: sdsnewlen (sds.c:99)
+==88929==    by 0x10949F: sdsnew (sds.c:156)
+==88929==    by 0x109276: main (main.c:13)
+==88929== 
+==88929== 
+==88929== 7 errors in context 3 of 4:
+==88929== Invalid read of size 1
+==88929==    at 0x48420D0: mempcpy (vg_replace_strmem.c:1536)
+==88929==    by 0x491B8D1: _IO_file_xsputn@@GLIBC_2.2.5 (in /usr/lib/libc-2.32.so)
+==88929==    by 0x490780A: __vfprintf_internal (in /usr/lib/libc-2.32.so)
+==88929==    by 0x48F2AE9: fprintf (in /usr/lib/libc-2.32.so)
+==88929==    by 0x1092B7: main (main.c:18)
+==88929==  Address 0x4a6604c is 12 bytes inside a block of size 14 free'd
+==88929==    at 0x483B9AB: free (vg_replace_malloc.c:538)
+==88929==    by 0x10952E: sdsfree (sds.c:167)
+==88929==    by 0x109289: main (main.c:15)
+==88929==  Block was alloc'd at
+==88929==    at 0x483A77F: malloc (vg_replace_malloc.c:307)
+==88929==    by 0x10935B: sdsnewlen (sds.c:99)
+==88929==    by 0x10949F: sdsnew (sds.c:156)
+==88929==    by 0x109276: main (main.c:13)
+==88929== 
+==88929== 
+==88929== 12 errors in context 4 of 4:
+==88929== Invalid read of size 1
+==88929==    at 0x483DC84: strlen (vg_replace_strmem.c:459)
+==88929==    by 0x4907AB7: __vfprintf_internal (in /usr/lib/libc-2.32.so)
+==88929==    by 0x48F2AE9: fprintf (in /usr/lib/libc-2.32.so)
+==88929==    by 0x1092B7: main (main.c:18)
+==88929==  Address 0x4a66042 is 2 bytes inside a block of size 14 free'd
+==88929==    at 0x483B9AB: free (vg_replace_malloc.c:538)
+==88929==    by 0x10952E: sdsfree (sds.c:167)
+==88929==    by 0x109289: main (main.c:15)
+==88929==  Block was alloc'd at
+==88929==    at 0x483A77F: malloc (vg_replace_malloc.c:307)
+==88929==    by 0x10935B: sdsnewlen (sds.c:99)
+==88929==    by 0x10949F: sdsnew (sds.c:156)
+==88929==    by 0x109276: main (main.c:13)
+==88929== 
+==88929== ERROR SUMMARY: 25 errors from 4 contexts (suppressed: 0 from 0)
