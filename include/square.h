@@ -1,2 +1,2 @@
 #include <stdio.h>
-extern int squares(int x,int y);
+extern int square(int x,int y);
