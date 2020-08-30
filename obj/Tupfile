@@ -1,0 +1,8 @@
+# 1. Build the source code in C
+# will grab the libraries included
+# in the include definitions
+# and call the !cc macro to build
+
+include_rules
+: foreach ../src/*.c |> !ccodbg |>
+: foreach ../src/*.c |> !ccorel |>

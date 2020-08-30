@@ -1,0 +1,22 @@
+&libdir  = include/
+&objdir  = obj/
+&bindir  = bin/
+CDEBUG += -Weverything
+CDEBUG += -g
+CDEBUG += -Og
+CDEBUG += -ggdb
+
+CRELEASE += -O2
+CRELEASE += -D_FORTIFY_SOURCE=2
+CRELEASE += -fexceptions
+CRELEASE += -fvisibility=hidden
+CRELEASE += -Werror
+
+# Do the object files
+!ccodbg = |> clang $(CDEBUG) -I&(libdir) -c %f -o &(objdir)/%o |> %B_debug.o
+!ccorel = |> clang $(CRELEASE) -I&(libdir) -c %f -o &(objdir)/%o |> %B_release.o
+# macro for the archive command
+!ar = |> ar crs %o %f |>
+!ccbdbg = |> clang $(CDEBUG) %f -o &(bindir)/%o |> %B
+!ccbrel = |> clang $(CRELEASE) %f -o &(bindir)/%o |> %B
+

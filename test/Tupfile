@@ -1,0 +1,12 @@
+include_rules
+#&Libs =
+CXFLAGS += -lc
+CXFLAGS += -lm
+CXFLAGS += ../lib/*.a
+
+#: *.c |> !cc |> ../obj/*.o
+#: *.c |> !cc |> ../obj/*.o | clang  %f  $(CXFLAGS) -o %f |> %B
+#:  ../obj/*.o | ../lib/*.a  |> clang  %f  $(CXFLAGS) -o testfile |> %B
+#: foreach ../lib/*.a  |> clang -v %f  $(CXFLAGS) -o %f |> %B
+: |> echo first > %o && echo second > %o.2 |> out/file.txt | %O.txt.2
+

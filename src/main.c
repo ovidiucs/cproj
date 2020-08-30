@@ -1,10 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
-
-#include "sds/sds.h"
-
-
+#include "../lib/sds/sds.h"
+#include "../include/square.h"
 
 
 int main (int argc, char** argv) {
@@ -14,5 +12,7 @@ int main (int argc, char** argv) {
     fprintf(stdout, "The number of arguments is: %d\n",argc);
     fprintf(stdout, "%s\n","correct" ); 
 
+    int rc = square(4,5);
+    fprintf(stdout, "%d\n",rc);
     return EXIT_SUCCESS;
 }
