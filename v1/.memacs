@@ -1,0 +1,21 @@
+
+require '/home/kiro/memacs9.3-Suppl.ms'
+
+# Turn on auto-save
+1 => chgGlobalMode 'ASave'
+
+# Rbind key matching braces / fences
+unbindKey "ESC }"
+unbindKey "C-c }"
+unbindKey "C-h }"
+unbindKey "C-x }"
+unbindKey "ESC {"
+bindKey "ESC '", gotoFence
+bindKey "C-c '", copyFencedRegion
+bindKey "C-h '", killFencedRegion
+bindKey "C-x '", deleteFencedRegion
+bindKey 'ESC "', fenceWord
+
+# Make "Line" mode global and enable it.
+editMode 'Line','global: true'
+1 => chgGlobalMode 'Line'

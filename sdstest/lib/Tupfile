@@ -1,0 +1,10 @@
+# 3. Create an archive file - static library
+# TODO: Static libary - for own code, maybe not
+# required for others
+include_rules
+#: ../obj/*.o |> !ar |> mylib.a
+#: foreach ../obj/*.o |> !ar |> %B.a {obj}
+# not foreach .. for all object files into a single archive - for now not .so file
+#: foreach ../obj/*.o |> !ar |> 
+: ../obj/*_debug.o |> !ar |> mylib_debug.a
+: ../obj/*_release.o |> !ar |> mylib_release.a
