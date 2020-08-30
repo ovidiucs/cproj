@@ -1,0 +1,39 @@
+&libdir  = include/
+&objdir  = obj/
+&bindir  = bin/
+
+CDEBUG += -Weverything
+CDEBUG += -g
+CDEBUG += -Og
+CDEBUG += -ggdb
+
+CRELEASE += -O2
+CRELEASE += -D_FORTIFY_SOURCE=2
+CRELEASE += -fexceptions
+CRELEASE += -fvisibility=hidden
+CRELEASE += -Werror
+
+VALGRND  += --leak-check=full
+VALGRND  += --show-leak-kinds=all
+VALGRND  += --track-origins=yes
+VALGRND  += --verbose
+VALGRND  += --log-file=
+
+ifeq (@(DO_RELEASE),y)
+  # Do the object files
+!ccorel = |> clang $(CRELEASE) -I&(libdir) -c %f -o &(objdir)/%o |> %B_release.o
+  # macro for the archive command
+!ar = |> ar crs %o %f |>
+  # Do binaries, debug and release 
+!ccbrel = |> clang $(CRELEASE) %f -o &(bindir)/%o |> %B
+else
+  # Do the object files
+!ccodbg = |> clang $(CDEBUG) -I&(libdir) -c %f -o &(objdir)/%o |> %B_debug.o
+  # macro for the archive command
+!ar = |> ar crs %o %f |>
+  # Do binaries, debug and release 
+!ccbdbg = |> clang $(CDEBUG) %f -o &(bindir)/%o |> %B
+endif
+
+# Valgrind the binaries
+!valgrnd = |> valgrind $(VALGRND)%o %f |> %B.txt
