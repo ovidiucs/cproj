@@ -1,11 +1,13 @@
-&libdir  = include/
+&includedir  = include/
 &objdir  = obj/
 &bindir  = bin/
+&libdir  = lib/sds/
 
 CDEBUG += -Weverything
 CDEBUG += -g
 CDEBUG += -Og
 CDEBUG += -ggdb
+#CDEBUG += -v
 
 CRELEASE += -O2
 CRELEASE += -D_FORTIFY_SOURCE=2
@@ -20,15 +22,15 @@ VALGRND  += --verbose
 VALGRND  += --log-file=
 
 ifeq (@(DO_RELEASE),y)
-  # Do the object files
-!ccorel = |> clang $(CRELEASE) -I&(libdir) -c %f -o &(objdir)/%o |> %B_release.o
+  # Create object files - preprocess, compile and assemble steps
+!ccorel = |> clang $(CRELEASE) -I&(includedir) -c %f -o &(objdir)/%o |> %B_release.o
   # macro for the archive command
 !ar = |> ar crs %o %f |>
   # Do binaries, debug and release 
 !ccbrel = |> clang $(CRELEASE) %f -o &(bindir)/%o |> %B
 else
   # Do the object files
-!ccodbg = |> clang $(CDEBUG) -I&(libdir) -c %f -o &(objdir)/%o |> %B_debug.o
+!ccodbg = |> clang $(CDEBUG) -iquote../lib -iquote../include  -c %f -o &(objdir)/%o  |> %B_debug.o
   # macro for the archive command
 !ar = |> ar crs %o %f |>
   # Do binaries, debug and release 
