@@ -1,8 +1,0 @@
-include_rules
-#&Libs =
-CXFLAGS += -lc
-CXFLAGS += -lm
-CXFLAGS += ../lib/mylib.a
-
-: *.c |> !cc |> ../obj/t_hash.o
-:  ../obj/t_hash.o | ../lib/mylib.a  |> clang  %f  $(CXFLAGS) -o t_hash |> %B
