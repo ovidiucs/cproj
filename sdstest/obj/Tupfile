@@ -7,8 +7,8 @@ include_rules
 
 
 ifeq (@(DO_RELEASE),y)
-: foreach ../src/*.c |> !ccorel |>
+: foreach ../src/*.c |> !cc |>
 else
-: foreach ../src/*.c |> !ccodbg |>
-: foreach ../lib/sds/*.c |> !ccodbg |> 
+: foreach ../src/*.c |> !cc |>
+: foreach ../lib/sds/*.c |> !cc |> 
 endif

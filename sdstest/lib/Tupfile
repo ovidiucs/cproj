@@ -6,5 +6,8 @@ include_rules
 #: foreach ../obj/*.o |> !ar |> %B.a {obj}
 # not foreach .. for all object files into a single archive - for now not .so file
 #: foreach ../obj/*.o |> !ar |> 
-: ../obj/*_debug.o |> !ar |> mylib_debug.a
-: ../obj/*_release.o |> !ar |> mylib_release.a
+# try variants -- variant 1
+#: ../obj/*_debug.o |> !ar |> mylib_debug.a
+#: ../obj/*_release.o |> !ar |> mylib_release.a
+# 2nd variant - set the archive to the build type
+: ../obj/*.o |> !ar |> mylib_@(BUILD_TYPE).a
