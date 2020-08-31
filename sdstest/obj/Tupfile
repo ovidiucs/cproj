@@ -5,9 +5,9 @@
 
 include_rules
 
-
-ifeq (@(DO_RELEASE),y)
+ifeq (@(BUILD_TYPE),debug)
 : foreach ../src/*.c |> !cc |>
+: foreach ../lib/sds/*.c |> !cc |> 
 else
 : foreach ../src/*.c |> !cc |>
 : foreach ../lib/sds/*.c |> !cc |> 

@@ -2,3 +2,6 @@
 *.a
 *.o
 **/bin/program*
+**/test/*_release.txt
+**/test/*_debug.txt
+

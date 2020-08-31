@@ -12,40 +12,26 @@ VALGRND  += --track-origins=yes
 VALGRND  += --verbose
 VALGRND  += --log-file=
 
+
 ifeq (@(BUILD_TYPE),debug)
-# debug build:
   CDEBUG += -Weverything
   CDEBUG += -g
   CDEBUG += -Og
   CDEBUG += -ggdb
-# Do the object files
   !cc = |> clang $(CDEBUG) $(IQT) -c %f -o &(objdir)/%o  |> %B_debug.o
-#  !cc2 = |> clang $(CDEBUG) -v -c %f -o %o  |> %B_debug.o
-# macro for the archive command
+  !cc2 = |> clang $(CDEBUG) -v -c %f -o %o  |> %B_debug.o
   !ar = |> ar crs %o %f |> 
-# Make binaries, debug and release 
   !ccb = |> clang $(CDEBUG) %f -o &(bindir)/%o |> %B
-else
-  ifeq (@(BUILD_TYPE),release)
-  # release build
-  CRELEASE += -O2
-  CRELEASE += -D_FORTIFY_SOURCE=2
-  CRELEASE += -fexceptions
-  CRELEASE += -fvisibility=hidden
-  CRELEASE += -Werror
-  # Create object files - preprocess, compile and assemble steps
-    !cc = |> clang $(CRELEASE) $(IQT) -c %f -o &(objdir)/%o |> %B_release.o
-  # macro for the archive command
-    !ar = |> ar crs %o %f |>
-  # Do binaries, debug and release 
-    !ccb = |> clang $(CRELEASE) %f -o &(bindir)/%o |> %B
   else
-    ifeq (@(BUILD_TYPE),static)
-      : |> echo static |>
-    else
-      error "Build type not set or wrong!"
-    endif
-  endif
+    ifeq(@(BUILD_TYPE),release)
+      CRELEASE += -O2
+      CRELEASE += -D_FORTIFY_SOURCE=2
+      CRELEASE += -fexceptions
+      CRELEASE += -fvisibility=hidden
+      CRELEASE += -Werror
+      !cc = |> clang $(CRELEASE) $(IQT) -c %f -o &(objdir)/%o |> %B_release.o
+      !ar = |> ar crs %o %f |>
+      !ccb = |> clang $(CRELEASE) %f -o &(bindir)/%o |> %B
 endif
 
 # Valgrind the binaries
