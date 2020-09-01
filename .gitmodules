@@ -1,0 +1,4 @@
+[submodule "sdstest/lib/sds"]
+	path = sdstest/lib/sds
+	url = https://github.com/ovidiucs/sds.git
+	branch = fb-dev
